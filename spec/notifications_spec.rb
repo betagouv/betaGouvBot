@@ -53,5 +53,13 @@ RSpec.describe "generating notifications:" do
 					expect(notifications(members,date)).to eq []
 				end
 			end
+
+			context "when hashes are keyed with strings" do
+				it "does its thing anyway" do
+					members = [{"fullname" => "lbo", "end" => "2016-12-01"}]
+					date = Date.parse('2016-10-12')
+					expect(notifications(members,date)).to eq [{when:"2016-11-21",who:["lbo"]},{when:"2016-11-30",who:["lbo"]}]
+				end
+			end
 	end
 end

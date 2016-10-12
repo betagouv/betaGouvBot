@@ -1,7 +1,8 @@
 require 'date'
+require 'active_support/core_ext/hash/indifferent_access'
 
 def notifications members, date
-	by_date = members.group_by {|item| item[:end]}
+	by_date = members.map(&:with_indifferent_access).group_by {|item| item[:end]}
 	by_date = by_date.select {|itsdate,_| !itsdate.to_s.empty? && (Date.parse itsdate) > date}
 	by_date.flat_map do |date,items|
 		date = Date.parse date
