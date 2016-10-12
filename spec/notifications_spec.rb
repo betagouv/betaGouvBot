@@ -37,5 +37,13 @@ RSpec.describe "generating notifications:" do
 					  {when:"2016-11-30",who:["lbo","you"]}]
 				end
 			end
+
+			context "when members have no end date" do
+				it "generates no notifications" do
+					members = [{fullname: "lbo",end: ""},{fullname: "you",end: ""}]
+					date = Date.parse('2016-12-01')
+					expect(notifications(members,date)).to eq []
+				end
+			end
 	end
 end
