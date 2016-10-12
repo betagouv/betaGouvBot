@@ -12,5 +12,13 @@ RSpec.describe "generating notifications:" do
 				end
 			end
 
+			context "when one member has a future end date" do
+				it "generates two notifications" do
+					members = [{id: "author/lbo",end: "2016-12-01"}]
+					date = Date.parse('2016-12-01')
+					expect(notifications(members,date)).to eq [{when:"2016-11-21",who:["author/lbo"]},{when:"2016-11-30",who:["author/lbo"]}]
+				end
+			end
+
 	end
 end
