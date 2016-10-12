@@ -8,11 +8,11 @@ require './notifier'
 include SendGrid
 
 helpers do
-	def send_reminder members, when		
+	def send_reminder members, urgency		
 		from = Email.new(email: 'betaGouvBot@beta.gouv.fr')
 		subject = 'Rappel: arrivée à échéance de contrats!'
 		to = Email.new(email: 'contact@beta.gouv.fr')
-		content = Content.new(type: 'text/plain', value: "Les contrats de #{members.join(',')} arrivent à échéance #{when}\n\n-- BetaGouvBot")
+		content = Content.new(type: 'text/plain', value: "Les contrats de #{members.join(',')} arrivent à échéance #{urgency}\n\n-- BetaGouvBot")
 		mail = Mail.new(from, subject, to, content)
 
 		sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
