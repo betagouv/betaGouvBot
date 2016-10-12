@@ -8,7 +8,7 @@ require './notifier'
 include SendGrid
 
 helpers do
-	def send_reminded members, when		
+	def send_reminder members, when		
 		from = Email.new(email: 'betaGouvBot@beta.gouv.fr')
 		subject = 'Rappel: arrivée à échéance de contrats!'
 		to = Email.new(email: 'contact@beta.gouv.fr')
