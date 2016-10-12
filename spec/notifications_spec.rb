@@ -28,5 +28,14 @@ RSpec.describe "generating notifications:" do
 					  {when:"2016-11-22",who:["author/you"]},{when:"2016-12-01",who:["author/you"]}]
 				end
 			end
+
+			context "when two members have the same end date" do
+				it "generates two notifications" do
+					members = [{id: "author/lbo",end: "2016-12-01"},{id: "author/you",end: "2016-12-01"}]
+					date = Date.parse('2016-12-01')
+					expect(notifications(members,date)).to eq [{when:"2016-11-21",who:["author/lbo","author/you"]},
+					  {when:"2016-11-30",who:["author/lbo","author/you"]}]
+				end
+			end
 	end
 end

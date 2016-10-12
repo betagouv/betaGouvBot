@@ -1,10 +1,12 @@
 require 'date'
 
 def notifications members, date
-	members.flat_map do |item|
-		date = Date.parse item[:end]
+	by_date = members.group_by {|item| item[:end]}
+	by_date.flat_map do |date,items|
+		date = Date.parse date
 		soon = (date - 10).iso8601
 		late = (date - 1).iso8601
-		[{when:soon, who:[item[:id]]},{when:late, who:[item[:id]]}]
+		who = items.map {|one| one[:id]}
+		[{when:soon, who: who},{when:late, who: who}]
 	end
 end
