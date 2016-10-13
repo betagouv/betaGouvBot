@@ -1,0 +1,37 @@
+require: rubocop-rspec
+
+AllCops:
+  Exclude:
+    - betagouvbot.gemspec
+    - Guardfile
+    - spec/spec_helper.rb
+    - vendor/**/*
+    - tmp/**/*
+
+  TargetRubyVersion: 2.3
+
+RSpec/FilePath:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/DotPosition:
+  Enabled: true
+
+Style/Encoding:
+  EnforcedStyle: always
+  Enabled: true
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+  Enabled: true
+
+Style/LambdaCall:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: true
+
+Style/WordArray:
+  Enabled: true
