@@ -24,7 +24,7 @@ helpers do
 	end
 end
 
-post '/payload' do
+get '/payload' do
 	# Read beta.gouv.fr members API
 	response = HTTParty.get('https://beta.gouv.fr/api/v1/authors.json')
 	# Parse into a schedule of notifications
