@@ -10,6 +10,9 @@ AllCops:
 
   TargetRubyVersion: 2.3
 
+Metrics/LineLength:
+  Max: 90
+
 RSpec/FilePath:
   Enabled: false
 
