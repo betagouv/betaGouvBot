@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require 'betagouvbot/mailer'
-require 'betagouvbot/notifier'
+require 'betagouvbot/anticipator'
 require 'betagouvbot/webhook'
 require 'betagouvbot/version'
 

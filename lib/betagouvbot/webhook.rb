@@ -1,6 +1,8 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
+require 'betagouvbot/anticipator'
+require 'betagouvbot/mailer'
 require 'sinatra/base'
 require 'sendgrid-ruby'
 
@@ -11,7 +13,7 @@ module BetaGouvBot
       members  = HTTParty.get('https://beta.gouv.fr/api/v1/authors.json').parsed_response
 
       # Parse into a schedule of notifications
-      schedule = Notifier.(members, Date.today)
+      schedule = Anticipator.(members, Date.today)
 
       # Send reminders (if any)
       schedule.keys.each do |urgency|

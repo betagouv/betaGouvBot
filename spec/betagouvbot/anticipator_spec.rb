@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-RSpec.describe BetaGouvBot::Notifier do
+RSpec.describe BetaGouvBot::Anticipator do
   let(:yesterday)     { today - 1 }
   let(:today)         { Date.today }
   let(:tomorrow)      { today + 1 }
