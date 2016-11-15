@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'betagouvbot'
-run BetaGouvBot::Webhook
+module BetaGouvBot
+  VERSION = '0.1.0'
+end

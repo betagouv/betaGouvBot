@@ -1,10 +1,12 @@
+# encoding: utf-8
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
+ruby '2.3.0'
 
-gem 'rspec', group: 'test'
+gemspec
 
-gem 'rack', '<2.0'
-gem 'thin'
-gem 'sinatra'
-gem 'httparty'
-gem 'activesupport'
-gem 'sendgrid-ruby'
+group :development, :test do
+  gem 'rubocop'
+  gem 'rubocop-rspec'
+end

@@ -1,0 +1,11 @@
+machine:
+  ruby:
+    version: 2.3.0
+
+dependencies:
+  pre:
+    - gem install bundler --no-ri --no-rdoc
+
+test:
+  override:
+    - bundle exec rake
