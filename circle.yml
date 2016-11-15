@@ -5,3 +5,7 @@ machine:
 dependencies:
   pre:
     - gem install bundler --no-ri --no-rdoc
+
+test:
+  override:
+    - bundle exec rake
