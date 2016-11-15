@@ -5,25 +5,29 @@ module BetaGouvBot
   module Mailer
     module_function
 
+    PHRASE = { tomorrow: 'demain', soon: 'dans 10 jours' }.freeze
+
     class << self
-      def call(members, urgency)
+      # @param expirations [#:[]] expiration dates mapped to members
+      def call(expirations)
+        expirations
+          .map { |urgency, members| email(urgency, members) }
+          .each { |mail| client.post(request_body: mail.to_json) }
+      end
+
+      def email(urgency, members)
         from    = SendGrid::Email.new(email: 'betagouvbot@beta.gouv.fr')
         to      = SendGrid::Email.new(email: 'contact@beta.gouv.fr')
         subject = 'Rappel: arrivée à échéance de contrats !'
-        content = content(members, urgency)
-        mail    = SendGrid::Mail.new(from, subject, to, content)
-
-        client.post(request_body: mail.to_json)
+        content = content(urgency, members)
+        SendGrid::Mail.new(from, subject, to, content)
       end
 
-      private
-
-      def content(members, urgency)
-        phrase = { tomorrow: 'demain', soon: 'dans 10 jours' }[urgency]
+      def content(urgency, members)
         SendGrid::Content.new(
           type: 'text/plain',
           value: %(
-            Les contrats de #{members.join(', ')} arrivent à échéance #{phrase}
+            Les contrats de #{members.join(', ')} arrivent à échéance #{PHRASE[urgency]}
 
             -- BetaGouvBot
           )

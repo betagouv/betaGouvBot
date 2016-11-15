@@ -16,9 +16,7 @@ module BetaGouvBot
       schedule = Anticipator.(members, Date.today)
 
       # Send reminders (if any)
-      schedule.keys.each do |urgency|
-        Mailer.(schedule[urgency], urgency)
-      end
+      Mailer.(schedule)
     end
   end
 end
