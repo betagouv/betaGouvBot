@@ -14,8 +14,9 @@ module BetaGouvBot
       schedule = Notifier.(members, Date.today)
 
       # Send reminders (if any)
-      Mailer.(schedule[:tomorrow], 'demain') if schedule[:tomorrow]
-      Mailer.(schedule[:soon], 'dans 10 jours') if schedule[:soon]
+      schedule.keys.each do |urgency|
+        Mailer.(schedule[urgency], urgency)
+      end
     end
   end
 end

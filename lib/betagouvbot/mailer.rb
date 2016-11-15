@@ -19,10 +19,11 @@ module BetaGouvBot
       private
 
       def content(members, urgency)
+        phrase = { tomorrow: 'demain', soon: 'dans 10 jours' }[urgency]
         SendGrid::Content.new(
           type: 'text/plain',
           value: %(
-            Les contrats de #{members.join(', ')} arrivent à échéance #{urgency}
+            Les contrats de #{members.join(', ')} arrivent à échéance #{phrase}
 
             -- BetaGouvBot
           )
