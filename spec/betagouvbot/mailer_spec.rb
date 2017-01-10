@@ -34,7 +34,7 @@ RSpec.describe BetaGouvBot::Mailer do
 
       it 'sends an email directly to the author' do
         described_class.(schedule)
-        expect(recipient).to have_received(:new).with(email: 'contact@beta.gouv.fr')
+        expect(recipient).to have_received(:new).with(email: 'ann@beta.gouv.fr')
       end
     end
 

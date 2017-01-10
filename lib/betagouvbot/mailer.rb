@@ -17,7 +17,9 @@ module BetaGouvBot
 
       def email(urgency, members)
         from    = SendGrid::Email.new(email: 'betagouvbot@beta.gouv.fr')
-        to      = recipient.new(email: 'contact@beta.gouv.fr')
+        to      = urgency == 21 ?
+                      recipient.new(email: members[0]["id"] + '@beta.gouv.fr')
+                    : recipient.new(email: 'contact@beta.gouv.fr')
         subject = 'Rappel: arrivée à échéance de contrats !'
         content = content(urgency, members)
         SendGrid::Mail.new(from, subject, to, content)
