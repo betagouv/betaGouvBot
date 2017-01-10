@@ -4,10 +4,13 @@
 require 'active_support/core_ext/hash/indifferent_access'
 
 module BetaGouvBot
-  module Notifier
+  module Anticipator
     module_function
 
     class << self
+      # Input: a date
+      # Input: a schedule of arrivals and departures
+      # @return [Hash<Array>] a set of imminent action warnings.
       def call(members, date)
         {}.tap do |result|
           by_date           = by_date(members)
