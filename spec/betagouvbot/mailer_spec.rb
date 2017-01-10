@@ -4,7 +4,7 @@
 RSpec.describe BetaGouvBot::Mailer do
   describe 'content of emails' do
     let(:members) { %w(Ann Bob) }
-    let(:urgency) { :tomorrow }
+    let(:urgency) { 10 }
 
     subject(:content) { described_class.content(urgency, members).value }
 
@@ -12,11 +12,10 @@ RSpec.describe BetaGouvBot::Mailer do
     it { is_expected.to include('Ann') }
     it { is_expected.to include('Bob') }
     it { is_expected.to include('arrivent à échéance') }
-    it { is_expected.to include('demain') }
+    it { is_expected.to include('dans 10 jours') }
   end
 
   describe 'sending out emails' do
-    let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+1).iso8601] }
     let(:schedule)  { BetaGouvBot::Anticipator.(authors, Date.today) }
     let(:client)    { instance_spy('client') }
     let(:recipient) { instance_spy('recipient') }
@@ -26,7 +25,27 @@ RSpec.describe BetaGouvBot::Mailer do
       allow(described_class).to receive(:client) { client }
     end
 
-    context "when it's 3 weeks before ending date" do
+    context "when a member has an end date in three weeks" do
+      let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+21).iso8601] }
+
+      it 'sends an email directly to the author' do
+        described_class.(schedule)
+        expect(recipient).to have_received(:new).with(email: 'contact@beta.gouv.fr')
+      end
+    end
+
+    context "when a member has an end date soon" do
+      let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+10).iso8601] }
+
+      it 'sends an email directly to the author' do
+        described_class.(schedule)
+        expect(recipient).to have_received(:new).with(email: 'contact@beta.gouv.fr')
+      end
+    end
+
+    context "when a member has an end date tomorrow" do
+      let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+1).iso8601] }
+
       it 'sends an email directly to the author' do
         described_class.(schedule)
         expect(recipient).to have_received(:new).with(email: 'contact@beta.gouv.fr')

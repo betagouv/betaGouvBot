@@ -14,11 +14,10 @@ module BetaGouvBot
       def call(members, date)
         {}.tap do |result|
           by_date           = by_date(members)
-          tomorrow          = date.+(1).iso8601
-          soon              = date.+(10).iso8601
 
-          result[:tomorrow] = result(by_date, tomorrow) if by_date[tomorrow]
-          result[:soon]     = result(by_date, soon)     if by_date[soon]
+          result[1]  = result(by_date, date.+(1).iso8601)  if by_date[date.+(1).iso8601]
+          result[10] = result(by_date, date.+(10).iso8601) if by_date[date.+(10).iso8601]
+          result[21] = result(by_date, date.+(21).iso8601) if by_date[date.+(21).iso8601]
         end
       end
 

@@ -4,8 +4,7 @@
 RSpec.describe BetaGouvBot::Anticipator do
   let(:yesterday)     { today - 1 }
   let(:today)         { Date.today }
-  let(:tomorrow)      { today + 1 }
-  let(:in_ten_days)   { today + 10 }
+  let(:whenever)      { today + 10 }
   let(:notifications) { described_class.(members, today) }
 
   context 'when member list is empty' do
@@ -16,46 +15,24 @@ RSpec.describe BetaGouvBot::Anticipator do
     end
   end
 
-  context 'when one member has end date tomorrow' do
-    let(:members) { [{ fullname: 'lbo', end: tomorrow.to_s }] }
+  context 'when one member has end date in the future' do
+    let(:members) { [{ fullname: 'lbo', end: whenever.to_s }] }
 
-    it "generates a 'tomorrow' notification" do
-      expect(notifications).to eq(tomorrow: %w(lbo))
+    it "generates a notification" do
+      expect(notifications).to eq(10 => %w(lbo))
     end
   end
 
-  context 'when two members have an end date tomorrow' do
+  context 'when two members have an end date in the future' do
     let(:members) do
       [
-        { fullname: 'lbo', end: tomorrow.to_s },
-        { fullname: 'you', end: tomorrow.to_s }
+        { fullname: 'lbo', end: whenever.to_s },
+        { fullname: 'you', end: whenever.to_s }
       ]
     end
 
-    it "generates one 'tomorrow' notification" do
-      expect(notifications).to eq(tomorrow: %w(lbo you))
-    end
-  end
-
-  context 'when one member has end date in ten days' do
-    let(:members) { [fullname: 'lbo', end: in_ten_days.to_s] }
-
-    it "generates a 'soon' notification" do
-      expect(notifications).to eq(soon: %w(lbo))
-    end
-  end
-
-  context 'when members have end dates with both cases' do
-    let(:members) do
-      [
-        { fullname: 'lbo', end: in_ten_days.to_s },
-        { fullname: 'you', end: tomorrow.to_s }
-      ]
-    end
-
-    it "generates one 'tomorrow' notification" do
-      expect(notifications)
-        .to(eq(tomorrow: %w(you), soon: %w(lbo)))
+    it "generates a single notification" do
+      expect(notifications).to eq(10 => %w(lbo you))
     end
   end
 
@@ -81,10 +58,10 @@ RSpec.describe BetaGouvBot::Anticipator do
   end
 
   context 'when hashes are stringified' do
-    let(:members) { ['fullname' => 'lbo', 'end' => tomorrow.to_s] }
+    let(:members) { ['fullname' => 'lbo', 'end' => whenever.to_s] }
 
     it 'does its thing anyway' do
-      expect(notifications).to eq(tomorrow: %w(lbo))
+      expect(notifications).to eq(10 => %w(lbo))
     end
   end
 end

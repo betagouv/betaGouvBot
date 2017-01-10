@@ -5,7 +5,7 @@ module BetaGouvBot
   module Mailer
     module_function
 
-    PHRASE = { tomorrow: 'demain', soon: 'dans 10 jours' }.freeze
+    PHRASE = { 1 => 'demain', 10 => 'dans 10 jours', 21 => 'dans 3 semaines' }.freeze
 
     class << self
       # @param expirations [#:[]] expiration dates mapped to members
