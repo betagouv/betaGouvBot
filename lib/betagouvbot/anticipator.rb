@@ -15,9 +15,9 @@ module BetaGouvBot
         {}.tap do |result|
           by_date           = by_date(members)
 
-          result[1]  = result(by_date, date.+(1).iso8601)  if by_date[date.+(1).iso8601]
-          result[10] = result(by_date, date.+(10).iso8601) if by_date[date.+(10).iso8601]
-          result[21] = result(by_date, date.+(21).iso8601) if by_date[date.+(21).iso8601]
+          result[1]  = by_date[date.+(1).iso8601]  if by_date[date.+(1).iso8601]
+          result[10] = by_date[date.+(10).iso8601] if by_date[date.+(10).iso8601]
+          result[21] = by_date[date.+(21).iso8601] if by_date[date.+(21).iso8601]
         end
       end
 
@@ -29,9 +29,6 @@ module BetaGouvBot
           .group_by { |item| item[:end] }
       end
 
-      def result(by_date, date)
-        by_date[date].map { |author| author[:fullname] }
-      end
     end
   end
 end

@@ -4,7 +4,8 @@
 RSpec.describe BetaGouvBot::Anticipator do
   let(:yesterday)     { today - 1 }
   let(:today)         { Date.today }
-  let(:whenever)      { today + 10 }
+  let(:days)          { 10 }
+  let(:whenever)      { today + days }
   let(:notifications) { described_class.(members, today) }
 
   context 'when member list is empty' do
@@ -19,7 +20,7 @@ RSpec.describe BetaGouvBot::Anticipator do
     let(:members) { [{ fullname: 'lbo', end: whenever.to_s }] }
 
     it "generates a notification" do
-      expect(notifications).to eq(10 => %w(lbo))
+      expect(notifications).to match(days => [a_hash_including("fullname" => 'lbo')] )
     end
   end
 
@@ -32,7 +33,8 @@ RSpec.describe BetaGouvBot::Anticipator do
     end
 
     it "generates a single notification" do
-      expect(notifications).to eq(10 => %w(lbo you))
+      expected = [a_hash_including("fullname" => 'lbo'), a_hash_including("fullname" => 'you')]
+      expect(notifications).to match(days => expected)
     end
   end
 
@@ -61,7 +63,7 @@ RSpec.describe BetaGouvBot::Anticipator do
     let(:members) { ['fullname' => 'lbo', 'end' => whenever.to_s] }
 
     it 'does its thing anyway' do
-      expect(notifications).to eq(10 => %w(lbo))
+      expect(notifications).to match(days => [a_hash_including("fullname" => 'lbo')] )
     end
   end
 end

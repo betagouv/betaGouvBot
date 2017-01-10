@@ -3,8 +3,12 @@
 
 RSpec.describe BetaGouvBot::Mailer do
   describe 'content of emails' do
-    let(:members) { %w(Ann Bob) }
+    let(:authors)   { [
+      {id: 'ann', fullname: 'Ann', end: (Date.today+10).iso8601},
+      {id: 'bob', fullname: 'Bob', end: (Date.today+10).iso8601}] }
+    let(:schedule)  { BetaGouvBot::Anticipator.(authors, Date.today) }
     let(:urgency) { 10 }
+    let(:members) { schedule[urgency] }
 
     subject(:content) { described_class.content(urgency, members).value }
 

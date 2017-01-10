@@ -24,10 +24,11 @@ module BetaGouvBot
       end
 
       def content(urgency, members)
+        names = members.map {|h| h["fullname"]}
         SendGrid::Content.new(
           type: 'text/plain',
           value: %(
-            Les contrats de #{members.join(', ')} arrivent à échéance #{PHRASE[urgency]}
+            Les contrats de #{names.join(', ')} arrivent à échéance #{PHRASE[urgency]}
 
             -- BetaGouvBot
           )
