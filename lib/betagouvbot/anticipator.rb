@@ -15,9 +15,10 @@ module BetaGouvBot
         {}.tap do |result|
           by_date           = by_date(members)
 
-          result[1]  = by_date[date.+(1).iso8601]  if by_date[date.+(1).iso8601]
-          result[10] = by_date[date.+(10).iso8601] if by_date[date.+(10).iso8601]
-          result[21] = by_date[date.+(21).iso8601] if by_date[date.+(21).iso8601]
+          [1,10,21].each do |how_soon|
+            the_day = date.+(how_soon).iso8601
+            result[how_soon] = by_date[the_day] if by_date[the_day]
+          end
         end
       end
 
