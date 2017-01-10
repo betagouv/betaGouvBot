@@ -10,7 +10,7 @@ module BetaGouvBot
   class Webhook < Sinatra::Base
     get '/payload' do
       # Read beta.gouv.fr members' API
-      members  = HTTParty.get('https://beta.gouv.fr/api/v1/authors.json').parsed_response
+      members  = HTTParty.get('https://beta.gouv.fr/api/v1.1/authors.json').parsed_response
 
       # Parse into a schedule of notifications
       schedule = Anticipator.(members, Date.today)
