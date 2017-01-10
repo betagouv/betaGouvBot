@@ -15,17 +15,22 @@ RSpec.describe BetaGouvBot::Mailer do
     it { is_expected.to include('demain') }
   end
 
- describe 'sending out emails' do
-   let(:authors)  { [id: 'ann', fullname: 'Ann', end: (Date.today+1).iso8601] }
-   let(:schedule) { BetaGouvBot::Anticipator.(authors, Date.today) }
-   let(:client)   { instance_spy('client') }
+  describe 'sending out emails' do
+    let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+1).iso8601] }
+    let(:schedule)  { BetaGouvBot::Anticipator.(authors, Date.today) }
+    let(:client)    { instance_spy('client') }
+    let(:recipient) { instance_spy('recipient') }
 
-   before { allow(described_class).to receive(:client) { client } }
+    before do
+      allow(described_class).to receive(:recipient) { recipient }
+      allow(described_class).to receive(:client) { client }
+    end
 
-   it 'works' do
-     described_class.(schedule)
-     expect(client).to have_received(:post)
-   end
+    context "when it's 3 weeks before ending date" do
+      it 'sends an email directly to the author' do
+        described_class.(schedule)
+        expect(recipient).to have_received(:new).with(email: 'contact@beta.gouv.fr')
+      end
+    end
   end
-
 end
