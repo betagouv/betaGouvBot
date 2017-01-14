@@ -5,36 +5,48 @@ module BetaGouvBot
   module Mailer
     module_function
 
-    PHRASE = { 1 => 'demain', 10 => 'dans 10 jours', 21 => 'dans 3 semaines' }.freeze
+    STOCK = %(
+            Le contrat de {{author.fullname}} arrive à échéance le {{author.end}}
+
+            -- BetaGouvBot
+          )
+    RULES = {1 => STOCK, 10 => STOCK, 21 => STOCK}
 
     class << self
       # @param expirations [#:[]] expiration dates mapped to members
       def call(expirations)
         expirations
-          .map { |urgency, members| email(urgency, members) }
+          .flat_map { |urgency, members|
+            members.map { |author| email(urgency, author, RULES) }
+          }
           .each { |mail| client.post(request_body: mail.to_json) }
       end
 
-      def email(urgency, members)
+      def email(urgency, author, rules)
         from    = SendGrid::Email.new(email: 'betagouvbot@beta.gouv.fr')
         to      = urgency == 21 ?
-                      recipient.new(email: members[0]["id"] + '@beta.gouv.fr')
+                      recipient.new(email: author["id"] + '@beta.gouv.fr')
                     : recipient.new(email: 'contact@beta.gouv.fr')
         subject = 'Rappel: arrivée à échéance de contrats !'
-        content = content(urgency, members)
-        SendGrid::Mail.new(from, subject, to, content)
+        body = body(urgency, author, rules)
+        content = content(body)
+        mail = SendGrid::Mail.new(from, subject, to, content)
       end
 
-      def content(urgency, members)
-        names = members.map {|h| h["fullname"]}
+      def body(urgency, author, rules)
+        template = template_factory.parse(rules[urgency])
+        template.render(author)
+      end
+
+      def content(body)
         SendGrid::Content.new(
           type: 'text/plain',
-          value: %(
-            Les contrats de #{names.join(', ')} arrivent à échéance #{PHRASE[urgency]}
-
-            -- BetaGouvBot
-          )
+          value: body
         )
+      end
+
+      def template_factory
+        Liquid::Template
       end
 
       def recipient

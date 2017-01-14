@@ -5,6 +5,7 @@ require 'betagouvbot/anticipator'
 require 'betagouvbot/mailer'
 require 'sinatra/base'
 require 'sendgrid-ruby'
+require 'liquid'
 
 module BetaGouvBot
   class Webhook < Sinatra::Base
