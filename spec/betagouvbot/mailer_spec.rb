@@ -28,7 +28,7 @@ RSpec.describe BetaGouvBot::Mailer do
   end
 
   describe 'selecting recipients of emails' do
-    let(:schedule)  { BetaGouvBot::Anticipator.(authors, Date.today) }
+    let(:schedule)  { BetaGouvBot::Anticipator.(authors, rules.keys, Date.today) }
     let(:client)    { instance_spy('client') }
 
     before do
@@ -60,7 +60,7 @@ RSpec.describe BetaGouvBot::Mailer do
   end
 
   describe 'sending out emails' do
-    let(:schedule)  { BetaGouvBot::Anticipator.(authors, Date.today) }
+    let(:schedule)  { BetaGouvBot::Anticipator.(authors, rules.keys, Date.today) }
     let(:client)    { instance_spy('client') }
 
     before do

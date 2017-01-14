@@ -15,7 +15,7 @@ module BetaGouvBot
 
           -- BetaGouvBot
         )
-  RULES = {1 => STOCK, 10 => STOCK, 21 => STOCK}
+  RULES = {1 => STOCK, 14 => STOCK, 21 => STOCK}
 
   class Webhook < Sinatra::Base
     get '/payload' do
@@ -23,7 +23,7 @@ module BetaGouvBot
       members  = HTTParty.get('https://beta.gouv.fr/api/v1.1/authors.json').parsed_response
 
       # Parse into a schedule of notifications
-      schedule = Anticipator.(members, Date.today)
+      schedule = Anticipator.(members, rules.keys, Date.today)
 
       # Send reminders (if any)
       Mailer.(schedule,rules)
@@ -34,7 +34,7 @@ module BetaGouvBot
 
       # Parse into a schedule of notifications
       debug_date = date ? Date.iso8601(date) : Date.today
-      schedule = Anticipator.(members, debug_date)
+      schedule = Anticipator.(members, rules.keys, debug_date)
 
       # Display  reminders (if any)
       emails = Mailer.debug(schedule,rules)

@@ -6,7 +6,7 @@ RSpec.describe BetaGouvBot::Anticipator do
   let(:today)         { Date.today }
   let(:days)          { 10 }
   let(:whenever)      { today + days }
-  let(:notifications) { described_class.(members, today) }
+  let(:notifications) { described_class.(members, [days], today) }
 
   context 'when member list is empty' do
     let(:members) { [] }

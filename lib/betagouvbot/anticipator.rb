@@ -11,11 +11,11 @@ module BetaGouvBot
       # Input: a date
       # Input: a schedule of arrivals and departures
       # @return [Hash<Array>] a set of imminent action warnings.
-      def call(members, date)
+      def call(members, urgencies, date)
         {}.tap do |result|
           by_date           = by_date(members)
 
-          [1,10,14,21].each do |how_soon|
+          urgencies.each do |how_soon|
             the_day = date.+(how_soon).iso8601
             result[how_soon] = by_date[the_day] if by_date[the_day]
           end
