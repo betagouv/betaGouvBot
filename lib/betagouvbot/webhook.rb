@@ -5,6 +5,7 @@ require 'betagouvbot/anticipator'
 require 'betagouvbot/mailer'
 require 'sinatra/base'
 require 'sendgrid-ruby'
+require 'httparty'
 require 'liquid'
 
 module BetaGouvBot
