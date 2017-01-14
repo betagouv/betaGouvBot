@@ -2,8 +2,10 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::Mailer do
+  
+  let(:rules)    { {1 => "demain", 21 => "dans 3s"} }
+
   describe 'formatting emails' do
-    let(:rules)    { {1 => "demain", 21 => "dans 3s"} }
     let(:parser)   { instance_spy('parser') }
     let(:template) { instance_spy('template') }
 
@@ -39,7 +41,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+21).iso8601] }
 
       it 'sends an email directly to the author' do
-        described_class.(schedule)
+        described_class.(schedule,rules)
         expect(recipient).to have_received(:new).with(email: 'ann@beta.gouv.fr')
       end
     end
@@ -48,7 +50,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+10).iso8601] }
 
       it 'sends an email directly to the author' do
-        described_class.(schedule)
+        described_class.(schedule,rules)
         expect(recipient).to have_received(:new).with(email: 'contact@beta.gouv.fr')
       end
     end
@@ -57,7 +59,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+1).iso8601] }
 
       it 'sends an email directly to the author' do
-        described_class.(schedule)
+        described_class.(schedule,rules)
         expect(recipient).to have_received(:new).with(email: 'contact@beta.gouv.fr')
       end
     end
@@ -75,7 +77,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+21).iso8601] }
 
       it 'sends out one email' do
-        described_class.(schedule)
+        described_class.(schedule,rules)
         expect(client).to have_received(:post).once
       end
     end
@@ -84,7 +86,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors)   { [{id: 'ann', fullname: 'Ann', end: (Date.today+21).iso8601}, {id: 'bob', fullname: 'Bob', end: (Date.today+21).iso8601}] }
 
       it 'sends out two emails' do
-        described_class.(schedule)
+        described_class.(schedule,rules)
         expect(client).to have_received(:post).twice
       end
     end

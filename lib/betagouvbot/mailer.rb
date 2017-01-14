@@ -5,27 +5,20 @@ module BetaGouvBot
   module Mailer
     module_function
 
-    STOCK = %(
-            Le contrat de {{author.fullname}} arrive à échéance le {{author.end}}
-
-            -- BetaGouvBot
-          )
-    RULES = {1 => STOCK, 10 => STOCK, 21 => STOCK}
-
     class << self
       # @param expirations [#:[]] expiration dates mapped to members
-      def call(expirations)
+      def call(expirations, rules)
         expirations
           .flat_map { |urgency, members|
-            members.map { |author| email(urgency, author, RULES) }
+            members.map { |author| email(urgency, author, rules) }
           }
           .each { |mail| client.post(request_body: mail.to_json) }
       end
 
-      def debug(expirations)
+      def debug(expirations, rules)
         expirations
           .flat_map { |urgency, members|
-            members.map { |author| email(urgency, author, RULES) }
+            members.map { |author| email(urgency, author, rules) }
           }
       end
 
