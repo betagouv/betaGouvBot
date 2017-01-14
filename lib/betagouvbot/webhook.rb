@@ -19,10 +19,10 @@ module BetaGouvBot
       members  = HTTParty.get('https://beta.gouv.fr/api/v1.1/authors.json').parsed_response
 
       # Parse into a schedule of notifications
-      schedule = Anticipator.(members, rules.keys, Date.today)
+      schedule = Anticipator.(members, RULES.keys, Date.today)
 
       # Send reminders (if any)
-      Mailer.(schedule,rules)
+      Mailer.(schedule,RULES)
     end
     get '/debug?:date?' do |date|
       # Read beta.gouv.fr members' API
@@ -30,10 +30,10 @@ module BetaGouvBot
 
       # Parse into a schedule of notifications
       debug_date = date ? Date.iso8601(date) : Date.today
-      schedule = Anticipator.(members, rules.keys, debug_date)
+      schedule = Anticipator.(members, RULES.keys, debug_date)
 
       # Display  reminders (if any)
-      emails = Mailer.debug(schedule,rules)
+      emails = Mailer.debug(schedule,RULES)
       emails
         .map(&:to_json)
         .join
