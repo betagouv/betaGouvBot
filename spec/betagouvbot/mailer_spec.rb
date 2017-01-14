@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::Mailer do
-  
+
   let(:rules)    { {1 => "demain", 21 => "dans 3s"} }
 
   describe 'formatting emails' do
@@ -29,11 +29,9 @@ RSpec.describe BetaGouvBot::Mailer do
 
   describe 'selecting recipients of emails' do
     let(:schedule)  { BetaGouvBot::Anticipator.(authors, Date.today) }
-    let(:recipient) { instance_spy('recipient') }
     let(:client)    { instance_spy('client') }
 
     before do
-      allow(described_class).to receive(:recipient) { recipient }
       allow(described_class).to receive(:client) { client }
     end
 
@@ -42,27 +40,23 @@ RSpec.describe BetaGouvBot::Mailer do
 
       it 'sends an email directly to the author' do
         described_class.(schedule,rules)
-        expect(recipient).to have_received(:new).with(email: 'ann@beta.gouv.fr')
+        recipients = hash_including("to" => ["email" => "ann@beta.gouv.fr"])
+        expected = {request_body: hash_including("personalizations" => array_including(recipients))}
+        expect(client).to have_received(:post).with(expected)
       end
     end
 
-    context "when a member has an end date soon" do
-      let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+10).iso8601] }
+    context "when a member has an end date in two weeks" do
+      let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+21).iso8601] }
 
       it 'sends an email directly to the author' do
         described_class.(schedule,rules)
-        expect(recipient).to have_received(:new).with(email: 'contact@beta.gouv.fr')
+        recipients = [hash_including("to" => ["email" => "ann@beta.gouv.fr"]), hash_including("to" => ["email" => "contact@beta.gouv.fr"])]
+        expected = {request_body: hash_including("personalizations" => array_including(*recipients))}
+        expect(client).to have_received(:post).with(expected)
       end
     end
 
-    context "when a member has an end date tomorrow" do
-      let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+1).iso8601] }
-
-      it 'sends an email directly to the author' do
-        described_class.(schedule,rules)
-        expect(recipient).to have_received(:new).with(email: 'contact@beta.gouv.fr')
-      end
-    end
   end
 
   describe 'sending out emails' do
