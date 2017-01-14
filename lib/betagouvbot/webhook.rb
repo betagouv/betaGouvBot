@@ -36,7 +36,7 @@ module BetaGouvBot
       emails = Mailer.debug(schedule,RULES)
       emails
         .map(&:to_json)
-        .join
+        .join("\n\n")
     end
   end
 end
