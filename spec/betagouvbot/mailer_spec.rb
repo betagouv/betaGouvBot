@@ -3,7 +3,7 @@
 
 RSpec.describe BetaGouvBot::Mailer do
 
-  let(:rules)    { {1 => "demain", 21 => "dans 3s"} }
+  let(:rules)    { {1 => "demain", 14 => "dans 2s", 21 => "dans 3s"} }
 
   describe 'formatting emails' do
     let(:parser)   { instance_spy('parser') }
@@ -47,12 +47,12 @@ RSpec.describe BetaGouvBot::Mailer do
     end
 
     context "when a member has an end date in two weeks" do
-      let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+21).iso8601] }
+      let(:authors)   { [id: 'ann', fullname: 'Ann', end: (Date.today+14).iso8601] }
 
-      it 'sends an email directly to the author' do
+      it 'sends an email to the author and contact' do
         described_class.(schedule,rules)
-        recipients = [hash_including("to" => ["email" => "ann@beta.gouv.fr"]), hash_including("to" => ["email" => "contact@beta.gouv.fr"])]
-        expected = {request_body: hash_including("personalizations" => array_including(*recipients))}
+        recipients = hash_including("to" => [{"email" => "ann@beta.gouv.fr"}, {"email" => "contact@beta.gouv.fr"}])
+        expected = {request_body: hash_including("personalizations" => array_including(recipients))}
         expect(client).to have_received(:post).with(expected)
       end
     end

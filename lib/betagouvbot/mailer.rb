@@ -12,7 +12,7 @@ module BetaGouvBot
           .flat_map { |urgency, members|
             members.map { |author| email(urgency, author, rules) }
           }
-          .each { |mail| client.post(request_body: mail.to_json) }
+          .each { |mail| client.post(request_body: mail) }
       end
 
       def debug(expirations, rules)
@@ -23,14 +23,13 @@ module BetaGouvBot
       end
 
       def email(urgency, author, rules)
-        from    = SendGrid::Email.new(email: 'betagouvbot@beta.gouv.fr')
-        to      = urgency == 21 ?
-                      recipient.new(email: author["id"] + '@beta.gouv.fr')
-                    : recipient.new(email: 'contact@beta.gouv.fr')
-        subject = 'Rappel: arrivée à échéance de contrats !'
         body = body(urgency, author, rules)
-        content = content(body)
-        mail = SendGrid::Mail.new(from, subject, to, content)
+        template = File.read("data/envelope_#{urgency}.json")
+        ready = template_factory.parse(template)
+        data = ready.render("author" => author)
+        envelope = JSON.parse(data)
+        envelope["content"][0]["value"] = body
+        envelope
       end
 
       def body(urgency, author, rules)

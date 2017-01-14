@@ -15,7 +15,7 @@ module BetaGouvBot
         {}.tap do |result|
           by_date           = by_date(members)
 
-          [1,10,21].each do |how_soon|
+          [1,10,14,21].each do |how_soon|
             the_day = date.+(how_soon).iso8601
             result[how_soon] = by_date[the_day] if by_date[the_day]
           end
