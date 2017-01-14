@@ -42,7 +42,7 @@ module BetaGouvBot
 
       def body(urgency, author, rules)
         template = template_factory.parse(rules[urgency])
-        template.render(author)
+        template.render("author" => author)
       end
 
       def content(body)

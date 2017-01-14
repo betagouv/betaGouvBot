@@ -20,7 +20,7 @@ RSpec.describe BetaGouvBot::Mailer do
       it 'formats email by parsing the appropriate template and passing in author' do
         described_class.body(urgency, author, rules)
         expect(parser).to have_received(:parse).with("dans 3s")
-        expect(template).to have_received(:render).with(author)
+        expect(template).to have_received(:render).with("author" => author)
       end
     end
   end
