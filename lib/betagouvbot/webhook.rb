@@ -10,12 +10,8 @@ require 'liquid'
 
 module BetaGouvBot
 
-  STOCK = %(
-          Le contrat de {{author.fullname}} arrive à échéance le {{author.end}}
-
-          -- BetaGouvBot
-        )
-  RULES = {1 => STOCK, 14 => STOCK, 21 => STOCK}
+  HORIZONS = [21, 14, 1, -1]
+  RULES = Hash[HORIZONS.map{|days| [days, File.read("data/body_#{days}.txt")]}]
 
   class Webhook < Sinatra::Base
     get '/payload' do

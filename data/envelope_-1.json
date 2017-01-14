@@ -1,0 +1,21 @@
+{
+  "personalizations": [
+    {
+      "to": [
+        {
+          "email": "contact@beta.gouv.fr"
+        }
+      ],
+      "subject": "Contrat expiré"
+    }
+  ],
+  "from": {
+    "email": "bot@beta.gouv.fr"
+  },
+  "content": [
+    {
+      "type": "text/plain",
+      "value": ""
+    }
+  ]
+}

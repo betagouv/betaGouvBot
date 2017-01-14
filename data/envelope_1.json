@@ -1,0 +1,21 @@
+{
+  "personalizations": [
+    {
+      "to": [
+        {
+          "email": "{{author.id}}@beta.gouv.fr"
+        }
+      ],
+      "subject": "⏰ Fin de contrat prévue pour demain"
+    }
+  ],
+  "from": {
+    "email": "bot@beta.gouv.fr"
+  },
+  "content": [
+    {
+      "type": "text/plain",
+      "value": ""
+    }
+  ]
+}
