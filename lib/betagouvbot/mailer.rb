@@ -22,6 +22,13 @@ module BetaGouvBot
           .each { |mail| client.post(request_body: mail.to_json) }
       end
 
+      def debug(expirations)
+        expirations
+          .flat_map { |urgency, members|
+            members.map { |author| email(urgency, author, RULES) }
+          }
+      end
+
       def email(urgency, author, rules)
         from    = SendGrid::Email.new(email: 'betagouvbot@beta.gouv.fr')
         to      = urgency == 21 ?
