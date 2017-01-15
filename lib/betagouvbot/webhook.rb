@@ -3,6 +3,7 @@
 
 require 'betagouvbot/anticipator'
 require 'betagouvbot/mailer'
+require 'betagouvbot/sortinghat'
 require 'sinatra/base'
 require 'sendgrid-ruby'
 require 'httparty'
