@@ -5,6 +5,7 @@ PATH
       activesupport
       httparty
       liquid
+      ovh-rest
       rack (< 2)
       sendgrid-ruby
       sinatra
@@ -29,6 +30,7 @@ GEM
     liquid (4.0.0)
     minitest (5.10.1)
     multi_xml (0.6.0)
+    ovh-rest (0.0.5)
     parser (2.3.1.4)
       ast (~> 2.2)
     powerpack (0.1.1)
