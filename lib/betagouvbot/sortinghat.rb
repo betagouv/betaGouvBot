@@ -18,11 +18,11 @@ module BetaGouvBot
       end
 
       def members
-        api.get("/email/domain/beta.gouv.fr/mailingList/incubateur/subscriber")
+        subscribers "incubateur"
       end
 
       def alumni
-        api.get("/email/domain/beta.gouv.fr/mailingList/alumni/subscriber")
+        subscribers "alumni"
       end
 
       def ovh
@@ -30,6 +30,10 @@ module BetaGouvBot
       end
 
       private
+
+      def subscribers list
+        api.get("/email/domain/beta.gouv.fr/mailingList/#{list}/subscriber")
+      end
 
       def api
         ovh.new(ENV['apiKey'], ENV['appSecret'], ENV['consumerKey'])
