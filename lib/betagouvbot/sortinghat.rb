@@ -11,8 +11,19 @@ module BetaGouvBot
     class << self
       # Input: a date
       # Input: a list of members' arrivals and departures
-      # @return [Hash<Array>] the list sorted into active members and alumni.
+      # Side-effect: keeps current members subscribed to one list and alumni to another
       def call(community, date)
+        begin
+          sorted = sort(community, date)
+          reconcile(members,sorted[:members],"incubateur")
+          reconcile(alumni,sorted[:alumni],"alumni")
+        rescue Exception => e
+          puts e.message
+          puts e.backtrace.inspect
+        end
+      end
+
+      def sort(community, date)
         members, alumni = community.map(&:with_indifferent_access).partition {|member| Date.iso8601(member[:end]) >= date}
         {members: members, alumni: alumni}
       end
@@ -25,18 +36,40 @@ module BetaGouvBot
         subscribers "alumni"
       end
 
+      def reconcile(current_members,computed_members,listname)
+        current_members
+          .select {|email| computed_members.none? {|author| email == email(author) } }
+          .each {|outgoing| unsubscribe(listname,outgoing) }
+        computed_members
+          .map(&:with_indifferent_access)
+          .select {|author| current_members.none? {|email| email == email(author) } }
+          .each {|incoming| subscribe(listname,email(incoming)) }
+      end
+
       def ovh
         OVH::REST
       end
 
+      def subscribe listname, email
+        api.post("/email/domain/beta.gouv.fr/mailingList/#{listname}/subscriber/#{email}")
+      end
+
+      def unsubscribe listname, email
+        api.delete("/email/domain/beta.gouv.fr/mailingList/#{listname}/subscriber/#{email}")
+      end
+
       private
 
-      def subscribers list
-        api.get("/email/domain/beta.gouv.fr/mailingList/#{list}/subscriber")
+      def subscribers listname
+        api.get("/email/domain/beta.gouv.fr/mailingList/#{listname}/subscriber")
       end
 
       def api
         ovh.new(ENV['apiKey'], ENV['appSecret'], ENV['consumerKey'])
+      end
+
+      def email author
+        "#{author[:id]}@beta.gouv.fr"
       end
 
     end

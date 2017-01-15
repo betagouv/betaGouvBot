@@ -24,6 +24,9 @@ module BetaGouvBot
 
       # Send reminders (if any)
       Mailer.(schedule,RULES)
+
+      # Reconcile mailing lists
+      SortingHat.(members, Date.today)
     end
     get '/debug?:date?' do |date|
       # Read beta.gouv.fr members' API
