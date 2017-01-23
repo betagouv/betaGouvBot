@@ -15,8 +15,8 @@ module BetaGouvBot
       def call(community, date)
         begin
           sorted = sort(community, date)
-          reconcile(members,sorted[:members],"incubateur")
-          reconcile(alumni,sorted[:alumni],"alumni")
+          reconcile(community,members,sorted[:members],"incubateur")
+          reconcile(community,alumni,sorted[:alumni],"alumni")
         rescue Exception => e
           puts e.message
           puts e.backtrace.inspect
@@ -36,8 +36,9 @@ module BetaGouvBot
         subscribers "alumni"
       end
 
-      def reconcile(current_members,computed_members,listname)
+      def reconcile(all,current_members,computed_members,listname)
         current_members
+          .select {|email| all.any? {|author| email == email(author) } }
           .select {|email| computed_members.none? {|author| email == email(author) } }
           .each {|outgoing| unsubscribe(listname,outgoing) }
         computed_members
