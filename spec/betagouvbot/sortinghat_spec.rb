@@ -29,11 +29,12 @@ RSpec.describe BetaGouvBot::SortingHat do
 
     context 'when member list has people without an end date' do
       let(:ann)   { {id: 'ann', fullname: 'Ann', end: today.iso8601} }
-      let(:err)   { {id: 'err', fullname: 'Err' } }
-      let(:members)   { [ann,err] }
+      let(:err1)  { {id: 'err1', fullname: 'Err' } }
+      let(:err2)  { {id: 'err2', fullname: 'Err', end: '' } }
+      let(:members)   { [ann,err1,err2] }
 
       it 'sorts by splitting just after current date' do
-        expect(sorted).to match({members: [ann,err], alumni: []})
+        expect(sorted).to match({members: [ann,err1,err2], alumni: []})
       end
     end
   end

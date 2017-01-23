@@ -24,7 +24,7 @@ module BetaGouvBot
       end
 
       def sort(community, date)
-        members, alumni = community.map(&:with_indifferent_access).partition {|member| !member[:end] || Date.iso8601(member[:end]) >= date}
+        members, alumni = community.map(&:with_indifferent_access).partition {|member| Date.iso8601(member[:end]) >= date rescue true}
         {members: members, alumni: alumni}
       end
 
