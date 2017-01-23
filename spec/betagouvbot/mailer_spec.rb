@@ -17,10 +17,9 @@ RSpec.describe BetaGouvBot::Mailer do
     context "when a member has an end date in three weeks" do
 
       let(:author)   { {id: 'ann', fullname: 'Ann', end: (Date.today+10).iso8601} }
-      let(:urgency)  { 21 }
 
       it 'formats email by parsing the appropriate template and passing in author' do
-        described_class.body(urgency, author, rules)
+        described_class.render("dans 3s", author)
         expect(parser).to have_received(:parse).with("dans 3s")
         expect(template).to have_received(:render).with("author" => author)
       end

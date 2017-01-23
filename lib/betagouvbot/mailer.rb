@@ -23,17 +23,19 @@ module BetaGouvBot
       end
 
       def email(urgency, author, rules)
-        body = body(urgency, author, rules)
-        template = File.read("data/envelope_#{urgency}.json")
-        ready = template_factory.parse(template)
-        data = ready.render("author" => author)
+        format_email(rules[urgency],File.read("data/envelope_#{urgency}.json"),author)
+      end
+
+      def format_email(body_t, envelope_t, author)
+        body = render(body_t, author)
+        data = render(envelope_t,author)
         envelope = JSON.parse(data)
         envelope["content"][0]["value"] = body
         envelope
       end
 
-      def body(urgency, author, rules)
-        template = template_factory.parse(rules[urgency])
+      def render(template, author)
+        template = template_factory.parse(template)
         template.render("author" => author)
       end
 
