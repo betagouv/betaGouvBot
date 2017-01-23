@@ -59,7 +59,7 @@ RSpec.describe BetaGouvBot::SortingHat do
     it 'uses the API to subscribe an email' do
       described_class.subscribe "listname", "ann@beta.gouv.fr"
       expect(ovh).to have_received(:new)
-      expect(api).to have_received(:post).with("/email/domain/beta.gouv.fr/mailingList/listname/subscriber/ann@beta.gouv.fr")
+      expect(api).to have_received(:post).with("/email/domain/beta.gouv.fr/mailingList/listname/subscriber",{email: "ann@beta.gouv.fr"})
     end
 
   end

@@ -52,7 +52,7 @@ module BetaGouvBot
       end
 
       def subscribe listname, email
-        api.post("/email/domain/beta.gouv.fr/mailingList/#{listname}/subscriber/#{email}")
+        api.post("/email/domain/beta.gouv.fr/mailingList/#{listname}/subscriber", email: email)
       end
 
       def unsubscribe listname, email
