@@ -27,6 +27,15 @@ RSpec.describe BetaGouvBot::SortingHat do
       end
     end
 
+    context 'when member list has people without an end date' do
+      let(:ann)   { {id: 'ann', fullname: 'Ann', end: today.iso8601} }
+      let(:err)   { {id: 'err', fullname: 'Err' } }
+      let(:members)   { [ann,err] }
+
+      it 'sorts by splitting just after current date' do
+        expect(sorted).to match({members: [ann,err], alumni: []})
+      end
+    end
   end
 
   describe 'subscribing and unsubscribing emails' do
