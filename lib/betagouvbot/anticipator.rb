@@ -13,7 +13,7 @@ module BetaGouvBot
       # @return [Hash<Array>] a set of imminent action warnings.
       def call(members, urgencies, date)
         {}.tap do |result|
-          by_date           = by_date(members)
+          by_date = by_date(members)
 
           urgencies.each do |how_soon|
             the_day = date.+(how_soon).iso8601

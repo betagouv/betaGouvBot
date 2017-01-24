@@ -30,6 +30,9 @@ Style/FrozenStringLiteralComment:
   EnforcedStyle: always
   Enabled: true
 
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
 Style/LambdaCall:
   Enabled: false
 
@@ -38,3 +41,17 @@ Style/SymbolArray:
 
 Style/WordArray:
   Enabled: true
+
+Style/MultilineBlockLayout:
+  Exclude:
+    - 'spec/**/*'
+
+Style/BlockDelimiters:
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/MultipleExpectations:
+  Max: 4
+
+RSpec/ExampleLength:
+  Max: 6

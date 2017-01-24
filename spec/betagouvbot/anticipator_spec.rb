@@ -19,8 +19,8 @@ RSpec.describe BetaGouvBot::Anticipator do
   context 'when one member has end date in the future' do
     let(:members) { [{ fullname: 'lbo', end: whenever.to_s }] }
 
-    it "generates a notification" do
-      expect(notifications).to match(days => [a_hash_including("fullname" => 'lbo')] )
+    it 'generates a notification' do
+      expect(notifications).to match(days => [a_hash_including('fullname' => 'lbo')])
     end
   end
 
@@ -32,8 +32,9 @@ RSpec.describe BetaGouvBot::Anticipator do
       ]
     end
 
-    it "generates a single notification" do
-      expected = [a_hash_including("fullname" => 'lbo'), a_hash_including("fullname" => 'you')]
+    it 'generates a single notification' do
+      expected = [a_hash_including('fullname' => 'lbo'),
+                  a_hash_including('fullname' => 'you')]
       expect(notifications).to match(days => expected)
     end
   end
@@ -63,7 +64,7 @@ RSpec.describe BetaGouvBot::Anticipator do
     let(:members) { ['fullname' => 'lbo', 'end' => whenever.to_s] }
 
     it 'does its thing anyway' do
-      expect(notifications).to match(days => [a_hash_including("fullname" => 'lbo')] )
+      expect(notifications).to match(days => [a_hash_including('fullname' => 'lbo')])
     end
   end
 end

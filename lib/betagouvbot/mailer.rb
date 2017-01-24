@@ -9,34 +9,34 @@ module BetaGouvBot
       # @param expirations [#:[]] expiration dates mapped to members
       def call(expirations, rules)
         expirations
-          .flat_map { |urgency, members|
-            members.map { |author| email(urgency, author, rules) }
-          }
+          .flat_map { |urgency, members| make_emails(urgency, members, rules) }
           .each { |mail| client.post(request_body: mail) }
       end
 
       def debug(expirations, rules)
         expirations
-          .flat_map { |urgency, members|
-            members.map { |author| email(urgency, author, rules) }
-          }
+          .flat_map { |urgency, members| make_emails(urgency, members, rules) }
+      end
+
+      def make_emails(urgency, members, rules)
+        members.map { |author| email(urgency, author, rules) }
       end
 
       def email(urgency, author, rules)
-        format_email(rules[urgency],File.read("data/envelope_#{urgency}.json"),author)
+        format_email(rules[urgency], File.read("data/envelope_#{urgency}.json"), author)
       end
 
       def format_email(body_t, envelope_t, author)
         body = render(body_t, author)
-        data = render(envelope_t,author)
+        data = render(envelope_t, author)
         envelope = JSON.parse(data)
-        envelope["content"][0]["value"] = body
+        envelope['content'][0]['value'] = body
         envelope
       end
 
       def render(template, author)
         template = template_factory.parse(template)
-        template.render("author" => author)
+        template.render('author' => author)
       end
 
       def content(body)
