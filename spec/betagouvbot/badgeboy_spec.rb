@@ -11,26 +11,42 @@ RSpec.describe BetaGouvBot::BadgeBoy do
       }
       let(:bob)     { { id: 'bob', start: '2017-01-01', end: '2017-12-31' } }
       let(:authors) { [bob, ann] }
-      let(:redis)   { instance_spy('redis') }
 
-      before do
-        allow(described_class).to receive(:request_badge)
-        allow(described_class).to receive(:state_storage) { redis }
-        allow(redis).to receive(:get).and_return(nil)
-        allow(redis).to receive(:get).and_return('2017-01-01/2017-12-31')
-        allow(redis).to receive(:set)
+      describe 'managing state' do
+        let(:redis) { {} }
+
+        before do
+          allow(described_class).to receive(:request_badge)
+          allow(described_class).to receive(:state_storage) { redis }
+        end
+
+        it 'requests a badge for new members' do
+          described_class.(authors)
+          expect(described_class).to have_received(:request_badge).once
+          expect(described_class).to have_received(:request_badge).with(ann)
+        end
+
+        it 'requests a badge only once' do
+          2.times { described_class.(authors) }
+          expect(described_class).to have_received(:request_badge).once
+          expect(described_class).to have_received(:request_badge).with(ann)
+        end
       end
 
-      it 'requests a badge for new members' do
-        described_class.(authors)
-        expect(described_class).to have_received(:request_badge).once
-        expect(described_class).to have_received(:request_badge).with(ann)
-      end
+      describe 'sending email' do
+        let(:mailer) { instance_spy('mailer') }
+        let(:mail)   { {} }
 
-      it 'requests a badge only once' do
-        2.times { described_class.(authors) }
-        expect(described_class).to have_received(:request_badge).once
-        expect(described_class).to have_received(:request_badge).with(ann)
+        before do
+          allow(described_class).to receive(:mailer) { mailer }
+          allow(mailer).to receive(:format_email).and_return(mail)
+        end
+
+        it 'uses mailer to send email requesting badges' do
+          described_class.request_badge(ann)
+          expect(mailer).to have_received(:format_email).with(anything, anything, ann)
+          expect(mailer).to have_received(:post).with(mail)
+        end
       end
     end
   end
