@@ -1,0 +1,6 @@
+Bonjour,
+
+Serait-il possible de fournir un badge à {{author.fullname}}, qui nous rejoint en tant que {{author.employer}} jusqu'au {{author.end}} au sein de l’incubateur ?
+
+Bonne journée,
+L'Incubateur

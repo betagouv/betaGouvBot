@@ -1,0 +1,29 @@
+{
+  "personalizations": [
+    {
+      "to": [
+        {
+          "email": "dinsic-sec.sgmap@modernisation.gouv.fr"
+        }
+      ],
+      "cc": [
+        {
+          "email": "{{author.id}}@beta.gouv.fr"
+        },
+        {
+          "email": "contact@beta.gouv.fr"
+        }
+      ],
+      "subject": "📛 [Demande de badge] Incubateur"
+    }
+  ],
+  "from": {
+    "email": "bot@beta.gouv.fr"
+  },
+  "content": [
+    {
+      "type": "text/plain",
+      "value": ""
+    }
+  ]
+}
