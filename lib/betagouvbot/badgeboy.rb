@@ -20,18 +20,26 @@ module BetaGouvBot
 
       def maybe_request_badge(author)
         key = "#{author[:id]}_badge_request"
-        previous = state_storage.get(key)
+        previous = state_storage[key]
         return if previous
         range = "#{author[:start]}-#{author[:end]}"
-        state_storage.set(key,range)
+        state_storage[key] = range
         request_badge(author)
       end
 
       def request_badge(author)
+        envelope = File.read('data/envelope_badge.json')
+        body = File.read('data/body_badge.txt')
+        email = mailer.format_email(envelope, body, author)
+        mailer.post(email)
       end
 
       def state_storage
         Redis.new
+      end
+
+      def mailer
+        BetaGouvBot::Mailer
       end
     end
   end

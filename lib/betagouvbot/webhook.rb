@@ -28,6 +28,9 @@ module BetaGouvBot
       # Send reminders (if any)
       mailer = Mailer.(warnings, RULES)
 
+      # Request badges (if any)
+      BadgeBoy.(members)
+
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)
 
