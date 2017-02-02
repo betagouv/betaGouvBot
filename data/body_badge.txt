@@ -1,6 +1,8 @@
 Bonjour,
 
-Serait-il possible de fournir un badge à {{author.fullname}}, qui nous rejoint en tant que {{author.employer}} jusqu'au {{author.end}} au sein de l’incubateur ?
+Serait-il possible de fournir ou renouveler un badge au bénéfice de {{ author.fullname }},
+qui interviendra au sein de l’incubateur sous contrat de type {{ author.employer }},
+du {{ author.start }} au {{ author.end }} ?
 
 Bonne journée,
-L'Incubateur
+Le secrétariat robotisé de l'Incubateur
