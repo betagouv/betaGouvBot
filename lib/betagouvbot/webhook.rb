@@ -11,7 +11,7 @@ require 'liquid'
 
 module BetaGouvBot
   HORIZONS = [21, 14, 1, -1].freeze
-  RULES = Hash[HORIZONS.map { |days| [days, File.read("data/body_#{days}.txt")] }]
+  RULES = Hash[HORIZONS.map { |days| [days, File.read("data/body_#{days}.md")] }]
 
   class Webhook < Sinatra::Base
     get '/actions' do
