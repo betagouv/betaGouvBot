@@ -8,7 +8,7 @@ Si c'est bien normal, assure-toi de prendre connaissance dès maintenant de ce q
 Si ton contrat a été prolongé et que tes nouvelles dates sont certaines, mets-les à jour en deux minutes tout de suite !
   https://github.com/sgmap/beta.gouv.fr/edit/master/_author/{{author.id}}.md
 
-Si quelque chose n'est pas clair, réponds à cet email ou ouvre une conversation dans #administration sur Slack :
+Si quelque chose n'est pas clair, réponds à cet email ou ouvre une conversation dans #incubateur-secretaria sur Slack :
   https://startups-detat.slack.com/archives/incubateur-secretaria
 
 Sans changement de date, un autre rappel sera automatiquement envoyé dans une semaine.
