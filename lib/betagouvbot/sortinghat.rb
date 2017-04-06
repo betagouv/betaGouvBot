@@ -14,10 +14,13 @@ module BetaGouvBot
       # Input: a date
       # Input: a list of members' arrivals and departures
       # Side-effect: keeps current members subscribed to one list and alumni to another
-      def call(community, date)
+      def call(community, date, dry_run = false)
         sorted = sort(community, date)
-        reconcile(community, members, sorted[:members], 'incubateur')
-        reconcile(community, alumni, sorted[:alumni], 'alumni')
+        {
+          "incubateur": reconcile(community, members, sorted[:members], 'incubateur',
+                                  dry_run),
+          "alumni": reconcile(community, alumni, sorted[:alumni], 'alumni', dry_run)
+        }
       rescue => e
         puts e.message
         puts e.backtrace.inspect
@@ -43,37 +46,42 @@ module BetaGouvBot
         subscribers 'alumni'
       end
 
-      def reconcile(all, current_members, computed_members, listname)
-        unsubscribe_current(all, current_members, computed_members, listname)
-        subscribe_new(current_members, computed_members, listname)
+      def reconcile(all, current_members, computed_members, listname, dry_run = false)
+        {
+          "unsubscribe": unsubscribe_current(all, current_members,
+                                             computed_members, listname, dry_run),
+          "subscribe": subscribe_new(current_members, computed_members,
+                                     listname, dry_run)
+        }
       end
 
-      def unsubscribe_current(all, current_members, computed_members, listname)
+      def unsubscribe_current(all, current_members, computed_members, listname,
+                              dry_run = false)
         current_members
           .select { |email| all.any? { |author| email == email(author) } }
           .select { |email| computed_members.none? { |author| email == email(author) } }
-          .each { |outgoing| unsubscribe(listname, outgoing) }
+          .each { |outgoing| unsubscribe(listname, outgoing, dry_run) }
       end
 
-      def subscribe_new(current_members, computed_members, listname)
+      def subscribe_new(current_members, computed_members, listname, dry_run = false)
         computed_members
           .map(&:with_indifferent_access)
           .select { |author| current_members.none? { |email| email == email(author) } }
-          .each { |incoming| subscribe(listname, email(incoming)) }
+          .each { |incoming| subscribe(listname, email(incoming), dry_run) }
       end
 
       def ovh
         OVH::REST
       end
 
-      def subscribe(listname, email)
+      def subscribe(listname, email, dry_run = false)
         endpoint = "/email/domain/#{DOMAIN}/mailingList/#{listname}/subscriber"
-        api.post(endpoint, email: email)
+        dry_run ? email : api.post(endpoint, email: email)
       end
 
-      def unsubscribe(listname, email)
+      def unsubscribe(listname, email, dry_run = false)
         endpoint = "/email/domain/#{DOMAIN}/mailingList/#{listname}/subscriber/#{email}"
-        api.delete(endpoint)
+        dry_run ? email : api.delete(endpoint)
       end
 
       private

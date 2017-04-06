@@ -7,15 +7,10 @@ module BetaGouvBot
 
     class << self
       # @param expirations [#:[]] expiration dates mapped to members
-      def call(expirations, rules)
+      def call(expirations, rules, dry_run = false)
         expirations
           .flat_map { |urgency, members| make_emails(urgency, members, rules) }
-          .each { |mail| client.post(request_body: mail) }
-      end
-
-      def debug(expirations, rules)
-        expirations
-          .flat_map { |urgency, members| make_emails(urgency, members, rules) }
+          .each { |mail| dry_run ? mail : client.post(request_body: mail) }
       end
 
       def make_emails(urgency, members, rules)
