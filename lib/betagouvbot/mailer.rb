@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+require 'betagouvbot/mailaction'
 
 module BetaGouvBot
   module Mailer
@@ -8,13 +9,16 @@ module BetaGouvBot
     class << self
       # @param expirations [#:[]] expiration dates mapped to members
       def call(warnings, rules, dry_run = false)
-        warnings
-          .map { |warning| email(warning[:term], warning[:who], rules) }
-          .each { |mail| dry_run ? mail : client.post(request_body: mail) }
+        actions = warnings.map { |warning| email(warning[:term], warning[:who], rules) }
+        actions.map(&:execute) unless dry_run
+        actions
       end
 
       def email(urgency, author, rules)
-        format_email(rules[urgency], File.read("data/envelope_#{urgency}.json"), author)
+        rule = rules[urgency]
+        envelope = File.read("data/envelope_#{urgency}.json")
+        email = format_email(rule, envelope, author)
+        MailAction.new(client, email)
       end
 
       def format_email(body_t, envelope_t, author)
