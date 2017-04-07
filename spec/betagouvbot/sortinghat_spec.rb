@@ -107,14 +107,14 @@ RSpec.describe BetaGouvBot::SortingHat do
       described_class.reconcile(all, current, computed, 'listname')
       expect(described_class).to have_received(:unsubscribe).once
       expect(described_class).to have_received(:unsubscribe)
-        .with('listname', 'ann@beta.gouv.fr')
+        .with('listname', 'ann@beta.gouv.fr', false)
     end
 
     it 'unsubscribes those who should not' do
       described_class.reconcile(all, current, computed, 'listname')
       expect(described_class).to have_received(:subscribe).once
       expect(described_class).to have_received(:subscribe)
-        .with('listname', 'bob@beta.gouv.fr')
+        .with('listname', 'bob@beta.gouv.fr', false)
     end
   end
 end
