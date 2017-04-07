@@ -12,7 +12,7 @@ RSpec.describe BetaGouvBot::Anticipator do
     let(:members) { [] }
 
     it 'generates no notification' do
-      expect(notifications).to eq({})
+      expect(notifications).to eq([])
     end
   end
 
@@ -20,7 +20,8 @@ RSpec.describe BetaGouvBot::Anticipator do
     let(:members) { [{ fullname: 'lbo', end: whenever.to_s }] }
 
     it 'generates a notification' do
-      expect(notifications).to match(days => [a_hash_including('fullname' => 'lbo')])
+      expected = [{ term: days, who: a_hash_including('fullname' => 'lbo') }]
+      expect(notifications).to match(expected)
     end
   end
 
@@ -33,9 +34,9 @@ RSpec.describe BetaGouvBot::Anticipator do
     end
 
     it 'generates a single notification' do
-      expected = [a_hash_including('fullname' => 'lbo'),
-                  a_hash_including('fullname' => 'you')]
-      expect(notifications).to match(days => expected)
+      expected = [{ term: days, who: a_hash_including('fullname' => 'lbo') },
+                  { term: days, who: a_hash_including('fullname' => 'you') }]
+      expect(notifications).to match(expected)
     end
   end
 
@@ -64,7 +65,8 @@ RSpec.describe BetaGouvBot::Anticipator do
     let(:members) { ['fullname' => 'lbo', 'end' => whenever.to_s] }
 
     it 'does its thing anyway' do
-      expect(notifications).to match(days => [a_hash_including('fullname' => 'lbo')])
+      expected = [{ term: days, who: a_hash_including('fullname' => 'lbo') }]
+      expect(notifications).to match(expected)
     end
   end
 end
