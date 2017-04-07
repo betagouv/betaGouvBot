@@ -28,7 +28,7 @@ module BetaGouvBot
 
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date, dry_run)
-      { "schedule": schedule, "mailer": mailer, "sorting_hat": sorting_hat }.to_json
+      { "warnings": warnings, "mailer": mailer, "sorting_hat": sorting_hat }.to_json
     end
   end
 end
