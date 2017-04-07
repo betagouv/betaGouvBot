@@ -87,6 +87,10 @@ module BetaGouvBot
         "#{author[:id]}@beta.gouv.fr"
       end
 
+      def author(community, email)
+        community.detect { |author| email == email(author) }
+      end
+
     end
   end
 end
