@@ -4,6 +4,8 @@
 require 'active_support/core_ext/hash/indifferent_access'
 require 'ovh/rest'
 require 'betagouvbot/mailinglistaction'
+require 'betagouvbot/mailer'
+require 'betagouvbot/mailaction'
 
 module BetaGouvBot
   module SortingHat
@@ -46,18 +48,24 @@ module BetaGouvBot
           subscribe_new(current_members, computed_members, listname)
       end
 
-      def unsubscribe_current(all, current_members, computed_members, listname)
-        current_members
-          .select { |email| all.any? { |author| email == email(author) } }
-          .select { |email| computed_members.none? { |author| email == email(author) } }
-          .each { |outgoing| unsubscribe(listname, outgoing) }
+      def unsubscribe_current(all, current, target, listname)
+        leaving = current
+                  .select { |email| all.any? { |author| email == email(author) } }
+                  .select { |email| target.none? { |author| email == email(author) } }
+
+        leaving.map { |outgoing| unsubscribe(listname, outgoing) } +
+          leaving.map { |outgoing| notify(false, listname, author(all, outgoing)) }
       end
 
-      def subscribe_new(current_members, computed_members, listname)
-        computed_members
-          .map(&:with_indifferent_access)
-          .select { |author| current_members.none? { |email| email == email(author) } }
-          .each { |incoming| subscribe(listname, email(incoming)) }
+      def subscribe_new(current, target, listname)
+        arriving = target
+                   .map(&:with_indifferent_access)
+                   .select { |author| current.none? { |email| email == email(author) } }
+        arriving.map { |incoming| subscribe(listname, email(incoming)) } +
+          arriving.map { |incoming| notify(true, listname, incoming) }
+      end
+
+      def notify(subscribed, listname, author)
       end
 
       def ovh
