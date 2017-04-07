@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+require 'betagouvbot/mailaction'
 
 RSpec.describe BetaGouvBot::SortingHat do
   let(:yesterday)     { today - 1 }
@@ -104,17 +105,22 @@ RSpec.describe BetaGouvBot::SortingHat do
     end
 
     it 'subscribes members who should be on the list' do
-      described_class.reconcile(all, current, computed, 'listname')
+      actions = described_class.reconcile(all, current, computed, 'listname')
       expect(described_class).to have_received(:unsubscribe).once
       expect(described_class).to have_received(:unsubscribe)
         .with('listname', 'ann@beta.gouv.fr')
+      notifications = actions.select {|action| action.instance_of? BetaGouvBot::MailAction }
+      expect(notifications.length).to equal(1)
+
     end
 
     it 'unsubscribes those who should not' do
-      described_class.reconcile(all, current, computed, 'listname')
+      actions = described_class.reconcile(all, current, computed, 'listname')
       expect(described_class).to have_received(:subscribe).once
       expect(described_class).to have_received(:subscribe)
         .with('listname', 'bob@beta.gouv.fr')
+      notifications = actions.select {|action| action.instance_of? BetaGouvBot::MailAction }
+      expect(notifications.length).to equal(1)
     end
   end
 end
