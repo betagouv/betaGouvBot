@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 require 'betagouvbot/mailaction'
 
 RSpec.describe BetaGouvBot::SortingHat do
@@ -109,9 +110,8 @@ RSpec.describe BetaGouvBot::SortingHat do
       expect(described_class).to have_received(:unsubscribe).once
       expect(described_class).to have_received(:unsubscribe)
         .with('listname', 'ann@beta.gouv.fr')
-      notifications = actions.select {|action| action.instance_of? BetaGouvBot::MailAction }
-      expect(notifications.length).to equal(1)
-
+      notifs = actions.select { |action| action.instance_of? BetaGouvBot::MailAction }
+      expect(notifs.length).to equal(2)
     end
 
     it 'unsubscribes those who should not' do
@@ -119,8 +119,8 @@ RSpec.describe BetaGouvBot::SortingHat do
       expect(described_class).to have_received(:subscribe).once
       expect(described_class).to have_received(:subscribe)
         .with('listname', 'bob@beta.gouv.fr')
-      notifications = actions.select {|action| action.instance_of? BetaGouvBot::MailAction }
-      expect(notifications.length).to equal(1)
+      notifs = actions.select { |action| action.instance_of? BetaGouvBot::MailAction }
+      expect(notifs.length).to equal(2)
     end
   end
 end

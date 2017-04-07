@@ -6,6 +6,7 @@ require 'ovh/rest'
 require 'betagouvbot/mailinglistaction'
 require 'betagouvbot/mailer'
 require 'betagouvbot/mailaction'
+require 'betagouvbot/mailer'
 
 module BetaGouvBot
   module SortingHat
@@ -66,6 +67,13 @@ module BetaGouvBot
       end
 
       def notify(subscribed, listname, author)
+        description = subscribed ? 'abonné.e à' : 'désabonné.e de'
+        subject = subscribed ? 'Abonnement à' : 'Désabonnement de'
+        mail = Mail.new("#{subject} #{listname}",
+                        'body_subscribe_action.md', ['{{author.id}}@beta.gouv.fr}}'])
+        BetaGouvBot::MailAction.new(Mailer.client,
+                                    mail.format('author' => author,
+                                                'description' => description))
       end
 
       def ovh
