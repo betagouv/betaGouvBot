@@ -21,10 +21,10 @@ module BetaGouvBot
       members = HTTParty.get('https://beta.gouv.fr/api/v1.1/authors.json').parsed_response
 
       # Parse into a schedule of notifications
-      schedule = Anticipator.(members, RULES.keys, date)
+      warnings = Anticipator.(members, RULES.keys, date)
 
       # Send reminders (if any)
-      mailer = Mailer.(schedule, RULES, dry_run)
+      mailer = Mailer.(warnings, RULES, dry_run)
 
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date, dry_run)

@@ -11,25 +11,18 @@ module BetaGouvBot
       # Input: a date
       # Input: a schedule of arrivals and departures
       # @return [Hash<Array>] a set of imminent action warnings.
-      def call(members, urgencies, date)
-        {}.tap do |result|
-          by_date = by_date(members)
-
-          urgencies.each do |how_soon|
-            the_day = date.+(how_soon).iso8601
-            result[how_soon] = by_date[the_day] if by_date[the_day]
+      def call(members, terms, date)
+        members_by_end_date = members
+                              .map(&:with_indifferent_access)
+                              .group_by { |item| item[:end] }
+        terms.flat_map do |term|
+          day = date.+(term).iso8601
+          members_group = members_by_end_date[day] || []
+          members_group.map do |member|
+            { "term": term, "who": member }
           end
         end
       end
-
-      private
-
-      def by_date(members)
-        members
-          .map(&:with_indifferent_access)
-          .group_by { |item| item[:end] }
-      end
-
     end
   end
 end
