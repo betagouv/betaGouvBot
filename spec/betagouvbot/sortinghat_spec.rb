@@ -52,14 +52,14 @@ RSpec.describe BetaGouvBot::SortingHat do
     end
 
     it 'uses the API to unsubscribe an email' do
-      described_class.unsubscribe 'listname', 'bob@beta.gouv.fr'
+      (described_class.unsubscribe 'listname', 'bob@beta.gouv.fr').execute
       endpoint = "#{PREFIX}/listname/subscriber/bob@beta.gouv.fr"
       expect(ovh).to have_received(:new)
       expect(api).to have_received(:delete).with(endpoint)
     end
 
     it 'uses the API to subscribe an email' do
-      described_class.subscribe 'listname', 'ann@beta.gouv.fr'
+      (described_class.subscribe 'listname', 'ann@beta.gouv.fr').execute
       endpoint = "#{PREFIX}/listname/subscriber"
       expect(ovh).to have_received(:new)
       expect(api).to have_received(:post).with(endpoint, email: 'ann@beta.gouv.fr')
@@ -107,14 +107,14 @@ RSpec.describe BetaGouvBot::SortingHat do
       described_class.reconcile(all, current, computed, 'listname')
       expect(described_class).to have_received(:unsubscribe).once
       expect(described_class).to have_received(:unsubscribe)
-        .with('listname', 'ann@beta.gouv.fr', false)
+        .with('listname', 'ann@beta.gouv.fr')
     end
 
     it 'unsubscribes those who should not' do
       described_class.reconcile(all, current, computed, 'listname')
       expect(described_class).to have_received(:subscribe).once
       expect(described_class).to have_received(:subscribe)
-        .with('listname', 'bob@beta.gouv.fr', false)
+        .with('listname', 'bob@beta.gouv.fr')
     end
   end
 end
