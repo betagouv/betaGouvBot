@@ -1,0 +1,35 @@
+{
+  "name": "betaGouvBot",
+  "scripts": {
+  },
+  "env": {
+    "apiKey": {
+      "required": true
+    },
+    "appSecret": {
+      "required": true
+    },
+    "consumerKey": {
+      "required": true
+    },
+    "LANG": {
+      "required": true
+    },
+    "RACK_ENV": {
+      "required": true
+    },
+    "SENDGRID_API_KEY": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+    "scheduler"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    }
+  ]
+}
