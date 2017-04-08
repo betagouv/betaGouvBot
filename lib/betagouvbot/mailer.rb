@@ -1,6 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 require 'betagouvbot/mailaction'
+require 'kramdown'
 
 module BetaGouvBot
   module Mailer
@@ -25,7 +26,7 @@ module BetaGouvBot
         body = render(body_t, author)
         data = render(envelope_t, author)
         envelope = JSON.parse(data)
-        envelope['content'][0]['value'] = body
+        envelope['content'][0]['value'] = content(body)
         envelope
       end
 
@@ -36,8 +37,8 @@ module BetaGouvBot
 
       def content(body)
         SendGrid::Content.new(
-          type: 'text/plain',
-          value: body
+          type: 'text/html',
+          value: Kramdown::Document.new(body).to_html
         )
       end
 
