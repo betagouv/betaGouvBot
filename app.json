@@ -24,9 +24,6 @@
   },
   "formation": {
   },
-  "addons": [
-    "scheduler"
-  ],
   "buildpacks": [
     {
       "url": "heroku/ruby"
