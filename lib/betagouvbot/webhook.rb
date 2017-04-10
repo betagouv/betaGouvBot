@@ -4,15 +4,13 @@
 require 'betagouvbot/anticipator'
 require 'betagouvbot/mailer'
 require 'betagouvbot/sortinghat'
+require 'betagouvbot/rules'
 require 'sinatra/base'
 require 'sendgrid-ruby'
 require 'httparty'
 require 'liquid'
 
 module BetaGouvBot
-  HORIZONS = [21, 14, 1, -1].freeze
-  RULES = Hash[HORIZONS.map { |days| [days, File.read("data/body_#{days}.md")] }]
-
   class Webhook < Sinatra::Base
     get '/actions' do
       date = params.key?('date') ? Date.iso8601(params['date']) : Date.today
