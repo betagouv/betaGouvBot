@@ -14,4 +14,4 @@ Bonne journée,
 Le secrétariat
 
 PS : vous voudriez pas me coder 2-3 plugins pour que je fasse tout ça à votre place ? 😬
-PPS : ce message est envoyé par un robot [non-AGI]https://en.wikipedia.org/wiki/Artificial_general_intelligence. En cas de problème, contacter un humain !
+PPS : ce message est envoyé par un robot [non-AGI](https://en.wikipedia.org/wiki/Artificial_general_intelligence). En cas de problème, contacter un humain !
