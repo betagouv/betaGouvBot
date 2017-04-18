@@ -1,3 +1,4 @@
+Contrat expiré
 Bonjour les loulous,
 
 {{author.fullname}} est apparemment parti·e hier.
