@@ -73,7 +73,8 @@ module BetaGouvBot
                         'body_subscribe_action.md', ['{{author.id}}@beta.gouv.fr}}'])
         BetaGouvBot::MailAction.new(Mailer.client,
                                     mail.format('author' => author,
-                                                'description' => description))
+                                                'description' => description,
+                                                'listname' => listname))
       end
 
       def ovh
