@@ -13,6 +13,8 @@ require 'liquid'
 module BetaGouvBot
   class Webhook < Sinatra::Base
     get '/actions' do
+      content_type 'application/json'
+
       date = params.key?('date') ? Date.iso8601(params['date']) : Date.today
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
       dry_run = !execute
