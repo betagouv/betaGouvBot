@@ -17,7 +17,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:author) { { id: 'ann', fullname: 'Ann', end: (Date.today + 10).iso8601 } }
 
       it 'formats email by parsing the appropriate template and passing in author' do
-        described_class.render('dans 3s', author)
+        described_class.render('dans 3s', 'author' => author)
         expect(parser).to have_received(:parse).with('dans 3s')
         expect(template).to have_received(:render).with('author' => author)
       end
