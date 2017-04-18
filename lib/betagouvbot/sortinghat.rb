@@ -15,6 +15,7 @@ module BetaGouvBot
       # Input: a list of members' arrivals and departures
       # Side-effect: keeps current members subscribed to one list and alumni to another
       def call(community, date, dry_run = false)
+        community = community.map(&:with_indifferent_access)
         sorted = sort(community, date)
         {
           "incubateur": reconcile(community, members, sorted[:members], 'incubateur',
@@ -33,7 +34,6 @@ module BetaGouvBot
       end
 
       def sort(community, date)
-        community = community.map(&:with_indifferent_access)
         members, alumni = community.partition { |member| active? member, date }
         { members: members, alumni: alumni }
       end
