@@ -14,7 +14,9 @@ module BetaGouvBot
   class Webhook < Sinatra::Base
     get '/actions' do
       date = params.key?('date') ? Date.iso8601(params['date']) : Date.today
-      dry_run = params.key?('dry_run')
+      execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
+      dry_run = !execute
+
       # Read beta.gouv.fr members' API
       members = HTTParty.get('https://beta.gouv.fr/api/v1.1/authors.json').parsed_response
 
