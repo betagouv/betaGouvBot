@@ -11,5 +11,9 @@ module BetaGouvBot
     def execute
       @client.post(request_body: @mail)
     end
+
+    def to_s
+      @mail.to_s
+    end
   end
 end

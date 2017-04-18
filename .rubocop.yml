@@ -50,6 +50,12 @@ Style/BlockDelimiters:
   Exclude:
     - 'spec/**/*'
 
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'spec/**/*.rb'
+
 RSpec/MultipleExpectations:
   Max: 4
 
