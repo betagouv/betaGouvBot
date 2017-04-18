@@ -2,27 +2,15 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::Mailer do
-  let(:rules) { { 1 => 'demain', 14 => 'dans 2s', 21 => 'dans 3s' } }
-
-  describe 'formatting emails' do
-    let(:parser)   { instance_spy('parser') }
-    let(:template) { instance_spy('template') }
-
-    before do
-      allow(described_class).to receive(:template_factory) { parser }
-      allow(parser).to receive(:parse) { template }
-    end
-
-    context 'when a member has an end date in three weeks' do
-      let(:author) { { id: 'ann', fullname: 'Ann', end: (Date.today + 10).iso8601 } }
-
-      it 'formats email by parsing the appropriate template and passing in author' do
-        described_class.render('dans 3s', 'author' => author)
-        expect(parser).to have_received(:parse).with('dans 3s')
-        expect(template).to have_received(:render).with('author' => author)
-      end
-    end
-  end
+  Mail = BetaGouvBot::Mail
+  let(:rules) { { 1 => { 'mail':  Mail.new('demain', nil,
+                                           ['{{author.id}}@beta.gouv.fr']) },
+                  14 => { 'mail': Mail.new('dans 2s', nil,
+                                           ['{{author.id}}@beta.gouv.fr',
+                                            'contact@beta.gouv.fr']) },
+                  21 => { 'mail': Mail.new('dans 3s', nil,
+                                           ['{{author.id}}@beta.gouv.fr']) } }
+  }
 
   describe 'selecting recipients of emails' do
     let(:schedule)  { BetaGouvBot::Anticipator.(authors, rules.keys, Date.today) }
@@ -37,8 +25,8 @@ RSpec.describe BetaGouvBot::Mailer do
 
       it 'sends an email directly to the author' do
         described_class.(schedule, rules)
-        recipients = hash_including('to' => ['email' => 'ann@beta.gouv.fr'])
-        expected = hash_including('personalizations' => array_including(recipients))
+        recipients = hash_including(to: ['email' => 'ann@beta.gouv.fr'])
+        expected = hash_including(personalizations: array_including(recipients))
         expect(client).to have_received(:post).with(request_body: expected)
       end
     end
@@ -50,8 +38,8 @@ RSpec.describe BetaGouvBot::Mailer do
         described_class.(schedule, rules)
         recipients_list = [{ 'email' => 'ann@beta.gouv.fr' },
                            { 'email' => 'contact@beta.gouv.fr' }]
-        recipients = hash_including('to' => recipients_list)
-        expected = hash_including('personalizations' => array_including(recipients))
+        recipients = hash_including(to: recipients_list)
+        expected = hash_including(personalizations: array_including(recipients))
         expect(client).to have_received(:post).with(request_body: expected)
       end
     end

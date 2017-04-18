@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require 'betagouvbot/mailaction'
-require 'kramdown'
+require 'betagouvbot/mail'
 
 module BetaGouvBot
   module Mailer
@@ -19,28 +19,15 @@ module BetaGouvBot
       end
 
       def email(urgency, context, rules)
-        rule = rules[urgency]
-        envelope = File.read("data/envelope_#{urgency}.json")
-        email = format_email(rule, envelope, context)
-        MailAction.new(client, email)
+        mail = rules[urgency][:mail].format(context)
+        MailAction.new(client, mail)
       end
 
-      def format_email(body_t, envelope_t, context)
-        body = render(body_t, context)
-        data = render(envelope_t, context)
-        envelope = JSON.parse(data)
-        envelope['content'][0]['value'] = Kramdown::Document.new(body).to_html
-        envelope['content'][0]['type'] = 'text/html'
-        envelope
-      end
-
-      def render(template, context)
-        template = template_factory.parse(template)
-        template.render(context)
-      end
-
-      def template_factory
-        Liquid::Template
+      def content(body)
+        SendGrid::Content.new(
+          type: 'text/plain',
+          value: body
+        )
       end
 
       def recipient
