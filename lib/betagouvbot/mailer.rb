@@ -36,7 +36,7 @@ module BetaGouvBot
 
       def client
         SendGrid::API
-          .new(api_key: ENV['SENDGRID_API_KEY'])
+          .new(api_key: ENV['SENDGRID_API_KEY'] || '')
           .client
           .mail
           ._('send')

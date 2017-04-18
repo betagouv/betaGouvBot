@@ -7,14 +7,9 @@ module BetaGouvBot
   class Mail
     def initialize(subject, body_fn, recipients = [], senders = ['bot@beta.gouv.fr'])
       @subject = subject
-      @body_fn = body_fn
+      @body_t = File.read("data/#{body_fn}") if body_fn
       @recipients = recipients
       @senders = senders
-    end
-
-    def body_fn=(body_fn)
-      @body_fn = body_fn
-      @body_t = File.read("data/#{body_fn}") if @body_fn
     end
 
     def format(context)

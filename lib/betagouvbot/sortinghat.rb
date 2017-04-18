@@ -3,12 +3,14 @@
 
 require 'active_support/core_ext/hash/indifferent_access'
 require 'ovh/rest'
+require 'betagouvbot/mailinglistaction'
+require 'betagouvbot/mailer'
+require 'betagouvbot/mailaction'
+require 'betagouvbot/mailer'
 
 module BetaGouvBot
   module SortingHat
     module_function
-
-    DOMAIN = 'beta.gouv.fr'
 
     class << self
       # Input: a date
@@ -17,14 +19,10 @@ module BetaGouvBot
       def call(community, date, dry_run = false)
         community = community.map(&:with_indifferent_access)
         sorted = sort(community, date)
-        {
-          "incubateur": reconcile(community, members, sorted[:members], 'incubateur',
-                                  dry_run),
-          "alumni": reconcile(community, alumni, sorted[:alumni], 'alumni', dry_run)
-        }
-      rescue => e
-        puts e.message
-        puts e.backtrace.inspect
+        actions = reconcile(community, members, sorted[:members], 'incubateur') +
+                  reconcile(community, alumni, sorted[:alumni], 'alumni')
+        actions.map(&:execute) unless dry_run
+        actions
       end
 
       def active?(member, date)
@@ -46,48 +44,55 @@ module BetaGouvBot
         subscribers 'alumni'
       end
 
-      def reconcile(all, current_members, computed_members, listname, dry_run = false)
-        {
-          "unsubscribe": unsubscribe_current(all, current_members,
-                                             computed_members, listname, dry_run),
-          "subscribe": subscribe_new(current_members, computed_members,
-                                     listname, dry_run)
-        }
+      def reconcile(all, current_members, computed_members, listname)
+        unsubscribe_current(all, current_members, computed_members, listname) +
+          subscribe_new(current_members, computed_members, listname)
       end
 
-      def unsubscribe_current(all, current_members, computed_members, listname,
-                              dry_run = false)
-        current_members
-          .select { |email| all.any? { |author| email == email(author) } }
-          .select { |email| computed_members.none? { |author| email == email(author) } }
-          .each { |outgoing| unsubscribe(listname, outgoing, dry_run) }
+      def unsubscribe_current(all, current, target, listname)
+        leaving = current
+                  .select { |email| all.any? { |author| email == email(author) } }
+                  .select { |email| target.none? { |author| email == email(author) } }
+
+        leaving.map { |outgoing| unsubscribe(listname, outgoing) } +
+          leaving.map { |outgoing| notify(false, listname, author(all, outgoing)) }
       end
 
-      def subscribe_new(current_members, computed_members, listname, dry_run = false)
-        computed_members
-          .map(&:with_indifferent_access)
-          .select { |author| current_members.none? { |email| email == email(author) } }
-          .each { |incoming| subscribe(listname, email(incoming), dry_run) }
+      def subscribe_new(current, target, listname)
+        arriving = target
+                   .map(&:with_indifferent_access)
+                   .select { |author| current.none? { |email| email == email(author) } }
+        arriving.map { |incoming| subscribe(listname, email(incoming)) } +
+          arriving.map { |incoming| notify(true, listname, incoming) }
+      end
+
+      def notify(subscribed, listname, author)
+        description = subscribed ? 'abonné.e à' : 'désabonné.e de'
+        subject = subscribed ? 'Abonnement à' : 'Désabonnement de'
+        mail = Mail.new("#{subject} #{listname}",
+                        'body_subscribe_action.md', ['{{author.id}}@beta.gouv.fr}}'])
+        BetaGouvBot::MailAction.new(Mailer.client,
+                                    mail.format('author' => author,
+                                                'description' => description,
+                                                'listname' => listname))
       end
 
       def ovh
         OVH::REST
       end
 
-      def subscribe(listname, email, dry_run = false)
-        endpoint = "/email/domain/#{DOMAIN}/mailingList/#{listname}/subscriber"
-        dry_run ? email : api.post(endpoint, email: email)
+      def subscribe(listname, email)
+        SubscribeAction.new(api, listname, email)
       end
 
-      def unsubscribe(listname, email, dry_run = false)
-        endpoint = "/email/domain/#{DOMAIN}/mailingList/#{listname}/subscriber/#{email}"
-        dry_run ? email : api.delete(endpoint)
+      def unsubscribe(listname, email)
+        UnsubscribeAction.new(api, listname, email)
       end
 
       private
 
       def subscribers(listname)
-        endpoint = "/email/domain/#{DOMAIN}/mailingList/#{listname}/subscriber"
+        endpoint = "#{MailingListAction::PREFIX}/mailingList/#{listname}/subscriber"
         api.get(endpoint)
       end
 
@@ -97,6 +102,10 @@ module BetaGouvBot
 
       def email(author)
         "#{author[:id]}@beta.gouv.fr"
+      end
+
+      def author(community, email)
+        community.detect { |author| email == email(author) }
       end
 
     end
