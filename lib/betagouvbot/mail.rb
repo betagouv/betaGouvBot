@@ -5,9 +5,17 @@ require 'kramdown'
 
 module BetaGouvBot
   class Mail
-    def initialize(subject, body_fn, recipients = [], senders = ['bot@beta.gouv.fr'])
+
+    def self.from_file(body_path, recipients = [], senders = ['bot@beta.gouv.fr'])
+      # Email data files consist of 1 subject line plus body
+      subject, *rest = File.readlines(body_path)
+      body_t = rest.join("\n")
+      Mail.new(subject, body_t, recipients, senders)
+    end
+
+    def initialize(subject, body_t, recipients, senders)
       @subject = subject
-      @body_t = File.read("data/#{body_fn}") if body_fn
+      @body_t = body_t
       @recipients = recipients
       @senders = senders
     end

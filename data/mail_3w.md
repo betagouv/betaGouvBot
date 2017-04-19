@@ -1,3 +1,4 @@
+🗓 Fin de contrat prévue pour dans 3 semaines
 Bonjour {{author.fullname}} !
 
 D'après les données accessibles sur https://beta.gouv.fr/equipe, ton contrat actuel arrive à expiration le {{author.end | format DD/MM/YYYY}}.

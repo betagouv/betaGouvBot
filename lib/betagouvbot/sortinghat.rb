@@ -68,11 +68,12 @@ module BetaGouvBot
 
       def notify(subscribed, listname, author)
         description = subscribed ? 'abonné.e à' : 'désabonné.e de'
-        subject = subscribed ? 'Abonnement à' : 'Désabonnement de'
-        mail = Mail.new("#{subject} #{listname}",
-                        'body_subscribe_action.md', ['{{author.id}}@beta.gouv.fr}}'])
+        operation = subscribed ? 'Abonnement à' : 'Désabonnement de'
+        mail = Mail.from_file('data/mail_subscribed.md',
+                              ['{{author.id}}@beta.gouv.fr}}'])
         BetaGouvBot::MailAction.new(Mailer.client,
                                     mail.format('author' => author,
+                                                'operation' => operation,
                                                 'description' => description,
                                                 'listname' => listname))
       end

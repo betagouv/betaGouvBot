@@ -1,3 +1,4 @@
+⏰ Fin de contrat prévue pour demain
 Bonjour {{author.fullname}} !
 
 D'après les données accessibles sur https://beta.gouv.fr/equipe, ton contrat actuel arrive à expiration demain.
