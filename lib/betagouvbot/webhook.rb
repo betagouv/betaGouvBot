@@ -34,7 +34,12 @@ module BetaGouvBot
       (mailer + sorting_hat).map(&:execute) if execute
 
       # Display for debugging
-      { "execute" : execute, "warnings": warnings, "mailer": mailer, "sorting_hat": sorting_hat }.to_json
+      {
+        "execute": execute,
+        "warnings": warnings,
+        "mailer": mailer,
+        "sorting_hat": sorting_hat
+      }.to_json
     end
   end
 end
