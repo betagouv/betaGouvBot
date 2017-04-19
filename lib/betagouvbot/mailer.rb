@@ -10,12 +10,10 @@ module BetaGouvBot
 
     class << self
       # @param expirations [#:[]] expiration dates mapped to members
-      def call(warnings, rules, dry_run = false)
-        actions = warnings.map do |warning|
+      def call(warnings, rules)
+        warnings.map do |warning|
           email(warning[:term], { 'author' => warning[:who] }, rules)
         end
-        actions.map(&:execute) unless dry_run
-        actions
       end
 
       def email(urgency, context, rules)

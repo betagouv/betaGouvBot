@@ -16,13 +16,11 @@ module BetaGouvBot
       # Input: a date
       # Input: a list of members' arrivals and departures
       # Side-effect: keeps current members subscribed to one list and alumni to another
-      def call(community, date, dry_run = false)
+      def call(community, date)
         community = community.map(&:with_indifferent_access)
         sorted = sort(community, date)
-        actions = reconcile(community, members, sorted[:members], 'incubateur') +
-                  reconcile(community, alumni, sorted[:alumni], 'alumni')
-        actions.map(&:execute) unless dry_run
-        actions
+        reconcile(community, members, sorted[:members], 'incubateur') +
+          reconcile(community, alumni, sorted[:alumni], 'alumni')
       end
 
       def active?(member, date)
