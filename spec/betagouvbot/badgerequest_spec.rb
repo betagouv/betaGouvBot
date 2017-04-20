@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-RSpec.describe BetaGouvBot::BadgeBoy do
+RSpec.describe BetaGouvBot::BadgeRequest do
   describe 'requesting badges' do
     context 'when a member is working out of DINSIC offices' do
       let(:ann)     { { id: 'ann',
