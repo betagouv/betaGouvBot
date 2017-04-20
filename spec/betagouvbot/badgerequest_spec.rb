@@ -44,6 +44,13 @@ RSpec.describe BetaGouvBot::BadgeRequest do
           2.times { described_class.(authors).map(&:execute) }
           expect(client).to have_received(:post).once
         end
+
+        it 'requests a new badge if dates change' do
+          described_class.(authors).map(&:execute)
+          ann[:end] = '2018-12-31'
+          described_class.(authors).map(&:execute)
+          expect(client).to have_received(:post).twice
+        end
       end
     end
   end
