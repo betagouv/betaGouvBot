@@ -5,7 +5,7 @@ require 'redis'
 require 'active_support/core_ext/hash/indifferent_access'
 
 module BetaGouvBot
-  module BadgeBoy
+  module BadgeRequest
     module_function
 
     class << self
