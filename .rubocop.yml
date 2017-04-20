@@ -63,4 +63,4 @@ RSpec/ExampleLength:
   Max: 6
 
 RSpec/NestedGroups:
-  MaxNesting: 4
+  Max: 4
