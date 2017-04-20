@@ -24,7 +24,7 @@ module BetaGouvBot
 
       def needs_badge_request?(author)
         range = "#{author[:start]}-#{author[:end]}"
-        previous = state_storage["#{author[:id]}_badge"]
+        previous = state["#{author[:id]}_badge"]
         needs_update = !previous || (previous != range)
         based_here = author[:office] == 'dinsic'
         based_here && needs_update
@@ -35,7 +35,7 @@ module BetaGouvBot
                               ['{{author.id}}@beta.gouv.fr}}', 'sgmap@beta.gouv.fr'])
         mailaction = MailAction.new(client, mail.format('author' => author))
         state_update = ProcAction.new do
-          state_storage["#{author[:id]}_badge"] = "#{author[:start]}-#{author[:end]}"
+          state["#{author[:id]}_badge"] = "#{author[:start]}-#{author[:end]}"
         end
         [mailaction, state_update]
       end
@@ -44,7 +44,7 @@ module BetaGouvBot
         Mailer.client
       end
 
-      def state_storage
+      def state
         Redis.new
       end
 
