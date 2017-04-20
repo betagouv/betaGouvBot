@@ -12,40 +12,37 @@ RSpec.describe BetaGouvBot::BadgeRequest do
       let(:bob)     { { id: 'bob', start: '2017-01-01', end: '2017-12-31' } }
       let(:authors) { [bob, ann] }
 
-      describe 'managing state' do
-        let(:redis) { {} }
+      let(:redis)  { {} }
+      let(:client) { instance_spy('client') }
 
+      before do
+        allow(described_class).to receive(:client) { client }
+        allow(described_class).to receive(:state_storage) { redis }
+      end
+
+      describe 'selecting members' do
         before do
           allow(described_class).to receive(:request_badge)
-          allow(described_class).to receive(:state_storage) { redis }
         end
 
-        it 'requests a badge for new members' do
+        it 'requests a badge for members who do not have one' do
           described_class.(authors)
-          expect(described_class).to have_received(:request_badge).once
-          expect(described_class).to have_received(:request_badge).with(ann)
-        end
-
-        it 'requests a badge only once' do
-          2.times { described_class.(authors) }
           expect(described_class).to have_received(:request_badge).once
           expect(described_class).to have_received(:request_badge).with(ann)
         end
       end
 
       describe 'sending email' do
-        let(:mailer) { instance_spy('mailer') }
-        let(:mail)   { {} }
-
-        before do
-          allow(described_class).to receive(:mailer) { mailer }
-          allow(mailer).to receive(:format_email).and_return(mail)
+        it 'creates a mail action' do
+          actions = described_class.request_badge(ann)
+          expect(actions).to include(a_kind_of(BetaGouvBot::MailAction))
         end
+      end
 
-        it 'uses mailer to send email requesting badges' do
-          described_class.request_badge(ann)
-          expect(mailer).to have_received(:format_email).with(anything, anything, ann)
-          expect(mailer).to have_received(:post).with(mail)
+      describe 'managing state' do
+        it 'requests a badge only once' do
+          2.times { described_class.(authors).map(&:execute) }
+          expect(client).to have_received(:post).once
         end
       end
     end
