@@ -26,7 +26,7 @@ module BetaGouvBot
         range = "#{author[:start]}-#{author[:end]}"
         previous = state_storage["#{author[:id]}_badge"]
         needs_update = !previous || (previous != range)
-        based_here = author[:based] == 'dinsic'
+        based_here = author[:office] == 'dinsic'
         based_here && needs_update
       end
 
