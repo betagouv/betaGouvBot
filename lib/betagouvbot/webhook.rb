@@ -29,7 +29,7 @@ module BetaGouvBot
       mailer = Mailer.(warnings, RULES)
 
       # Request badges (if any)
-      BadgeBoy.(members)
+      BadgeRequest.(members)
 
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)
