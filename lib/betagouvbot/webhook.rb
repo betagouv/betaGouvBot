@@ -17,7 +17,6 @@ module BetaGouvBot
 
       date = params.key?('date') ? Date.iso8601(params['date']) : Date.today
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
-      dry_run = !execute
 
       # Read beta.gouv.fr members' API
       members = HTTParty.get('https://beta.gouv.fr/api/v1.1/authors.json').parsed_response
@@ -26,11 +25,21 @@ module BetaGouvBot
       warnings = Anticipator.(members, RULES.keys, date)
 
       # Send reminders (if any)
-      mailer = Mailer.(warnings, RULES, dry_run)
+      mailer = Mailer.(warnings, RULES)
 
       # Reconcile mailing lists
-      sorting_hat = SortingHat.(members, date, dry_run)
-      { "warnings": warnings, "mailer": mailer, "sorting_hat": sorting_hat }.to_json
+      sorting_hat = SortingHat.(members, date)
+
+      # Execute actions
+      (mailer + sorting_hat).map(&:execute) if execute
+
+      # Display for debugging
+      {
+        "execute": execute,
+        "warnings": warnings,
+        "mailer": mailer,
+        "sorting_hat": sorting_hat
+      }.to_json
     end
   end
 end

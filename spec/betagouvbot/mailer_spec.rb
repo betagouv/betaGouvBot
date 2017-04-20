@@ -24,7 +24,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 21).iso8601] }
 
       it 'sends an email directly to the author' do
-        described_class.(schedule, rules)
+        described_class.(schedule, rules).map(&:execute)
         recipients = hash_including(to: ['email' => 'ann@beta.gouv.fr'])
         expected = hash_including(personalizations: array_including(recipients))
         expect(client).to have_received(:post).with(request_body: expected)
@@ -35,7 +35,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 14).iso8601] }
 
       it 'sends an email to the author and contact' do
-        described_class.(schedule, rules)
+        described_class.(schedule, rules).map(&:execute)
         recipients_list = [{ 'email' => 'ann@beta.gouv.fr' },
                            { 'email' => 'contact@beta.gouv.fr' }]
         recipients = hash_including(to: recipients_list)
@@ -57,7 +57,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 21).iso8601] }
 
       it 'sends out one email' do
-        described_class.(schedule, rules)
+        described_class.(schedule, rules).map(&:execute)
         expect(client).to have_received(:post).once
       end
     end
@@ -68,7 +68,7 @@ RSpec.describe BetaGouvBot::Mailer do
       }
 
       it 'sends out two emails' do
-        described_class.(schedule, rules)
+        described_class.(schedule, rules).map(&:execute)
         expect(client).to have_received(:post).twice
       end
     end
