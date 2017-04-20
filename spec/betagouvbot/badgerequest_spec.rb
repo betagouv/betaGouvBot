@@ -7,7 +7,7 @@ RSpec.describe BetaGouvBot::BadgeRequest do
       let(:ann)     { { id: 'ann',
                         start: '2017-01-01',
                         end: '2017-12-31',
-                        based: 'dinsic' }
+                        office: 'dinsic' }
       }
       let(:bob)     { { id: 'bob', start: '2017-01-01', end: '2017-12-31' } }
       let(:authors) { [bob, ann] }

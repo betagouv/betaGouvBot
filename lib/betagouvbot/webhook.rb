@@ -29,20 +29,21 @@ module BetaGouvBot
       mailer = Mailer.(warnings, RULES)
 
       # Request badges (if any)
-      BadgeRequest.(members)
+      badges = BadgeRequest.(members)
 
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)
 
       # Execute actions
-      (mailer + sorting_hat).map(&:execute) if execute
+      (mailer + sorting_hat + badges).map(&:execute) if execute
 
       # Display for debugging
       {
         "execute": execute,
         "warnings": warnings,
         "mailer": mailer,
-        "sorting_hat": sorting_hat
+        "sorting_hat": sorting_hat,
+        "badges": badges
       }.to_json
     end
   end
