@@ -17,7 +17,7 @@ RSpec.describe BetaGouvBot::BadgeRequest do
 
       before do
         allow(described_class).to receive(:client) { client }
-        allow(described_class).to receive(:state_storage) { redis }
+        allow(described_class).to receive(:state) { redis }
       end
 
       describe 'selecting members' do
