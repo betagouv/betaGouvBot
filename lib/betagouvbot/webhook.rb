@@ -20,7 +20,7 @@ module BetaGouvBot
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
 
       # Read beta.gouv.fr members' API
-      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
+      members = HTTParty.get('https://beta.gouv.fr/api/v1.3/authors.json').parsed_response
 
       # Parse into a schedule of notifications
       warnings = Anticipator.(members, RULES.keys, date)
