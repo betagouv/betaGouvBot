@@ -47,10 +47,14 @@ module BetaGouvBot
       content_type 'application/json; charset=utf8'
       # Read beta.gouv.fr members' API
       members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
-      badges = BadgeRequest.(members, params['text'])
+      member = params['text']
+      badges = BadgeRequest.(members, member)
       execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
+      token = params['token']
+      secret = ENV['BADGE_TOKEN']
+      api_token = ENV['SENDGRID_API_KEY']
       badges.map(&:execute) if execute
-      { response_type: 'in_channel', text: 'OK, demande faite !' }.to_json
+      { response_type: 'in_channel', text: "OK, demande faite pour #{member} (#{execute}) (#{token}) (#{secret}) (#{api_token})!" }.to_json
     end
 
     get '/badge' do
