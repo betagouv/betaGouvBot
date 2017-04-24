@@ -50,6 +50,7 @@ module BetaGouvBot
       member = params['text']
       badges = BadgeRequest.(members, member)
       execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
+      token = params['token']
       badges.map(&:execute) if execute
       { response_type: 'in_channel', text: "OK, demande faite pour #{member} (#{execute}) (#{token})!" }.to_json
     end
