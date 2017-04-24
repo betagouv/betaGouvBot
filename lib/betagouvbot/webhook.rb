@@ -52,8 +52,9 @@ module BetaGouvBot
       execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
       token = params['token']
       secret = ENV['BADGE_TOKEN']
+      api_token = ENV['SENDGRID_API_KEY']
       badges.map(&:execute) if execute
-      { response_type: 'in_channel', text: "OK, demande faite pour #{member} (#{execute}) (#{token}) #{secret}!" }.to_json
+      { response_type: 'in_channel', text: "OK, demande faite pour #{member} (#{execute}) (#{token}) (#{secret}) (#{api_token})!" }.to_json
     end
 
     get '/badge' do
