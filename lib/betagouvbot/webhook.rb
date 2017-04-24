@@ -42,12 +42,18 @@ module BetaGouvBot
         "sorting_hat": sorting_hat
       }.to_json
     end
+
     post '/badge' do
       content_type 'application/json; charset=utf8'
       badges = BadgeRequest.(members, params.key('text'))
       execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
       badges.map(&:execute) if execute
-      execute ? 'OK, demande faite !' : badges.to_json
+      { response_type: 'in_channel', text: 'OK, demande faite !' }.to_json
+    end
+
+    get '/badge' do
+      content_type 'application/json; charset=utf8'
+      BadgeRequest.(members, params.key('text'))
     end
   end
 end
