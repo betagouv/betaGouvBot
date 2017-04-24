@@ -57,7 +57,7 @@ module BetaGouvBot
       # Read beta.gouv.fr members' API
       members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
       content_type 'application/json; charset=utf8'
-      BadgeRequest.(members, params.key('text'))
+      { "badges": BadgeRequest.(members, params.key('text')) }.to_json
     end
   end
 end
