@@ -1,3 +1,4 @@
+Demande de badge
 Bonjour,
 
 Serait-il possible de fournir ou renouveler un badge au bénéfice de {{ author.fullname }},
