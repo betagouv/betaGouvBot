@@ -20,7 +20,7 @@ module BetaGouvBot
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
 
       # Read beta.gouv.fr members' API
-      members = HTTParty.get('https://beta.gouv.fr/api/v1.3/authors.json').parsed_response
+      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
 
       # Parse into a schedule of notifications
       warnings = Anticipator.(members, RULES.keys, date)
@@ -45,6 +45,8 @@ module BetaGouvBot
 
     post '/badge' do
       content_type 'application/json; charset=utf8'
+      # Read beta.gouv.fr members' API
+      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
       badges = BadgeRequest.(members, params.key('text'))
       execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
       badges.map(&:execute) if execute
@@ -52,6 +54,8 @@ module BetaGouvBot
     end
 
     get '/badge' do
+      # Read beta.gouv.fr members' API
+      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
       content_type 'application/json; charset=utf8'
       BadgeRequest.(members, params.key('text'))
     end
