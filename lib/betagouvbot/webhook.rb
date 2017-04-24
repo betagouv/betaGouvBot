@@ -28,9 +28,6 @@ module BetaGouvBot
       # Send reminders (if any)
       mailer = Mailer.(warnings, RULES)
 
-      # Request badges (if any)
-      badges = BadgeRequest.(members)
-
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)
 
@@ -42,9 +39,15 @@ module BetaGouvBot
         "execute": execute,
         "warnings": warnings,
         "mailer": mailer,
-        "sorting_hat": sorting_hat,
-        "badges": badges
+        "sorting_hat": sorting_hat
       }.to_json
+    end
+    post '/badge' do
+      content_type 'application/json; charset=utf8'
+      badges = BadgeRequest.(members, params.key('text'))
+      execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
+      badges.map(&:execute) if execute
+      execute ? "OK, demande faite !" : badges.to_json
     end
   end
 end
