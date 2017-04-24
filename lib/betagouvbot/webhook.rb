@@ -32,7 +32,7 @@ module BetaGouvBot
       sorting_hat = SortingHat.(members, date)
 
       # Execute actions
-      (mailer + sorting_hat + badges).map(&:execute) if execute
+      (mailer + sorting_hat).map(&:execute) if execute
 
       # Display for debugging
       {
