@@ -21,13 +21,6 @@ module BetaGouvBot
         MailAction.new(client, mail)
       end
 
-      def content(body)
-        SendGrid::Content.new(
-          type: 'text/plain',
-          value: body
-        )
-      end
-
       def recipient
         SendGrid::Email
       end
