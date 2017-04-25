@@ -25,7 +25,7 @@ module BetaGouvBot
         'to': @recipients.map { |mail| { 'email' => self.class.render(mail, context) } },
         'subject': self.class.render(@subject, context)
       }],
-        'from': self.class.render(@sender, context),
+        'from': { 'email' => self.class.render(@sender, context) },
         'content': [{
           'type': 'text/html',
           'value': Kramdown::Document.new(md_source).to_html
