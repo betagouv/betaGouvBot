@@ -1,6 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
+require 'active_support/core_ext/hash/indifferent_access'
 require 'betagouvbot/anticipator'
 require 'betagouvbot/mailer'
 require 'betagouvbot/sortinghat'
@@ -13,14 +14,20 @@ require 'liquid'
 
 module BetaGouvBot
   class Webhook < Sinatra::Base
-    get '/actions' do
+    before do
       content_type 'application/json; charset=utf8'
+    end
 
+    helpers do
+      def members
+        members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
+        members.map(&:with_indifferent_access)
+      end
+    end
+
+    get '/actions' do
       date = params.key?('date') ? Date.iso8601(params['date']) : Date.today
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
-
-      # Read beta.gouv.fr members' API
-      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
 
       # Parse into a schedule of notifications
       warnings = Anticipator.(members, RULES.keys, date)
@@ -34,7 +41,7 @@ module BetaGouvBot
       # Execute actions
       (mailer + sorting_hat).map(&:execute) if execute
 
-      # Display for debugging
+      # Debug
       {
         "execute": execute,
         "warnings": warnings,
@@ -44,19 +51,14 @@ module BetaGouvBot
     end
 
     post '/badge' do
-      content_type 'application/json; charset=utf8'
-      # Read beta.gouv.fr members' API
-      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
       badges = BadgeRequest.(members, params['text'])
       execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
       badges.map(&:execute) if execute
       { response_type: 'in_channel', text: 'OK, demande faite !' }.to_json
     end
 
+    # Debug
     get '/badge' do
-      # Read beta.gouv.fr members' API
-      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
-      content_type 'application/json; charset=utf8'
       { "badges": BadgeRequest.(members, params['text']) }.to_json
     end
   end

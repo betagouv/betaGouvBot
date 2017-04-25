@@ -1,6 +1,8 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
+require 'active_support/core_ext/hash/indifferent_access'
+
 RSpec.describe BetaGouvBot::Mailer do
   Mail = BetaGouvBot::Mail
   let(:rules) { { 1 => { mail:  Mail.new('demain', nil,
@@ -13,7 +15,8 @@ RSpec.describe BetaGouvBot::Mailer do
   }
 
   describe 'selecting recipients of emails' do
-    let(:schedule)  { BetaGouvBot::Anticipator.(authors, rules.keys, Date.today) }
+    let(:members)   { authors.map(&:with_indifferent_access) }
+    let(:schedule)  { BetaGouvBot::Anticipator.(members, rules.keys, Date.today) }
     let(:client)    { instance_spy('client') }
 
     before do
