@@ -61,5 +61,17 @@ module BetaGouvBot
     get '/badge' do
       { "badges": BadgeRequest.(members, params['text']) }.to_json
     end
+
+    post '/compte' do
+      accounts = AccountRequest.(members, params['text'])
+      execute = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
+      accounts.map(&:execute) if execute
+      { response_type: 'in_channel', text: 'OK, création de compte en cours !' }.to_json
+    end
+
+    # Debug
+    get '/compte' do
+      { "comptes": AccountRequest.(members, params['text']) }.to_json
+    end
   end
 end
