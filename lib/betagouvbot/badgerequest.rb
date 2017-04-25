@@ -1,7 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'active_support/core_ext/hash/indifferent_access'
 require 'betagouvbot/mailaction'
 require 'betagouvbot/procaction'
 require 'betagouvbot/mailer'
@@ -16,7 +15,6 @@ module BetaGouvBot
       # Side-effect: emails badge requests
       def call(members, member_id)
         members
-          .map(&:with_indifferent_access)
           .select { |author| author[:id] == member_id }
           .flat_map { |member| request_badge(member) }
       end

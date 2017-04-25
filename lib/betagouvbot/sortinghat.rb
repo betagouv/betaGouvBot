@@ -1,7 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'active_support/core_ext/hash/indifferent_access'
 require 'ovh/rest'
 require 'betagouvbot/mailinglistaction'
 require 'betagouvbot/mailer'
@@ -17,7 +16,6 @@ module BetaGouvBot
       # Input: a list of members' arrivals and departures
       # Side-effect: keeps current members subscribed to one list and alumni to another
       def call(community, date)
-        community = community.map(&:with_indifferent_access)
         sorted = sort(community, date)
         reconcile(community, members, sorted[:members], 'incubateur') +
           reconcile(community, alumni, sorted[:alumni], 'alumni')
