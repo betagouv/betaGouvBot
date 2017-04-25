@@ -9,8 +9,7 @@ module BetaGouvBot
     def self.from_file(body_path, recipients = [], sender = 'bot@beta.gouv.fr')
       # Email data files consist of 1 subject line plus body
       subject, *rest = File.readlines(body_path)
-      body_t = rest.join("\n")
-      Mail.new(subject, body_t, recipients, sender)
+      Mail.new(subject.strip, rest.join, recipients, sender)
     end
 
     def initialize(subject, body_t, recipients, sender)
