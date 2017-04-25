@@ -6,6 +6,9 @@ require 'kramdown'
 module BetaGouvBot
   class Mail
 
+    attr_accessor :subject
+    attr_accessor :recipients
+
     def self.from_file(body_path, recipients = [], sender = 'secretariat@beta.gouv.fr')
       # Email data files consist of 1 subject line plus body
       subject, *rest = File.readlines(body_path)
