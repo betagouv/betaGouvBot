@@ -12,7 +12,7 @@ Si quelque chose n'est pas clair, réponds à cet email ou ouvre une conversatio
 
 Sans changement de date, un autre rappel sera automatiquement envoyé dans une semaine.
 
-Bonne journée,
+Bonne journée,  
 Le secrétariat
 
 PS : ce message est envoyé par robot [non-AGI](https://en.wikipedia.org/wiki/Artificial_general_intelligence). En cas de problème, contacter un humain !

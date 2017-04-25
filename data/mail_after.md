@@ -10,7 +10,7 @@ Il faut s'assurer qu'elle ou il est bien :
 - Sans droit d'écriture sur l'agenda public.
 - Sans droit de délégation sur le [manager OVH](https://www.ovh.com/manager/web/#/configuration/email_domain/beta.gouv.fr?tab=EMAILS).
 
-Bonne journée,
+Bonne journée,  
 Le secrétariat
 
 PS : vous voudriez pas me coder 2-3 plugins pour que je fasse tout ça à votre place ? 😬
