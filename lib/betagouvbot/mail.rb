@@ -6,18 +6,18 @@ require 'kramdown'
 module BetaGouvBot
   class Mail
 
-    def self.from_file(body_path, recipients = [], senders = ['bot@beta.gouv.fr'])
+    def self.from_file(body_path, recipients = [], sender = 'bot@beta.gouv.fr')
       # Email data files consist of 1 subject line plus body
       subject, *rest = File.readlines(body_path)
       body_t = rest.join("\n")
-      Mail.new(subject, body_t, recipients, senders)
+      Mail.new(subject, body_t, recipients, sender)
     end
 
-    def initialize(subject, body_t, recipients, senders)
+    def initialize(subject, body_t, recipients, sender)
       @subject = subject
       @body_t = body_t
       @recipients = recipients
-      @senders = senders
+      @sender = sender
     end
 
     def format(context)
@@ -26,7 +26,7 @@ module BetaGouvBot
         'to': @recipients.map { |mail| { 'email' => self.class.render(mail, context) } },
         'subject': self.class.render(@subject, context)
       }],
-        'from': @senders.map { |mail| { 'email' => self.class.render(mail, context) } },
+        'from': self.class.render(@sender, context),
         'content': [{
           'type': 'text/html',
           'value': Kramdown::Document.new(md_source).to_html

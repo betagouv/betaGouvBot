@@ -4,12 +4,12 @@
 RSpec.describe BetaGouvBot::Mailer do
   Mail = BetaGouvBot::Mail
   let(:rules) { { 1 => { mail:  Mail.new('demain', nil,
-                                         ['{{author.id}}@beta.gouv.fr'], []) },
+                                         ['{{author.id}}@beta.gouv.fr'], '') },
                   14 => { mail: Mail.new('dans 2s', nil,
                                          ['{{author.id}}@beta.gouv.fr',
-                                          'contact@beta.gouv.fr'], []) },
+                                          'contact@beta.gouv.fr'], '') },
                   21 => { mail: Mail.new('dans 3s', nil,
-                                         ['{{author.id}}@beta.gouv.fr'], []) } }
+                                         ['{{author.id}}@beta.gouv.fr'], '') } }
   }
 
   describe 'selecting recipients of emails' do
