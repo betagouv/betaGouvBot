@@ -66,7 +66,7 @@ module BetaGouvBot
       accounts = AccountRequest.(members, params['text'])
       execute = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
       accounts.map(&:execute) if execute
-      { response_type: 'in_channel', text: 'OK, création de compte en cours !' }.to_json
+      HTTParty.post(params['response_url'], 'OK, création de compte en cours !')
     end
 
     # Debug
