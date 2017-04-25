@@ -5,6 +5,7 @@ require 'betagouvbot/anticipator'
 require 'betagouvbot/mailer'
 require 'betagouvbot/sortinghat'
 require 'betagouvbot/rules'
+require 'betagouvbot/badgerequest'
 require 'sinatra/base'
 require 'sendgrid-ruby'
 require 'httparty'
@@ -19,7 +20,7 @@ module BetaGouvBot
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
 
       # Read beta.gouv.fr members' API
-      members = HTTParty.get('https://beta.gouv.fr/api/v1.1/authors.json').parsed_response
+      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
 
       # Parse into a schedule of notifications
       warnings = Anticipator.(members, RULES.keys, date)
@@ -40,6 +41,23 @@ module BetaGouvBot
         "mailer": mailer,
         "sorting_hat": sorting_hat
       }.to_json
+    end
+
+    post '/badge' do
+      content_type 'application/json; charset=utf8'
+      # Read beta.gouv.fr members' API
+      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
+      badges = BadgeRequest.(members, params['text'])
+      execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
+      badges.map(&:execute) if execute
+      { response_type: 'in_channel', text: 'OK, demande faite !' }.to_json
+    end
+
+    get '/badge' do
+      # Read beta.gouv.fr members' API
+      members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
+      content_type 'application/json; charset=utf8'
+      { "badges": BadgeRequest.(members, params['text']) }.to_json
     end
   end
 end
