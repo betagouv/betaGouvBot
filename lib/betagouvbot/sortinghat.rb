@@ -68,7 +68,7 @@ module BetaGouvBot
         description = subscribed ? 'abonné.e à' : 'désabonné.e de'
         operation = subscribed ? 'Abonnement à' : 'Désabonnement de'
         mail = Mail.from_file('data/mail_subscribed.md',
-                              ['{{author.id}}@beta.gouv.fr}}'])
+                              ['{{author.id}}@beta.gouv.fr'])
         BetaGouvBot::MailAction.new(Mailer.client,
                                     mail.format('author' => author,
                                                 'operation' => operation,
