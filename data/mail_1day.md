@@ -7,7 +7,7 @@ C'est le moment de t'assurer que tu as bien coché tous les éléments de la [ch
 
 On espère que tu as passé un moment positif avec nous !
 
-Bonne journée et à une prochaine,
+Bonne journée et à une prochaine,  
 Le secrétariat
 
 PS : ce message est envoyé par robot [non-AGI](https://en.wikipedia.org/wiki/Artificial_general_intelligence). En cas de problème, contacter un humain !

@@ -3,5 +3,5 @@ Bonjour {{author.fullname}} !
 
 Tu viens d'être {{description}} la liste de diffusion "{{listname}}@beta.gouv.fr".
 
-Bonne journée,
+Bonne journée,  
 Le secrétariat
