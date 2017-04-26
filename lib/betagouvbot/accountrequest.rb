@@ -42,8 +42,12 @@ module BetaGouvBot
       redirections = api
       endpoint = '/email/domain/beta.gouv.fr/redirection'
       existing = redirections.get(endpoint, from: address)
-      return if existing.length >= 1
-      redirections.post(endpoint, from: address, to: @redirect, localCopy: 'false')
+      if existing.length >= 1
+        update = "#{endpoint}/#{existing[0]}/changeRedirection"
+        redirections.post(update, to: @redirect)
+      else
+        redirections.post(endpoint, from: address, to: @redirect, localCopy: 'false')
+      end
     end
 
     def ovh

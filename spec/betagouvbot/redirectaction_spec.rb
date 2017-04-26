@@ -23,10 +23,11 @@ describe BetaGouvBot::RedirectAction do
       before do
         allow(api).to receive(:get) { ['11413952074'] }
       end
-      it 'leaves it alone' do
+      it 'updates the redirection with the new address' do
+        update = "#{endpoint}/11413952074/changeRedirection"
         action.execute
         expect(api).to have_received(:get).with(endpoint, from: 'ann@beta.gouv.fr')
-        expect(api).not_to have_received(:post)
+        expect(api).to have_received(:post).with(update, to: 'ann@gmail.com')
       end
     end
 
