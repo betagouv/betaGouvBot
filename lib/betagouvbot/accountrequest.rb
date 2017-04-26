@@ -4,11 +4,10 @@
 module BetaGouvBot
   class AccountAction
     attr_accessor :name
-    attr_accessor :redirect
+    attr_accessor :password
 
-    def initialize(name, redirect, password)
+    def initialize(name, password)
       @name = name
-      @redirect = redirect
       @password = password
     end
 
@@ -28,6 +27,34 @@ module BetaGouvBot
       ovh.new(ENV['apiKey'], ENV['appSecret'], ENV['consumerKey'])
     end
   end
+
+  class RedirectAction
+    attr_accessor :name
+    attr_accessor :redirect
+
+    def initialize(name, redirect)
+      @name = name
+      @redirect = redirect
+    end
+
+    def execute
+      address = "#{@name}@beta.gouv.fr"
+      redirections = api
+      endpoint = '/email/domain/beta.gouv.fr/redirection'
+      existing = redirections.get(endpoint, from: address)
+      return if existing.length >= 1
+      redirections.post(endpoint, from: address, to: @redirect, localCopy: 'false')
+    end
+
+    def ovh
+      OVH::REST
+    end
+
+    def api
+      ovh.new(ENV['apiKey'], ENV['appSecret'], ENV['consumerKey'])
+    end
+  end
+
   module AccountRequest
     module_function
 
@@ -39,11 +66,14 @@ module BetaGouvBot
           .flat_map { |author| request_account(author, redirect, password) }
       end
 
-      def request_account(member, redirect, password)
+      def request_account(member, redirect_raw, password)
+        no_redirect = redirect_raw[0] == '*'
+        redirect = no_redirect ? redirect_raw[1..-1] : redirect_raw
         mail = Mail.from_file('data/mail_compte.md', [redirect])
+        account = AccountAction.new(member[:id], password)
+        redirect = RedirectAction.new(member[:id], redirect)
         notify = MailAction.new(client, mail.format('author' => member))
-        perform = AccountAction.new(member[:id], redirect, password)
-        [perform, notify]
+        no_redirect ? [account, notify] : [account, redirect, notify]
       end
 
       def client

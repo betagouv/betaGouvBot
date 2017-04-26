@@ -5,7 +5,7 @@ describe BetaGouvBot::AccountAction do
   describe 'executing actions' do
     let(:ovh)       { instance_spy('ovh') }
     let(:api)       { instance_spy('api') }
-    let(:action)    { described_class.new('ann', 'ann@gmail.com', 'pwd') }
+    let(:action)    { described_class.new('ann', 'pwd') }
     let(:endpoint)  { '/email/domain/beta.gouv.fr/account' }
 
     before do
@@ -23,9 +23,10 @@ describe BetaGouvBot::AccountAction do
       before do
         allow(api).to receive(:get) { ['ann'] }
       end
-      it 'checks for existence of the account' do
+      it 'leaves the account alone' do
         action.execute
         expect(api).to have_received(:get).with(endpoint, accountName: 'ann')
+        expect(api).not_to have_received(:post)
       end
     end
 
