@@ -1,7 +1,13 @@
 Création de compte beta.gouv.fr
 Bonjour {{author.fullname}} !
 
-On vient de te créer un compte mail: {{author.fullname}}@beta.gouv.fr.
+On vient de te créer une adresse mail: {{author.id}}@beta.gouv.fr.
+
+{% if redirect %}
+Les mails envoyés à cette adresse seront redirigés vers ton adresse {{redirect}}.
+{% else %}
+Tu pourras consulter ces mails directement par interface Web ou IMAP, plus de détails sur [le wiki](https://github.com/sgmap/beta.gouv.fr/wiki/Mail).
+{% endif %}
 
 Fais-en bon usage. :)
 
