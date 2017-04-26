@@ -1,7 +1,7 @@
-Création de compte beta.gouv.fr
+Ton adresse @beta.gouv.fr
 Bonjour {{author.fullname}} !
 
-On vient de te créer une adresse mail: {{author.id}}@beta.gouv.fr.
+On vient de créer ou mettre à jour ton adresse mail: {{author.id}}@beta.gouv.fr.
 
 {% if redirect %}
 Les mails envoyés à cette adresse seront redirigés vers ton adresse {{redirect}}.

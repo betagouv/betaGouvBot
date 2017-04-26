@@ -46,7 +46,7 @@ RSpec.describe BetaGouvBot::AccountRequest do
         actions = described_class.(authors, 'bob bob@gmail.com pass')
         match_recipient = array_including(a_hash_including('email' => 'bob@gmail.com'))
         matching = be_a_kind_of(BetaGouvBot::MailAction)
-                   .and have_attributes(subject: 'Création de compte beta.gouv.fr')
+                   .and have_attributes(subject: 'Ton adresse @beta.gouv.fr')
                    .and have_attributes(recipients: match_recipient)
         expect(actions).to include(matching)
       end
