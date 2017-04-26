@@ -69,7 +69,7 @@ module BetaGouvBot
       def request_account(member, redirect_raw, password)
         no_redirect = redirect_raw[0] == '*'
         redirect = no_redirect ? redirect_raw[1..-1] : redirect_raw
-        context = 'author' => member
+        context = { 'author' => member }
         context['redirect'] = redirect unless no_redirect
         mail = Mail.from_file('data/mail_compte.md', [redirect])
         account = AccountAction.new(member[:id], password)
