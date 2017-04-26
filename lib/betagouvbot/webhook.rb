@@ -63,6 +63,13 @@ module BetaGouvBot
     end
 
     post '/compte' do
+      member = params['text'].split(' ').first
+      origin = params['user_name']
+      response = "A la demande de #{origin} je créée un compte pour #{member}"
+      body = { response_type: 'in_channel', text: response }.to_json
+      headers = { 'Content-Type' => 'application/json' }
+      HTTParty.post(params['response_url'], body: body, headers: headers)
+
       response = 'OK, création de compte en cours !'
       accounts = AccountRequest.(members, params['text'])
       execute = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
