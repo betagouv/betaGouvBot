@@ -63,10 +63,15 @@ module BetaGouvBot
     end
 
     post '/compte' do
+      response = 'OK, création de compte en cours !'
       accounts = AccountRequest.(members, params['text'])
       execute = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
-      accounts.map(&:execute) if execute
-      body = { text: 'OK, création de compte en cours !' }.to_json
+      begin
+        accounts.map(&:execute) if execute
+      rescue StandardError => e
+        response = "Zut, il y a une erreur: #{e.message}"
+      end
+      body = { text: response }.to_json
       headers = { 'Content-Type' => 'application/json' }
       HTTParty.post(params['response_url'], body: body, headers: headers)
     end
