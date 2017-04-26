@@ -78,6 +78,8 @@ module BetaGouvBot
       rescue StandardError => e
         response = "Zut, il y a une erreur: #{e.message}"
       end
+      
+      response = 'Je ne vois pas de qui tu veux parler' if accounts.empty?
       body = { text: response }.to_json
       headers = { 'Content-Type' => 'application/json' }
       HTTParty.post(params['response_url'], body: body, headers: headers)
