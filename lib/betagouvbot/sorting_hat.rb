@@ -2,9 +2,9 @@
 # frozen_string_literal: true
 
 require 'ovh/rest'
-require 'betagouvbot/mailinglistaction'
+require 'betagouvbot/mailing_list_action'
 require 'betagouvbot/mailer'
-require 'betagouvbot/mailaction'
+require 'betagouvbot/mail_action'
 require 'betagouvbot/mailer'
 
 module BetaGouvBot

@@ -1,8 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'betagouvbot/mailaction'
-require 'betagouvbot/procaction'
+require 'betagouvbot/mail_action'
 require 'betagouvbot/mailer'
 require 'betagouvbot/mail'
 
