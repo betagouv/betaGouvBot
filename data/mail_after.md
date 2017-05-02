@@ -1,9 +1,9 @@
 Contrat expiré
 Bonjour les loulous,
 
-{{author.fullname}} est apparemment parti·e hier.
+{{author.fullname}} est apparemment parti·e hier. Il faut vérifier que son contrat est a été renouvelé et mettre à jour sa nouvelle date de fin.
 
-Il faut s'assurer qu'elle ou il est bien :
+Si c'est un départ effetif, il faut s'assurer qu'elle ou il est bien :
 
 - Dans la team [alumni](https://github.com/orgs/sgmap/teams/alumni) sur GitHub.
 - Sans droit d'écriture sur des [dépôts](https://github.com/orgs/sgmap/people) sur GitHub.
