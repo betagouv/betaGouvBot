@@ -21,7 +21,7 @@ module BetaGouvBot
 
     def format(context)
       md_source = self.class.render(@body_t, context)
-      { "personalizations": [{
+      { 'personalizations': [{
         'to': @recipients.map { |mail| { 'email' => self.class.render(mail, context) } },
         'subject': self.class.render(@subject, context)
       }],
