@@ -5,6 +5,9 @@ module BetaGouvBot
   # Anticipator allows to detect, from a list of members (people), those whose contracts
   # come to and end in +terms+ days.
   #
+  # @see https://gist.github.com/chetan/1827484
+  # @see http://yardoc.org/types.html
+  #
   # @param [<#[]>] members A collection of authors.
   # @option members [String] :fullname An author's fullname.
   # @option members [String] :end An author's contact end date (yyyy/mm/dd).
