@@ -14,10 +14,12 @@ module BetaGouvBot
     end
 
     def execute
-      accounts = api
-      existing = accounts.get(ENDPOINT, accountName: @name)
       return if existing.length >= 1
-      accounts.post(ENDPOINT, accountName: @name, password: @password)
+      api.post(ENDPOINT, accountName: @name, password: @password)
+    end
+
+    def existing
+      api.get(ENDPOINT, accountName: @name)
     end
 
     def ovh
@@ -25,7 +27,7 @@ module BetaGouvBot
     end
 
     def api
-      ovh.new(ENV['apiKey'], ENV['appSecret'], ENV['consumerKey'])
+      @api ||= ovh.new(ENV['apiKey'], ENV['appSecret'], ENV['consumerKey'])
     end
   end
 
