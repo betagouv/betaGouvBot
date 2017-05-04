@@ -1,7 +1,7 @@
 Contrat expiré
 Bonjour les loulous,
 
-{{author.fullname}} est apparemment parti·e hier. Il faut vérifier, soit que son contrat a été renouvelé et dans ce cas mettre à jour sa nouvelle date de fin, soit que c'est bien un "au revoir".
+{{author.fullname}} est apparemment parti·e hier. Il faut vérifier, soit que son contrat a été renouvelé et dans ce cas [mettre à jour sa nouvelle date de fin](https://github.com/sgmap/beta.gouv.fr/edit/master/_authors/{{author.id}}.md), soit que c'est bien un "au revoir".
 
 Si c'est un départ effectif, il faut s'assurer qu'elle ou il est bien :
 
