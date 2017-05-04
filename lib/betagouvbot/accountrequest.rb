@@ -33,6 +33,8 @@ module BetaGouvBot
     attr_accessor :name
     attr_accessor :redirect
 
+    ENDPOINT = '/email/domain/beta.gouv.fr/redirection'
+
     def initialize(name, redirect)
       @name = name
       @redirect = redirect
@@ -41,13 +43,12 @@ module BetaGouvBot
     def execute
       address = "#{@name}@beta.gouv.fr"
       redirections = api
-      endpoint = '/email/domain/beta.gouv.fr/redirection'
-      existing = redirections.get(endpoint, from: address)
+      existing = redirections.get(ENDPOINT, from: address)
       if existing.length >= 1
-        update = "#{endpoint}/#{existing[0]}/changeRedirection"
+        update = "#{ENDPOINT}/#{existing[0]}/changeRedirection"
         redirections.post(update, to: @redirect)
       else
-        redirections.post(endpoint, from: address, to: @redirect, localCopy: 'false')
+        redirections.post(ENDPOINT, from: address, to: @redirect, localCopy: 'false')
       end
     end
 
