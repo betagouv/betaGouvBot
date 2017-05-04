@@ -6,6 +6,8 @@ module BetaGouvBot
     attr_accessor :name
     attr_accessor :password
 
+    ENDPOINT = '/email/domain/beta.gouv.fr/account'
+
     def initialize(name, password)
       @name = name
       @password = password
@@ -13,10 +15,9 @@ module BetaGouvBot
 
     def execute
       accounts = api
-      endpoint = '/email/domain/beta.gouv.fr/account'
-      existing = accounts.get(endpoint, accountName: @name)
+      existing = accounts.get(ENDPOINT, accountName: @name)
       return if existing.length >= 1
-      accounts.post(endpoint, accountName: @name, password: @password)
+      accounts.post(ENDPOINT, accountName: @name, password: @password)
     end
 
     def ovh
