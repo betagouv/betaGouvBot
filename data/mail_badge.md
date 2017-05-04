@@ -10,4 +10,4 @@ du {{ author.start | date: "%d/%m/%Y" }} au {{ author.end | date: "%d/%m/%Y" }} 
 {% endif %}
 
 Bonne journée,  
-Le secrétariat robotisé de l'Incubateur
+Le secrétariat de l'Incubateur

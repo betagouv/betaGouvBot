@@ -6,7 +6,7 @@ require 'kramdown'
 module BetaGouvBot
   class Mail
 
-    def self.from_file(body_path, recipients = [], sender = 'bot@beta.gouv.fr')
+    def self.from_file(body_path, recipients = [], sender = 'secretariat@beta.gouv.fr')
       # Email data files consist of 1 subject line plus body
       subject, *rest = File.readlines(body_path)
       Mail.new(subject.strip, rest.join, recipients, sender)
@@ -21,7 +21,7 @@ module BetaGouvBot
 
     def format(context)
       md_source = self.class.render(@body_t, context)
-      { "personalizations": [{
+      { 'personalizations': [{
         'to': @recipients.map { |mail| { 'email' => self.class.render(mail, context) } },
         'subject': self.class.render(@subject, context)
       }],
