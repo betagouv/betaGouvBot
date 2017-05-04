@@ -74,22 +74,36 @@ module BetaGouvBot
 
     class << self
       def call(members, command)
-        member, redirect, password = command.split(' ')
+        member, personal_address, password = command.split(' ')
         members
           .select { |author| author[:id] == member }
-          .flat_map { |author| request_account(author, redirect, password) }
+          .flat_map { |author| request_account(author, personal_address, password) }
       end
 
-      def request_account(member, redirect_raw, password)
-        no_redirect = redirect_raw[0] == '*'
-        redirect = no_redirect ? redirect_raw[1..-1] : redirect_raw
+      def request_account(member, personal_address, password)
+        create_account(member, password) +
+          create_redirection(member, personal_address) +
+          create_notification(member, personal_address)
+      end
+
+      def create_account(member, password)
+        [AccountAction.new(member[:id], password)]
+      end
+
+      def create_redirection(member, target)
+        redirect?(target) ? [RedirectAction.new(member[:id], target)] : []
+      end
+
+      def create_notification(member, personal_address)
         context = { 'author' => member }
-        context['redirect'] = redirect unless no_redirect
-        mail = Mail.from_file('data/mail_compte.md', [redirect])
-        account = AccountAction.new(member[:id], password)
-        redirect = RedirectAction.new(member[:id], redirect)
-        notify = MailAction.new(client, mail.format(context))
-        no_redirect ? [account, notify] : [account, redirect, notify]
+        context['redirect'] = personal_address if redirect?(personal_address)
+        personal_address = personal_address[1..-1] unless redirect?(personal_address)
+        mail = Mail.from_file('data/mail_compte.md', [personal_address])
+        [MailAction.new(client, mail.format(context))]
+      end
+
+      def redirect?(personal_address)
+        !personal_address.start_with?('*')
       end
 
       def client
