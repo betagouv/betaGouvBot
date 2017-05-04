@@ -43,15 +43,21 @@ module BetaGouvBot
     end
 
     def execute
-      address = "#{@name}@beta.gouv.fr"
-      redirections = api
-      existing = redirections.get(ENDPOINT, from: address)
+      existing = redirections
       if existing.length >= 1
         update = "#{ENDPOINT}/#{existing[0]}/changeRedirection"
-        redirections.post(update, to: @redirect)
+        api.post(update, to: @redirect)
       else
-        redirections.post(ENDPOINT, from: address, to: @redirect, localCopy: 'false')
+        api.post(ENDPOINT, from: address, to: @redirect, localCopy: 'false')
       end
+    end
+
+    def redirections
+      api.get(ENDPOINT, from: address)
+    end
+
+    def address
+      "#{@name}@beta.gouv.fr"
     end
 
     def ovh
@@ -59,7 +65,7 @@ module BetaGouvBot
     end
 
     def api
-      ovh.new(ENV['apiKey'], ENV['appSecret'], ENV['consumerKey'])
+      @api ||= ovh.new(ENV['apiKey'], ENV['appSecret'], ENV['consumerKey'])
     end
   end
 
