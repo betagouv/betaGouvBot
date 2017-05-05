@@ -3,6 +3,7 @@
 
 require 'betagouvbot/mailer'
 require 'betagouvbot/accountrequest'
+require 'betagouvbot/github_actions'
 require 'betagouvbot/anticipator'
 require 'betagouvbot/webhook'
 require 'betagouvbot/version'
