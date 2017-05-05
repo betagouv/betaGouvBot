@@ -2,7 +2,22 @@
 # frozen_string_literal: true
 
 module BetaGouvBot
+  module GithubRequest
+    module_function
+
+    BETA_GOUV_FR = '2348627'
+
+    class << self
+      def call(community, date)
+        active = SortingHat.sort(community, date)[:members]
+        active
+          .map { |member| OrganizationAction.new('sgmap', member[:github], BETA_GOUV_FR) }
+      end
+    end
+  end
+
   class OrganizationAction
+    attr_accessor :org, :user, :team
 
     def initialize(org, user, team)
       @org = org
