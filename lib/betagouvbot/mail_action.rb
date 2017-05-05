@@ -8,6 +8,14 @@ module BetaGouvBot
       @mail = mail
     end
 
+    def subject
+      @mail[:personalizations][0][:subject]
+    end
+
+    def recipients
+      @mail[:personalizations][0][:to]
+    end
+
     def execute
       @client.post(request_body: @mail)
     end
