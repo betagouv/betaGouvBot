@@ -20,7 +20,7 @@ module BetaGouvBot
 
     helpers do
       def members
-        members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
+        members = HTTParty.get('https://beta.gouv.fr/api/v1.3/authors.json').parsed_response
         members.map(&:with_indifferent_access)
       end
     end
@@ -38,15 +38,19 @@ module BetaGouvBot
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)
 
+      # Manage Github membership
+      github = GithubRequest.(members, date)
+
       # Execute actions
-      (mailer + sorting_hat).map(&:execute) if execute
+      (mailer + sorting_hat + github).map(&:execute) if execute
 
       # Debug
       {
         "execute": execute,
         "warnings": warnings,
         "mailer": mailer,
-        "sorting_hat": sorting_hat
+        "sorting_hat": sorting_hat,
+        "github": github
       }.to_json
     end
 
