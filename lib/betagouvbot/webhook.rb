@@ -20,7 +20,7 @@ module BetaGouvBot
 
     helpers do
       def members
-        members = HTTParty.get('https://beta.gouv.fr/api/v1.2/authors.json').parsed_response
+        members = HTTParty.get('https://beta.gouv.fr/api/v1.3/authors.json').parsed_response
         members.map(&:with_indifferent_access)
       end
     end
