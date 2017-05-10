@@ -49,7 +49,8 @@ module BetaGouvBot
         "execute": execute,
         "warnings": warnings,
         "mailer": mailer,
-        "sorting_hat": sorting_hat
+        "sorting_hat": sorting_hat,
+        "github": github
       }.to_json
     end
 
