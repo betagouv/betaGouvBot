@@ -7,7 +7,8 @@ RSpec.describe BetaGouvBot::GithubRequest do
 
   let(:ann)     { { id: 'ann', github: 'ann-gh', end: yesterday.iso8601 } }
   let(:bob)     { { id: 'bob', github: 'bob-gh', end: tomorrow.iso8601 } }
-  let(:members) { [bob, ann] }
+  let(:ted)     { { id: 'ted', fullname: 'Ted', end: tomorrow.iso8601 } }
+  let(:members) { [bob, ann, ted] }
 
   it 'ensures all active members are invited to Github org SGMAP' do
     actions = described_class.(members, Date.today)

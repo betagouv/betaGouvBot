@@ -11,6 +11,7 @@ module BetaGouvBot
       def call(community, date)
         active = SortingHat.sort(community, date)[:members]
         active
+          .reject { |member| member[:github].nil? || member[:github].empty? }
           .map { |member| OrganizationAction.new('sgmap', member[:github], BETA_GOUV_FR) }
       end
     end
