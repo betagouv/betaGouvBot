@@ -38,5 +38,9 @@ module BetaGouvBot
     def api
       @api ||= octokit.new(ENV['GITHUB_TOKEN'] || '')
     end
+
+    def to_s
+      "#{self.class.name}, #{@user}, #{@org}, #{@team}"
+    end
   end
 end
