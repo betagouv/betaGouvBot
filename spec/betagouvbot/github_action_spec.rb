@@ -25,7 +25,7 @@ RSpec.describe BetaGouvBot::OrganizationAction do
       it 'leaves the user alone' do
         action.execute
         expect(api).to have_received(:organization_member?).with('sgmap', 'ann-gh')
-        expect(api).not_to have_received(:add_team_member)
+        expect(api).not_to have_received(:add_team_membership)
       end
     end
 
@@ -36,7 +36,7 @@ RSpec.describe BetaGouvBot::OrganizationAction do
       it 'invites the user to the org and team' do
         action.execute
         expect(api).to have_received(:organization_member?).with('sgmap', 'ann-gh')
-        expect(api).to have_received(:add_team_member).with(12, 'ann-gh')
+        expect(api).to have_received(:add_team_membership).with(12, 'ann-gh')
       end
     end
   end

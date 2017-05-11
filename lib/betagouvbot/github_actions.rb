@@ -30,7 +30,7 @@ module BetaGouvBot
 
     def execute
       return if api.organization_member?(@org, @user)
-      api.add_team_member(@team, @user)
+      api.add_team_membership(@team, @user)
     end
 
     def octokit
