@@ -6,11 +6,21 @@ module BetaGouvBot
     module_function
 
     class << self
-      def call(members, command)
-        member, personal_address, password = command.split(' ')
-        members
-          .select { |author| author[:id] == member }
-          .flat_map { |author| request_account(author, personal_address, password) }
+      def call(authors, params)
+        fullname, email, password = params.split
+        validate_fullname!(fullname)
+
+        authors
+          .select { |author| author[:id] == fullname }
+          .flat_map { |author| request_account(author, email, password) }
+      end
+
+      private
+
+      def validate_fullname!(fullname)
+        fullname &&
+          fullname == fullname[/\A[a-z\.\-.]+\z/] ||
+          raise(InvalidNameError, 'Author name format should be prenom.nom')
       end
 
       def request_account(member, personal_address, password)
