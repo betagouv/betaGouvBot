@@ -5,14 +5,16 @@ module BetaGouvBot
   module AccountRequest
     module_function
 
-    InvalidNameError  = Class.new(StandardError)
-    InvalidEmailError = Class.new(StandardError)
+    InvalidNameError   = Class.new(StandardError)
+    InvalidEmailError  = Class.new(StandardError)
+    EmptyPasswordError = Class.new(StandardError)
 
     class << self
       def call(authors, params)
         fullname, email, password = params.split
         validate_fullname!(fullname)
         validate_email!(email)
+        validate_password!(password)
 
         authors
           .select { |author| author[:id] == fullname }
@@ -31,6 +33,10 @@ module BetaGouvBot
         email &&
           email =~ /\A\*?([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i ||
           raise(InvalidEmailError, "That's not a valid email, maybe a typo?")
+      end
+
+      def validate_password!(password)
+        password || raise(EmptyPasswordError, 'Password is required')
       end
 
       def request_account(author, email, password)

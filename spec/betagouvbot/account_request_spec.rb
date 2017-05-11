@@ -70,6 +70,12 @@ RSpec.describe BetaGouvBot::AccountRequest do
 
           it { is_expected.to raise_error(described_class::InvalidEmailError) }
         end
+
+        context 'with an empty password' do
+          let(:params) { 'bob bob@email.coop' }
+
+          it { is_expected.to raise_error(described_class::EmptyPasswordError) }
+        end
       end
     end
   end
