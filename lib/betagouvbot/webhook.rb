@@ -67,25 +67,19 @@ module BetaGouvBot
     end
 
     post '/compte' do
-      member = params['text'].split(' ').first
-      origin = params['user_name']
+      member   = params['text'].to_s.split.first
+      origin   = params['user_name']
       response = "A la demande de @#{origin} je créée un compte pour #{member}"
-      body = { response_type: 'in_channel', text: response }.to_json
-      headers = { 'Content-Type' => 'application/json' }
+      body     = { response_type: 'in_channel', text: response }.to_json
       HTTParty.post(params['response_url'], body: body, headers: headers)
 
       response = 'OK, création de compte en cours !'
-      accounts = AccountRequest.(members, params['text'])
-      execute = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
-      begin
-        accounts.map(&:execute) if execute
-      rescue StandardError => e
-        response = "Zut, il y a une erreur: #{e.message}"
-      end
+      accounts = AccountRequest.(members, *params['text'].to_s.split)
+      execute  = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
+      accounts.map(&:execute) if execute
 
       response = 'Je ne vois pas de qui tu veux parler' if accounts.empty?
-      body = { text: response }.to_json
-      headers = { 'Content-Type' => 'application/json' }
+      body     = { text: response }.to_json
       HTTParty.post(params['response_url'], body: body, headers: headers)
 
       # Explicitly return empty response to suppress echoing of the command
@@ -94,7 +88,12 @@ module BetaGouvBot
 
     # Debug
     get '/compte' do
-      { "comptes": AccountRequest.(members, params['text']) }.to_json
+      { "comptes": AccountRequest.(members, *params['text'].to_s.split) }.to_json
+    end
+
+    ## Noop
+    error StandardError do
+      "Zut, il y a une erreur: #{env['sinatra.error'].message}"
     end
   end
 end
