@@ -40,6 +40,8 @@ RSpec.describe BetaGouvBot::Webhook do
     let(:callback)     { 'https://bob.coop' }
     let(:text)         { "#{user_name} #{user_name}@email.coop password" }
     let(:base_params)  { { response_url: callback, user_name: user_name, token: token } }
+    let(:empty_params) { { response_url: callback, user_name: user_name } }
+    let(:valid_params) { empty_params.merge(text: text) }
 
     before do
       allow(ENV).to receive(:[]).with('COMPTE_TOKEN') { token }
@@ -49,6 +51,7 @@ RSpec.describe BetaGouvBot::Webhook do
     end
 
     it { expect(post('/compte')).not_to be_ok }
+    it { expect(post('/compte', empty_params)).not_to be_ok }
     it { expect(post('/compte', valid_params)).to be_ok }
   end
 end

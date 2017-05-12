@@ -18,6 +18,12 @@ module BetaGouvBot
           .parsed_response
           .map(&:with_indifferent_access)
       end
+
+      def error_message(&_)
+        "Zut, il y a une erreur: #{env['sinatra.error'].message}".tap do
+          yield if block_given?
+        end
+      end
     end
 
     get '/actions' do
@@ -86,9 +92,22 @@ module BetaGouvBot
       { "comptes": AccountRequest.(members, *params['text'].to_s.split) }.to_json
     end
 
-    ## Noop
+    ## Error handling
+
+    error ArgumentError,
+          AccountRequest::InvalidNameError,
+          AccountRequest::InvalidEmailError do
+
+      error_message do |response|
+        if params['response_url']
+          body = { text: response }.to_json
+          HTTParty.post(params['response_url'], body: body, headers: headers)
+        end
+      end
+    end
+
     error StandardError do
-      "Zut, il y a une erreur: #{env['sinatra.error'].message}"
+      error_message
     end
   end
 end
