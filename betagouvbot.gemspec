@@ -8,10 +8,10 @@ require 'betagouvbot/version'
 Gem::Specification.new do |spec|
   spec.name          = 'betagouvbot'
   spec.version       = BetaGouvBot::VERSION
-  spec.authors       = ['Morendil']
+  spec.authors       = ['Morendil', 'maukoquiroga', 'l-vincent-l']
   spec.email         = ['betagouvbot@beta.gouv.fr']
 
-  spec.summary       = 'Alert email webhook.'
+  spec.summary       = 'Automated assistant for beta.gouv.fr administrative tasks.'
   spec.homepage      = 'https://github.com/sgmap/betagouvbot'
   spec.license       = 'AGPL-3.0'
 
@@ -20,17 +20,21 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'activesupport'
   spec.add_runtime_dependency 'httparty'
-  spec.add_runtime_dependency 'rack', '< 2'
-  spec.add_runtime_dependency 'sendgrid-ruby'
-  spec.add_runtime_dependency 'ovh-rest'
-  spec.add_runtime_dependency 'octokit'
-  spec.add_runtime_dependency 'redis'
-  spec.add_runtime_dependency 'sinatra'
-  spec.add_runtime_dependency 'liquid'
   spec.add_runtime_dependency 'kramdown'
+  spec.add_runtime_dependency 'liquid'
+  spec.add_runtime_dependency 'octokit'
+  spec.add_runtime_dependency 'ovh-rest'
+  spec.add_runtime_dependency 'rack', '< 2'
+  spec.add_runtime_dependency 'redis'
+  spec.add_runtime_dependency 'sendgrid-ruby'
+  spec.add_runtime_dependency 'sinatra'
   spec.add_runtime_dependency 'thin'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rspec-collection_matchers'
+  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop-rspec'
+  spec.add_development_dependency 'webmock'
 end
