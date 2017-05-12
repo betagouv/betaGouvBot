@@ -5,8 +5,9 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup :default, :test
 
+Dir[File.expand_path(File.join('spec', 'support', '**', '*.rb'))].map(&method(:require))
+
 require 'betagouvbot'
-require 'rspec/collection_matchers'
 
 RSpec.configure do |config|
   config.run_all_when_everything_filtered = true

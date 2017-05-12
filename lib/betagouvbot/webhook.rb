@@ -14,14 +14,14 @@ require 'liquid'
 
 module BetaGouvBot
   class Webhook < Sinatra::Base
-    before do
-      content_type 'application/json; charset=utf8'
-    end
+    before { content_type 'application/json; charset=utf8' }
 
     helpers do
       def members
-        members = HTTParty.get('https://beta.gouv.fr/api/v1.3/authors.json').parsed_response
-        members.map(&:with_indifferent_access)
+        HTTParty
+          .get('https://beta.gouv.fr/api/v1.3/authors.json')
+          .parsed_response
+          .map(&:with_indifferent_access)
       end
     end
 
