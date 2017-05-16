@@ -17,6 +17,7 @@ RSpec.describe BetaGouvBot::Webhook do
         )
     end
 
+    it { expect(post('/compte')).not_to be_ok }
     it { expect(post('/compte', params)).to be_ok }
   end
 end

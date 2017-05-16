@@ -5,18 +5,37 @@ module BetaGouvBot
   module AccountRequest
     module_function
 
+    InvalidNameError   = Class.new(StandardError)
+    InvalidEmailError  = Class.new(StandardError)
+
     class << self
-      def call(members, command)
-        member, personal_address, password = command.split(' ')
-        members
-          .select { |author| author[:id] == member }
-          .flat_map { |author| request_account(author, personal_address, password) }
+      def call(authors, fullname, email, password)
+        validate_fullname!(fullname)
+        validate_email!(email)
+
+        authors
+          .select { |author| author[:id] == fullname }
+          .flat_map { |author| request_account(author, email, password) }
       end
 
-      def request_account(member, personal_address, password)
-        create_account(member, password) +
-          create_redirection(member, personal_address) +
-          create_notification(member, personal_address)
+      private
+
+      def validate_fullname!(fullname)
+        fullname &&
+          fullname == fullname[/\A[a-z\.\-.]+\z/] ||
+          raise(InvalidNameError, 'Le format du nom doit être prenom.nom')
+      end
+
+      def validate_email!(email)
+        email &&
+          email =~ /\A\*?([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i ||
+          raise(InvalidEmailError, 'Email invalide, typo ?')
+      end
+
+      def request_account(author, email, password)
+        create_account(author, password) +
+          create_redirection(author, email) +
+          create_notification(author, email)
       end
 
       def create_account(member, password)
