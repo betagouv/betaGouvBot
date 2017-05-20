@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe BetaGouvBot::RedirectAction do
+RSpec.describe BetaGouvBot::RedirectAction do
   describe 'executing actions' do
     let(:ovh)       { instance_spy('ovh') }
     let(:api)       { instance_spy('api') }
