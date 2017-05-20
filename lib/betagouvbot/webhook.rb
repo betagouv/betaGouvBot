@@ -75,7 +75,7 @@ module BetaGouvBot
       HTTParty.post(params['response_url'], body: body, headers: headers)
 
       response = 'OK, création de compte en cours !'
-      accounts = AccountRequest.(members, *params['text'].to_s.split)
+      accounts = AccountRequest.new.(members, *params['text'].to_s.split)
       execute  = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
       accounts.map(&:execute) if execute
 
