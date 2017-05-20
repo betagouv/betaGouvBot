@@ -5,7 +5,6 @@ require 'kramdown'
 
 module BetaGouvBot
   class Mail
-
     attr_accessor :subject
     attr_accessor :recipients
 

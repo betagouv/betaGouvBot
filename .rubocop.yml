@@ -1,13 +1,6 @@
 require: rubocop-rspec
 
 AllCops:
-  Exclude:
-    - betagouvbot.gemspec
-    - Guardfile
-    - spec/spec_helper.rb
-    - vendor/**/*
-    - tmp/**/*
-
   TargetRubyVersion: 2.3
 
 Metrics/LineLength:
@@ -30,9 +23,6 @@ Style/FrozenStringLiteralComment:
   EnforcedStyle: always
   Enabled: true
 
-Style/EmptyLinesAroundClassBody:
-  Enabled: false
-
 Style/LambdaCall:
   Enabled: false
 
@@ -52,8 +42,7 @@ Style/BlockDelimiters:
 
 Metrics/BlockLength:
   Exclude:
-    - 'Rakefile'
-    - '**/*.rake'
+    - 'betagouvbot.gemspec'
     - 'spec/**/*.rb'
 
 RSpec/MultipleExpectations:

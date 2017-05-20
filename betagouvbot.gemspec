@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/sgmap/betagouvbot'
   spec.license       = 'AGPL-3.0'
 
-  spec.files         = Dir['{lib,data}/**/*', 'README*', 'Rakefile','config.ru']
+  spec.files         = Dir['{lib,data}/**/*', 'README*', 'Rakefile', 'config.ru']
   spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'activesupport'

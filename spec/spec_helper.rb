@@ -5,7 +5,7 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup :default, :test
 
-Dir[File.expand_path(File.join('spec', 'support', '**', '*.rb'))].map(&method(:require))
+Dir[__dir__ + '/support/**/*.rb'].each(&method(:require))
 
 require 'betagouvbot'
 

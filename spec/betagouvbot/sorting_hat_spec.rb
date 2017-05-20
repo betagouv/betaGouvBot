@@ -1,8 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'betagouvbot/mail_action'
-
 RSpec.describe BetaGouvBot::SortingHat do
   let(:yesterday)     { today - 1 }
   let(:today)         { Date.today }

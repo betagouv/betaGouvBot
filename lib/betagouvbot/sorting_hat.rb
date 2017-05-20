@@ -2,10 +2,6 @@
 # frozen_string_literal: true
 
 require 'ovh/rest'
-require 'betagouvbot/mailing_list_action'
-require 'betagouvbot/mailer'
-require 'betagouvbot/mail_action'
-require 'betagouvbot/mailer'
 
 module BetaGouvBot
   module SortingHat
@@ -21,6 +17,7 @@ module BetaGouvBot
           reconcile(community, alumni, sorted[:alumni], 'alumni')
       end
 
+      # TODO: do not use exceptions for control flow
       def active?(member, date)
         Date.iso8601(member[:end]) >= date
       rescue
@@ -104,7 +101,6 @@ module BetaGouvBot
       def author(community, email)
         community.detect { |author| email == email(author) }
       end
-
     end
   end
 end
