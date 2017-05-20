@@ -2,11 +2,6 @@
 # frozen_string_literal: true
 
 require 'active_support/core_ext/hash/indifferent_access'
-require 'betagouvbot/anticipator'
-require 'betagouvbot/mailer'
-require 'betagouvbot/sorting_hat'
-require 'betagouvbot/rules'
-require 'betagouvbot/badge_request'
 require 'sinatra/base'
 require 'sendgrid-ruby'
 require 'httparty'
@@ -55,7 +50,7 @@ module BetaGouvBot
     end
 
     post '/badge' do
-      badges = BadgeRequest.(members, params['text'])
+      badges  = BadgeRequest.(members, params['text'])
       execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
       badges.map(&:execute) if execute
       { response_type: 'in_channel', text: 'OK, demande faite !' }.to_json

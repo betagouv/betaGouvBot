@@ -5,6 +5,7 @@ module BetaGouvBot
   class MailingListAction
     DOMAIN = 'beta.gouv.fr'
     PREFIX = "/email/domain/#{DOMAIN}"
+
     def initialize(api, listname, email)
       @api = api
       @listname = listname

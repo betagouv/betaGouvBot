@@ -1,10 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'betagouvbot/mail_action'
-require 'betagouvbot/mailer'
-require 'betagouvbot/mail'
-
 module BetaGouvBot
   module BadgeRequest
     module_function
@@ -29,7 +25,6 @@ module BetaGouvBot
       def client
         Mailer.client
       end
-
     end
   end
 end
