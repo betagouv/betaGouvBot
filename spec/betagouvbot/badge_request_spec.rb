@@ -8,30 +8,24 @@ RSpec.describe BetaGouvBot::BadgeRequest do
       let(:bob)     { { id: 'bob', start: '2017-01-01', end: '2017-12-31' } }
       let(:authors) { [bob, ann] }
 
-      let(:client) { instance_spy('client') }
+      let(:client) { instance_double('client') }
 
-      before do
-        allow(described_class).to receive(:client) { client }
-      end
+      before { allow(described_class).to receive(:client) { client } }
 
       describe 'selecting members' do
-        before do
-          allow(described_class).to receive(:request_badge)
-        end
+        before { allow(described_class).to receive(:request_badge) }
 
         it 'requests a badge for members who do not have one' do
           described_class.(authors, 'bob')
-          expect(described_class).to have_received(:request_badge).once
-          expect(described_class).to have_received(:request_badge).with(bob)
+          is_expected.to have_received(:request_badge).with(bob).once
         end
       end
 
       describe 'sending email' do
-        it 'creates a mail action' do
-          actions = described_class.(authors, 'ann')
-          expect(actions).to have(1).items
-          expect(actions).to include(a_kind_of(BetaGouvBot::MailAction))
-        end
+        subject { described_class.(authors, 'ann') }
+
+        it { is_expected.to include(a_kind_of(BetaGouvBot::MailAction)) }
+        it { is_expected.to have(1).items }
       end
     end
   end

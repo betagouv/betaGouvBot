@@ -14,11 +14,10 @@ RSpec.describe BetaGouvBot::Mail do
     context 'when a member has an end date in three weeks' do
       let(:author) { { id: 'ann', fullname: 'Ann', end: (Date.today + 10).iso8601 } }
 
-      it 'formats email by parsing the appropriate template and passing in author' do
-        described_class.render('dans 3s', 'author' => author)
-        expect(parser).to have_received(:parse).with('dans 3s')
-        expect(template).to have_received(:render).with('author' => author)
-      end
+      before { described_class.render('dans 3s', 'author' => author) }
+
+      it { expect(parser).to have_received(:parse).with('dans 3s') }
+      it { expect(template).to have_received(:render).with('author' => author) }
     end
   end
 end

@@ -3,13 +3,12 @@
 
 module BetaGouvBot
   class AccountAction
-    attr_accessor :name
-    attr_accessor :password
+    attr_accessor :name, :password
 
     ENDPOINT = '/email/domain/beta.gouv.fr/account'
 
     def initialize(name, password)
-      @name = name
+      @name     = name
       @password = password
     end
 
@@ -17,6 +16,8 @@ module BetaGouvBot
       return if existing.length >= 1
       api.post(ENDPOINT, accountName: @name, password: @password)
     end
+
+    private
 
     def existing
       api.get(ENDPOINT, accountName: @name)
