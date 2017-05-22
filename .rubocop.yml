@@ -45,8 +45,8 @@ Metrics/BlockLength:
     - 'betagouvbot.gemspec'
     - 'spec/**/*.rb'
 
-RSpec/MultipleExpectations:
-  Max: 4
+RSpec/ExampleLength:
+  Max: 7
 
 RSpec/NestedGroups:
   Max: 5

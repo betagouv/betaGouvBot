@@ -3,13 +3,12 @@
 
 module BetaGouvBot
   class RedirectAction
-    attr_accessor :name
-    attr_accessor :redirect
+    attr_accessor :name, :redirect
 
     ENDPOINT = '/email/domain/beta.gouv.fr/redirection'
 
     def initialize(name, redirect)
-      @name = name
+      @name     = name
       @redirect = redirect
     end
 
@@ -22,6 +21,8 @@ module BetaGouvBot
         api.post(ENDPOINT, from: address, to: @redirect, localCopy: 'false')
       end
     end
+
+    private
 
     def redirections
       api.get(ENDPOINT, from: address)

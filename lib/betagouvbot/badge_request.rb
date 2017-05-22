@@ -14,12 +14,15 @@ module BetaGouvBot
           .flat_map { |member| request_badge(member) }
       end
 
+      private
+
       def request_badge(author)
         mail = Mail.from_file('data/mail_badge.md',
                               ['dinsic-sec.sgmap@modernisation.gouv.fr',
                                '{{author.id}}@beta.gouv.fr',
                                'sgmap@beta.gouv.fr'])
-        [MailAction.new(client, mail.format('author' => author))]
+
+        MailAction.new(client, mail.format('author' => author))
       end
 
       def client

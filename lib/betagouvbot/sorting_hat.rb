@@ -20,7 +20,7 @@ module BetaGouvBot
       # TODO: do not use exceptions for control flow
       def active?(member, date)
         Date.iso8601(member[:end]) >= date
-      rescue
+      rescue ArgumentError
         true
       end
 
@@ -30,45 +30,49 @@ module BetaGouvBot
       end
 
       def members
-        subscribers 'incubateur'
+        subscribers('incubateur')
       end
 
       def alumni
-        subscribers 'alumni'
+        subscribers('alumni')
       end
 
       def reconcile(all, current_members, computed_members, listname)
-        unsubscribe_current(all, current_members, computed_members, listname) +
-          subscribe_new(current_members, computed_members, listname)
+        unsubscribe_current(all, current_members, computed_members, listname)
+          .<<(subscribe_new(current_members, computed_members, listname))
+          .flatten
       end
 
       def unsubscribe_current(all, current, target, listname)
-        leaving = current
-                  .select { |email| all.any? { |author| email == email(author) } }
-                  .select { |email| target.none? { |author| email == email(author) } }
+        leaving =
+          current
+          .select { |email| all.any? { |author| email == email(author) } }
+          .select { |email| target.none? { |author| email == email(author) } }
 
         leaving.map { |outgoing| unsubscribe(listname, outgoing) } +
           leaving.map { |outgoing| notify(false, listname, author(all, outgoing)) }
       end
 
       def subscribe_new(current, target, listname)
-        arriving = target
-                   .map(&:with_indifferent_access)
-                   .select { |author| current.none? { |email| email == email(author) } }
+        arriving =
+          target
+          .map(&:with_indifferent_access)
+          .select { |author| current.none? { |email| email == email(author) } }
+
         arriving.map { |incoming| subscribe(listname, email(incoming)) } +
           arriving.map { |incoming| notify(true, listname, incoming) }
       end
 
       def notify(subscribed, listname, author)
-        description = subscribed ? 'abonné.e à' : 'désabonné.e de'
-        operation = subscribed ? 'Abonnement à' : 'Désabonnement de'
-        mail = Mail.from_file('data/mail_subscribed.md',
-                              ['{{author.id}}@beta.gouv.fr'])
-        BetaGouvBot::MailAction.new(Mailer.client,
-                                    mail.format('author' => author,
-                                                'operation' => operation,
-                                                'description' => description,
-                                                'listname' => listname))
+        BetaGouvBot::MailAction.new(
+          Mailer.client,
+          mail.format(
+            'author'      => author,
+            'operation'   => operation(subscribed),
+            'description' => description(subscribed),
+            'listname'    => listname
+          )
+        )
       end
 
       def ovh
@@ -100,6 +104,18 @@ module BetaGouvBot
 
       def author(community, email)
         community.detect { |author| email == email(author) }
+      end
+
+      def mail
+        Mail.from_file('data/mail_subscribed.md', ['{{author.id}}@beta.gouv.fr'])
+      end
+
+      def description(subscribed)
+        subscribed ? 'abonné·e à' : 'désabonné·e de'
+      end
+
+      def operation(subscribed)
+        subscribed ? 'Abonnement à' : 'Désabonnement de'
       end
     end
   end
