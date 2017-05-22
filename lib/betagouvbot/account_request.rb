@@ -1,38 +1,49 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
+require 'active_model'
+require 'wisper'
+
 module BetaGouvBot
   class AccountRequest
-    InvalidNameError   = Class.new(StandardError)
-    InvalidEmailError  = Class.new(StandardError)
+    include ActiveModel::Validations
+    include Wisper::Publisher
 
-    def call(authors, fullname, email, password)
-      validate_fullname!(fullname)
-      validate_email!(email)
+    attr_reader :authors, :fullname, :email, :password
 
+    validate :validate_fullname,
+             :validate_email,
+             :validate_password
+
+    def initialize(authors, fullname, email, password)
+      @authors  = authors
+      @fullname = fullname
+      @email    = email
+      @password = password
+    end
+
+    def call
+      return broadcast(:error, errors.full_messages) if invalid?
+
+      accounts.tap do |accounts|
+        broadcast(:success, accounts) if accounts.present?
+        broadcast(:not_found) if accounts.empty?
+      end
+    end
+
+    private
+
+    def accounts
       authors
         .select { |author| author[:id] == fullname }
         .flat_map { |author| request_account(author, email, password) }
     end
 
-    private
-
-    def validate_fullname!(fullname)
-      fullname &&
-        fullname == fullname[/\A[a-z\.\-.]+\z/] ||
-        raise(InvalidNameError, 'Le format du nom doit être prenom.nom')
-    end
-
-    def validate_email!(email)
-      email &&
-        email =~ /\A\*?([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i ||
-        raise(InvalidEmailError, 'Email invalide, typo ?')
-    end
-
     def request_account(author, email, password)
-      create_account(author, password) +
-        create_redirection(author, email) +
-        create_notification(author, email)
+      create_account(author, password)
+        .<<(create_redirection(author, email))
+        .<<(create_notification(author, email))
+        .flatten
     end
 
     def create_account(member, password)
@@ -63,6 +74,23 @@ module BetaGouvBot
 
     def client
       Mailer.client
+    end
+
+    def validate_fullname
+      fullname &&
+        fullname == fullname[/\A[a-z\.\-.]+\z/] ||
+        errors.add(:base, 'le format du nom doit être prenom.nom')
+    end
+
+    def validate_email
+      email &&
+        email =~ /\A\*?([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i ||
+        errors.add(:base, "l'email doit être présent et être valide")
+    end
+
+    def validate_password
+      password ||
+        errors.add(:base, 'le mot de passe doit être présent')
     end
   end
 end

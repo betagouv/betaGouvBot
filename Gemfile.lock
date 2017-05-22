@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     betagouvbot (0.1.0)
+      activemodel
       activesupport
       httparty
       kramdown
@@ -13,11 +14,13 @@ PATH
       sendgrid-ruby
       sinatra
       thin
-      whisper
+      wisper
 
 GEM
   remote: https://rubygems.org/
   specs:
+    activemodel (5.1.1)
+      activesupport (= 5.1.1)
     activesupport (5.1.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
@@ -43,7 +46,6 @@ GEM
     minitest (5.10.2)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
-    oauth (0.5.2)
     octokit (4.7.0)
       sawyer (~> 0.8.0, >= 0.5.3)
     ovh-rest (0.0.5)
@@ -85,7 +87,6 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     rubocop-rspec (1.15.1)
       rubocop (>= 0.42.0)
-    ruby-hmac (0.4.0)
     ruby-progressbar (1.8.1)
     ruby_http_client (3.1.0)
     safe_yaml (1.0.4)
@@ -112,10 +113,8 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
-    whisper (0.0.1)
-      activesupport
-      oauth
-      ruby-hmac
+    wisper (2.0.0)
+    wisper-rspec (0.0.3)
 
 PLATFORMS
   ruby
@@ -130,6 +129,7 @@ DEPENDENCIES
   rubocop
   rubocop-rspec
   webmock
+  wisper-rspec
 
 RUBY VERSION
    ruby 2.3.0p0

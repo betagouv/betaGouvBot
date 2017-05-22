@@ -19,9 +19,13 @@ module BetaGouvBot
           .map(&:with_indifferent_access)
       end
 
-      def error_message(&_)
-        "Zut, il y a une erreur: #{env['sinatra.error'].message}".tap do
-          yield if block_given?
+      def publish_error(message)
+        "Zut, il y a une ou plusieurs erreur(s) : #{message}".tap do |response|
+          HTTParty.post(
+            params['response_url'],
+            body: { text: response }.to_json,
+            headers: headers
+          )
         end
       end
     end
@@ -68,23 +72,37 @@ module BetaGouvBot
     end
 
     post '/compte' do
+      halt(400, "'response_url' doit être présent") unless params['response_url']
+      halt(400, "'user_name' doit être présent") unless params['user_name']
+      halt(400, "'text' doit être présent") unless params['text']
+      halt(400, "'token' doit être présent") unless params['token']
+      halt(401, "'token' n'est pas valide") unless params['token'] == ENV['COMPTE_TOKEN']
+
       member   = params['text'].to_s.split.first
       origin   = params['user_name']
-      response = "A la demande de @#{origin} je créée un compte pour #{member}"
+      response = "À la demande de @#{origin} je crée un compte pour #{member}"
       body     = { response_type: 'in_channel', text: response }.to_json
       HTTParty.post(params['response_url'], body: body, headers: headers)
 
-      response = 'OK, création de compte en cours !'
-      accounts = AccountRequest.new.(members, *params['text'].to_s.split)
-      execute  = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
-      accounts.map(&:execute) if execute
+      account_request = AccountRequest.new
 
-      response = 'Je ne vois pas de qui tu veux parler' if accounts.empty?
-      body     = { text: response }.to_json
-      HTTParty.post(params['response_url'], body: body, headers: headers)
+      account_request.on(:success) do |accounts|
+        accounts.map(&:execute)
+        response = 'OK, création de compte en cours !'
+        body     = { text: response }.to_json
+        HTTParty.post(params['response_url'], body: body, headers: headers)
+        [201, headers, body]
+      end
 
-      # Explicitly return empty response to suppress echoing of the command
-      ''
+      account_request.on(:not_found) do
+        error 404, 'Je ne vois pas de qui tu veux parler'
+      end
+
+      account_request.on(:error) do
+        error 422, 'pene' # TODO: add error message
+      end
+
+      account_request.(members, *params['text'].to_s.split)
     end
 
     # Debug
@@ -94,20 +112,14 @@ module BetaGouvBot
 
     ## Error handling
 
-    error ArgumentError,
-          AccountRequest::InvalidNameError,
-          AccountRequest::InvalidEmailError do
-
-      error_message do |response|
-        if params['response_url']
-          body = { text: response }.to_json
-          HTTParty.post(params['response_url'], body: body, headers: headers)
-        end
-      end
+    error 400, 401, 404, 422 do
+      publish_error(body.join(', ')) if params['response_url']
+      [status, headers, { errors: body }.to_json]
     end
 
-    error StandardError do
-      error_message
-    end
+    # error 500 do
+    #   publish_error(env['sinatra.error'].message) if params['response_url']
+    #   [status, headers, { errors: [env['sinatra.error'].message] }.to_json]
+    # end
   end
 end
