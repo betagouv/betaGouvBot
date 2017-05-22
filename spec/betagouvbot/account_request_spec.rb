@@ -15,6 +15,14 @@ RSpec.describe BetaGouvBot::AccountRequest do
 
       before { allow(described_class).to receive(:client) }
 
+      shared_examples 'sending notifications' do
+        it 'notifies the backing address' do
+          is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
+            .and(have_attributes(subject: 'Ton adresse @beta.gouv.fr'))
+            .and(have_attributes(recipients: [{ 'email' => 'bob@email.coop' }]))
+        end
+      end
+
       context 'with valid parameters' do
         subject { described_class.(authors, fullname, email, password) }
 
@@ -30,11 +38,7 @@ RSpec.describe BetaGouvBot::AccountRequest do
             .and(have_attributes(redirect: 'bob@email.coop'))
         end
 
-        it 'notifies the backing address' do
-          is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
-            .and(have_attributes(subject: 'Ton adresse @beta.gouv.fr'))
-            .and(have_attributes(recipients: [{ 'email' => 'bob@email.coop' }]))
-        end
+        it_behaves_like 'sending notifications'
 
         context 'with a starred address' do
           let(:email) { '*bob@email.coop' }
@@ -43,10 +47,7 @@ RSpec.describe BetaGouvBot::AccountRequest do
             is_expected.not_to include(be_a_kind_of(BetaGouvBot::RedirectAction))
           end
 
-          it 'notifies the backing address' do
-            is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
-              .and(have_attributes(recipients: [{ 'email' => 'bob@email.coop' }]))
-          end
+          it_behaves_like 'sending notifications'
         end
 
         context 'when a request is made by a non member' do
