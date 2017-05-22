@@ -2,33 +2,45 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::Mailer do
-  Mail = BetaGouvBot::Mail
-  let(:rules) { { 1 => { mail:  Mail.new('demain', nil,
-                                         ['{{author.id}}@beta.gouv.fr'], '') },
-                  14 => { mail: Mail.new('dans 2s', nil,
-                                         ['{{author.id}}@beta.gouv.fr',
-                                          'contact@beta.gouv.fr'], '') },
-                  21 => { mail: Mail.new('dans 3s', nil,
-                                         ['{{author.id}}@beta.gouv.fr'], '') } }
-  }
+  let(:in_3w) do
+    instance_double(
+      'mail',
+      format: { personalizations: [to: ['email' => 'ann@email.coop']] }
+    )
+  end
+
+  let(:in_2w) do
+    instance_double(
+      'mail',
+      format: {
+        personalizations: [
+          to: [{ 'email' => 'ann@email.coop' }, { 'email' => 'hi@email.coop' }]
+        ]
+      }
+    )
+  end
+
+  let(:rules) do
+    {
+      1  => { mail: instance_double('mail') },
+      14 => { mail: in_2w },
+      21 => { mail: in_3w }
+    }
+  end
+
+  let(:schedule)  { BetaGouvBot::Anticipator.(authors, rules.keys, Date.today) }
+  let(:client)    { instance_spy('client') }
+
+  before { allow(described_class).to receive(:client) { client } }
 
   describe 'selecting recipients of emails' do
-    let(:members)   { authors.map(&:with_indifferent_access) }
-    let(:schedule)  { BetaGouvBot::Anticipator.(members, rules.keys, Date.today) }
-    let(:client)    { instance_spy('client') }
-
-    before do
-      allow(described_class).to receive(:client) { client }
-    end
-
     context 'when a member has an end date in three weeks' do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 21).iso8601] }
 
       it 'sends an email directly to the author' do
         described_class.(schedule, rules).map(&:execute)
-        recipients = hash_including(to: ['email' => 'ann@beta.gouv.fr'])
-        expected = hash_including(personalizations: array_including(recipients))
-        expect(client).to have_received(:post).with(request_body: expected)
+        expect(client).to have_received(:post)
+          .with(request_body: in_3w.format)
       end
     end
 
@@ -37,23 +49,13 @@ RSpec.describe BetaGouvBot::Mailer do
 
       it 'sends an email to the author and contact' do
         described_class.(schedule, rules).map(&:execute)
-        recipients_list = [{ 'email' => 'ann@beta.gouv.fr' },
-                           { 'email' => 'contact@beta.gouv.fr' }]
-        recipients = hash_including(to: recipients_list)
-        expected = hash_including(personalizations: array_including(recipients))
-        expect(client).to have_received(:post).with(request_body: expected)
+        expect(client).to have_received(:post)
+          .with(request_body: in_2w.format)
       end
     end
   end
 
   describe 'sending out emails' do
-    let(:schedule)  { BetaGouvBot::Anticipator.(authors, rules.keys, Date.today) }
-    let(:client)    { instance_spy('client') }
-
-    before do
-      allow(described_class).to receive(:client) { client }
-    end
-
     context 'when one member has an end date in three weeks' do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 21).iso8601] }
 
@@ -64,9 +66,12 @@ RSpec.describe BetaGouvBot::Mailer do
     end
 
     context 'when two members have an end date in three weeks' do
-      let(:authors) { [{ id: 'ann', fullname: 'Ann', end: (Date.today + 21).iso8601 },
-                       { id: 'bob', fullname: 'Bob', end: (Date.today + 21).iso8601 }]
-      }
+      let(:authors) do
+        [
+          { id: 'ann', fullname: 'Ann', end: (Date.today + 21).iso8601 },
+          { id: 'bob', fullname: 'Bob', end: (Date.today + 21).iso8601 }
+        ]
+      end
 
       it 'sends out two emails' do
         described_class.(schedule, rules).map(&:execute)

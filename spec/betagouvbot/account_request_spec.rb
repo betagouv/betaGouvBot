@@ -4,81 +4,72 @@
 RSpec.describe BetaGouvBot::AccountRequest do
   describe 'requesting email accounts' do
     context 'when a Slack user requests a beta.gouv.fr email' do
-      let(:ann)     { { id: 'ann' } }
-      let(:bob)     { { id: 'bob' } }
-      let(:authors) { [bob, ann] }
+      let(:ann)      { 'ann' }
+      let(:bob)      { 'bob' }
+      let(:joe)      { 'joe' }
+
+      let(:authors)  { [{ id: ann }, { id: bob }] }
+      let(:fullname) { bob }
+      let(:email)    { "#{fullname}@email.coop" }
+      let(:password) { 'password' }
 
       before { allow(described_class).to receive(:client) }
 
+      shared_examples 'sending notifications' do
+        it 'notifies the backing address' do
+          is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
+            .and(have_attributes(subject: 'Ton adresse @beta.gouv.fr'))
+            .and(have_attributes(recipients: [{ 'email' => 'bob@email.coop' }]))
+        end
+      end
+
       context 'with valid parameters' do
+        subject { described_class.(authors, fullname, email, password) }
+
         it 'creates an email account' do
-          actions = described_class.(authors, 'bob', 'bob@gmail.com', 'password')
-          matching = be_a_kind_of(BetaGouvBot::AccountAction)
-                     .and have_attributes(name: 'bob')
-                     .and have_attributes(password: 'password')
-          expect(actions).to include(matching)
+          is_expected.to include be_a_kind_of(BetaGouvBot::AccountAction)
+            .and(have_attributes(name: 'bob'))
+            .and(have_attributes(password: 'password'))
         end
 
         it 'creates a redirection' do
-          actions = described_class.(authors, 'bob', 'bob@gmail.com', 'password')
-          matching = be_a_kind_of(BetaGouvBot::RedirectAction)
-                     .and have_attributes(name: 'bob')
-                     .and have_attributes(redirect: 'bob@gmail.com')
-          expect(actions).to include(matching)
+          is_expected.to include be_a_kind_of(BetaGouvBot::RedirectAction)
+            .and(have_attributes(name: 'bob'))
+            .and(have_attributes(redirect: 'bob@email.coop'))
         end
 
-        it 'creates no redirection for a starred address' do
-          actions = described_class.(authors, 'bob', '*bob@gmail.com', 'password')
-          matching = be_a_kind_of(BetaGouvBot::RedirectAction)
-          expect(actions).not_to include(matching)
+        it_behaves_like 'sending notifications'
+
+        context 'with a starred address' do
+          let(:email) { '*bob@email.coop' }
+
+          it 'does not create a redirection' do
+            is_expected.not_to include(be_a_kind_of(BetaGouvBot::RedirectAction))
+          end
+
+          it_behaves_like 'sending notifications'
         end
 
-        it 'notifies the backing address for a starred address' do
-          actions = described_class.(authors, 'bob', '*bob@gmail.com', 'password')
-          match_recipient = array_including(a_hash_including('email' => 'bob@gmail.com'))
-          matching = be_a_kind_of(BetaGouvBot::MailAction)
-                     .and have_attributes(recipients: match_recipient)
-          expect(actions).to include(matching)
-        end
+        context 'when a request is made by a non member' do
+          let(:fullname) { 'joe' }
 
-        it 'notifies the backing address' do
-          actions = described_class.(authors, 'bob', 'bob@gmail.com', 'pass')
-          match_recipient = array_including(a_hash_including('email' => 'bob@gmail.com'))
-          matching = be_a_kind_of(BetaGouvBot::MailAction)
-                     .and have_attributes(subject: 'Ton adresse @beta.gouv.fr')
-                     .and have_attributes(recipients: match_recipient)
-          expect(actions).to include(matching)
-        end
-
-        it 'creates accounts only for members' do
-          actions = described_class.(authors, 'joe', 'blah@blah.coop', 'blah')
-          expect(actions).to be_empty
+          it 'does not create and account' do
+            is_expected.to be_empty
+          end
         end
       end
 
       context 'with invalid parameters' do
-        subject { -> { described_class.(authors, *params.to_s.split) } }
-
-        context 'without arguments' do
-          let(:params) { nil }
-
-          it { is_expected.to raise_error(ArgumentError) }
-        end
-
-        context 'with missing arguments' do
-          let(:params) { 'bob bob@email.coop' }
-
-          it { is_expected.to raise_error(ArgumentError) }
-        end
+        subject { -> { described_class.(authors, fullname, email, password) } }
 
         context 'with an invalid fullname' do
-          let(:params) { 'bob69 bob@email.coop password' }
+          let(:fullname) { 'bob69' }
 
           it { is_expected.to raise_error(described_class::InvalidNameError) }
         end
 
         context 'with an invalid email' do
-          let(:params) { 'bob #bob@email.coop password' }
+          let(:email) { '#bob@email.coop' }
 
           it { is_expected.to raise_error(described_class::InvalidEmailError) }
         end

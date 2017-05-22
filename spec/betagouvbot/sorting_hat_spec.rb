@@ -92,11 +92,15 @@ RSpec.describe BetaGouvBot::SortingHat do
   end
 
   describe 'reconciling subscription lists' do
-    let(:all) { [{ id: 'ann', fullname: 'Ann', end: today.iso8601 },
-                 { id: 'bob', fullname: 'Bob', end: today.iso8601 }]
-    }
     let(:current)  { ['someoneelse@gmail.com', 'ann@beta.gouv.fr'] }
     let(:computed) { [{ id: 'bob', fullname: 'Bob', end: today.iso8601 }] }
+
+    let(:all) do
+      [
+        { id: 'ann', fullname: 'Ann', end: today.iso8601 },
+        { id: 'bob', fullname: 'Bob', end: today.iso8601 }
+      ]
+    end
 
     before do
       allow(described_class).to receive(:unsubscribe)
@@ -104,21 +108,17 @@ RSpec.describe BetaGouvBot::SortingHat do
     end
 
     it 'subscribes members who should be on the list' do
-      actions = described_class.reconcile(all, current, computed, 'listname')
-      expect(described_class).to have_received(:unsubscribe).once
-      expect(described_class).to have_received(:unsubscribe)
-        .with('listname', 'ann@beta.gouv.fr')
-      notifs = actions.select { |action| action.instance_of? BetaGouvBot::MailAction }
-      expect(notifs.length).to equal(2)
-    end
-
-    it 'unsubscribes those who should not' do
-      actions = described_class.reconcile(all, current, computed, 'listname')
-      expect(described_class).to have_received(:subscribe).once
+      described_class.reconcile(all, current, computed, 'listname')
       expect(described_class).to have_received(:subscribe)
         .with('listname', 'bob@beta.gouv.fr')
-      notifs = actions.select { |action| action.instance_of? BetaGouvBot::MailAction }
-      expect(notifs.length).to equal(2)
+        .once
+    end
+
+    it 'unsubscribes those who should not be on the list' do
+      described_class.reconcile(all, current, computed, 'listname')
+      expect(described_class).to have_received(:unsubscribe)
+        .with('listname', 'ann@beta.gouv.fr')
+        .once
     end
   end
 end
