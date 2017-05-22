@@ -12,21 +12,29 @@ module BetaGouvBot
     before { content_type 'application/json; charset=utf8' }
 
     helpers do
-      def members
+      def authors
         HTTParty
           .get('https://beta.gouv.fr/api/v1.3/authors.json')
           .parsed_response
           .map(&:with_indifferent_access)
       end
 
-      def publish_error(message)
-        "Zut, il y a une ou plusieurs erreur(s) : #{message}".tap do |response|
-          HTTParty.post(
-            params['response_url'],
-            body: { text: response }.to_json,
-            headers: headers
-          )
-        end
+      def broadcast_acknowledge(origin, member, callback)
+        response = "À la demande de @#{origin} je crée un compte pour #{member}"
+        body     = { response_type: 'in_channel', text: response }.to_json
+        HTTParty.post(callback, body: body, headers: headers)
+      end
+
+      def broadcast_success(callback)
+        response = 'OK, création de compte en cours !'
+        body     = { text: response }.to_json
+        HTTParty.post(callback, body: body, headers: headers)
+      end
+
+      def broadcast_errors(errors, callback)
+        response = "Zut, il y a une ou plusieurs erreur(s) : #{errors.join(', ')}"
+        body     = { text: response }.to_json
+        HTTParty.post(callback, body: body, headers: headers)
       end
     end
 
@@ -41,10 +49,10 @@ module BetaGouvBot
       mailer = Mailer.(warnings, FormatMail.to_rules)
 
       # Reconcile mailing lists
-      sorting_hat = SortingHat.(members, date)
+      sorting_hat = SortingHat.(authors, date)
 
-      # Manage Github membership
-      github = GithubRequest.(members, date)
+      # Manage Github authorship
+      github = GithubRequest.(authors, date)
 
       # Execute actions
       (mailer + sorting_hat + github).map(&:execute) if execute
@@ -60,7 +68,7 @@ module BetaGouvBot
     end
 
     post '/badge' do
-      badges  = BadgeRequest.(members, params['text'])
+      badges  = BadgeRequest.(authors, params['text'])
       execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
       badges.map(&:execute) if execute
       { response_type: 'in_channel', text: 'OK, demande faite !' }.to_json
@@ -68,58 +76,53 @@ module BetaGouvBot
 
     # Debug
     get '/badge' do
-      { "badges": BadgeRequest.(members, params['text']) }.to_json
+      { "badges": BadgeRequest.(authors, params['text']) }.to_json
     end
 
     post '/compte' do
-      halt(400, "'response_url' doit être présent") unless params['response_url']
-      halt(400, "'user_name' doit être présent") unless params['user_name']
-      halt(400, "'text' doit être présent") unless params['text']
-      halt(400, "'token' doit être présent") unless params['token']
-      halt(401, "'token' n'est pas valide") unless params['token'] == ENV['COMPTE_TOKEN']
+      params['response_url'].present? || error(400, "'response_url' doit être présente")
+      params['user_name'].present?    || error(400, "'user_name' doit être présent")
+      params['token'].present?        || error(400, "'token' doit être présent")
 
-      member   = params['text'].to_s.split.first
-      origin   = params['user_name']
-      response = "À la demande de @#{origin} je crée un compte pour #{member}"
-      body     = { response_type: 'in_channel', text: response }.to_json
-      HTTParty.post(params['response_url'], body: body, headers: headers)
+      params['token'] == ENV['COMPTE_TOKEN'] || error(401, "'token' n'est pas valide")
 
-      account_request = AccountRequest.new
+      unless params['text'].present?
+        error(422, '/compte prenom.nom [*]mail@truc.com passw (* = sans redir)')
+      end
+
+      member, email, password = params['text'].to_s.split
+
+      broadcast_acknowledge(params['user_name'], member, params['response_url'])
+
+      account_request = AccountRequest.new(authors, member, email, password)
 
       account_request.on(:success) do |accounts|
         accounts.map(&:execute)
-        response = 'OK, création de compte en cours !'
-        body     = { text: response }.to_json
-        HTTParty.post(params['response_url'], body: body, headers: headers)
-        [201, headers, body]
+        broadcast_success(params['response_url'])
+        return [201, headers, nil]
       end
 
       account_request.on(:not_found) do
-        error 404, 'Je ne vois pas de qui tu veux parler'
+        error 404, 'je ne vois pas de qui tu veux parler'
       end
 
-      account_request.on(:error) do
-        error 422, 'pene' # TODO: add error message
+      account_request.on(:error) do |errors|
+        error 422, errors
       end
 
-      account_request.(members, *params['text'].to_s.split)
+      account_request.()
     end
 
     # Debug
     get '/compte' do
-      { "comptes": AccountRequest.(members, *params['text'].to_s.split) }.to_json
+      { "comptes": AccountRequest.(authors, *params['text'].to_s.split) }.to_json
     end
 
     ## Error handling
 
     error 400, 401, 404, 422 do
-      publish_error(body.join(', ')) if params['response_url']
-      [status, headers, { errors: body }.to_json]
+      broadcast_errors(body, params['response_url']) if params['response_url'].present?
+      return [status, headers, { errors: body }.to_json]
     end
-
-    # error 500 do
-    #   publish_error(env['sinatra.error'].message) if params['response_url']
-    #   [status, headers, { errors: [env['sinatra.error'].message] }.to_json]
-    # end
   end
 end
