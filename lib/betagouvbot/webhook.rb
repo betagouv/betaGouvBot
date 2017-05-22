@@ -99,15 +99,15 @@ module BetaGouvBot
       account_request.on(:success) do |accounts|
         accounts.map(&:execute)
         broadcast_success(params['response_url'])
-        return [201, headers, nil]
+        halt(200)
       end
 
       account_request.on(:not_found) do
-        error 404, 'je ne vois pas de qui tu veux parler'
+        error(404, 'je ne vois pas de qui tu veux parler')
       end
 
       account_request.on(:error) do |errors|
-        error 422, errors
+        error(422, errors)
       end
 
       account_request.()
@@ -122,7 +122,7 @@ module BetaGouvBot
 
     error 400, 401, 404, 422 do
       broadcast_errors(body, params['response_url']) if params['response_url'].present?
-      return [status, headers, { errors: body }.to_json]
+      halt([200, headers, { code: status, errors: body }.to_json])
     end
   end
 end

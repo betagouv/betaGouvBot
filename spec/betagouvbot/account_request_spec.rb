@@ -2,8 +2,6 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::AccountRequest do
-  subject(:account_request) { described_class.new }
-
   describe 'requesting email accounts' do
     context 'when a Slack user requests a beta.gouv.fr email' do
       subject { described_class.new(authors, fullname, email, password).() }
