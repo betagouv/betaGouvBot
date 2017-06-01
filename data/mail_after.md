@@ -9,6 +9,7 @@ Si c'est un départ effectif, il faut s'assurer qu'elle ou il est bien :
 - Sans droit d'écriture sur des [dépôts](https://github.com/orgs/sgmap/people) sur GitHub.
 - Sans droit d'écriture sur l'agenda public.
 - Sans droit de délégation sur le [manager OVH](https://www.ovh.com/manager/web/#/configuration/email_domain/beta.gouv.fr?tab=EMAILS).
+- Organisé son pot de départ ☺
 
 Bonne journée,  
 Le secrétariat
