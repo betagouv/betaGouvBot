@@ -3,21 +3,26 @@
 
 RSpec.describe BetaGouvBot::Mail do
   describe 'formatting emails' do
-    let(:parser)   { instance_spy('parser') }
-    let(:template) { instance_spy('template') }
+    let(:template_builder) { class_double('Liquid::Template', parse: template) }
+    let(:template)         { instance_spy('template') }
+    let(:document_builder) { class_double('Kramdown::Document', new: document) }
+    let(:document)         { instance_spy('document') }
+
+    let(:mail) { described_class.new('dans 3s', nil, [], nil) }
 
     before do
-      allow(described_class).to receive(:template_factory) { parser }
-      allow(parser).to receive(:parse) { template }
+      allow(mail).to receive(:template_builder) { template_builder }
+      allow(mail).to receive(:document_builder) { document_builder }
     end
 
     context 'when a member has an end date in three weeks' do
       let(:author) { { id: 'ann', fullname: 'Ann', end: (Date.today + 10).iso8601 } }
 
-      before { described_class.render('dans 3s', 'author' => author) }
+      before { mail.format('author' => author) }
 
-      it { expect(parser).to have_received(:parse).with('dans 3s') }
-      it { expect(template).to have_received(:render).with('author' => author) }
+      it { expect(template_builder).to have_received(:parse).with('dans 3s') }
+      it { expect(template).to have_received(:render).with('author' => author).thrice }
+      it { expect(document).to have_received(:to_html) }
     end
   end
 end
