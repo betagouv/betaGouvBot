@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.files         = Dir['{lib,data}/**/*', 'README*', 'Rakefile', 'config.ru']
   spec.require_paths = ['lib']
 
+  spec.add_runtime_dependency 'activemodel'
   spec.add_runtime_dependency 'activesupport'
   spec.add_runtime_dependency 'httparty'
   spec.add_runtime_dependency 'kramdown'
@@ -29,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sendgrid-ruby'
   spec.add_runtime_dependency 'sinatra'
   spec.add_runtime_dependency 'thin'
+  spec.add_runtime_dependency 'wisper'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
@@ -38,4 +40,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'webmock'
+  spec.add_development_dependency 'wisper-rspec'
 end
