@@ -9,11 +9,11 @@ module BetaGouvBot
     end
 
     def subject
-      @mail[:personalisations][0][:subject]
+      @mail[:personalizations][0][:subject]
     end
 
     def recipients
-      @mail[:personalisations][0][:to]
+      @mail[:personalizations][0][:to]
     end
 
     def execute

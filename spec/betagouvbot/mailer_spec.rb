@@ -5,7 +5,7 @@ RSpec.describe BetaGouvBot::Mailer do
   let(:in_3w) do
     instance_double(
       'mail',
-      format: { personalisations: [to: ['email' => 'ann@email.coop']] }
+      format: { personalizations: [to: ['email' => 'ann@email.coop']] }
     )
   end
 
@@ -13,7 +13,7 @@ RSpec.describe BetaGouvBot::Mailer do
     instance_double(
       'mail',
       format: {
-        personalisations: [
+        personalizations: [
           to: [{ 'email' => 'ann@email.coop' }, { 'email' => 'hi@email.coop' }]
         ]
       }
