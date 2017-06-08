@@ -47,21 +47,15 @@ module BetaGouvBot
       end
 
       def create_notification(member, personal_address)
-        context = {}.tap do |hash|
-          hash[:author]   = member
-          hash[:redirect] = personal_address if redirect?(personal_address)
-        end
-
+        context = { 'author' => member }
+        context['redirect'] = personal_address if redirect?(personal_address)
         personal_address = personal_address[1..-1] unless redirect?(personal_address)
-        [MailAction.new(client, format_mail(personal_address).(context))]
+        mail = Mail.from_file('data/mail_compte.md', [personal_address])
+        [MailAction.new(client, mail.format(context))]
       end
 
       def redirect?(personal_address)
         !personal_address.start_with?('*')
-      end
-
-      def format_mail(personal_address)
-        FormatMail.from_file('data/mail_compte.md', [personal_address])
       end
 
       def client
