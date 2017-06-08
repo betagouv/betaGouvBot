@@ -4,9 +4,9 @@
 require 'kramdown'
 
 module BetaGouvBot
-  class Mail
+  class FormatMail < Hash
     class << self
-      def rules
+      def to_rules
         @rules ||= {
           21 => { mail: from_file('data/mail_3w.md', ['{{author.id}}@beta.gouv.fr']) },
           14 => { mail: from_file(
@@ -32,22 +32,39 @@ module BetaGouvBot
       @body_t     = body_t
       @recipients = recipients
       @sender     = sender
+      super()
     end
 
-    def format(context)
-      md_source = render_template(body_t, context)
-      { 'personalizations': [{
-        'to': recipients.map { |mail| { 'email' => render_template(mail, context) } },
-        'subject': render_template(subject, context)
-      }],
-        'from': { 'email' => render_template(sender, context) },
-        'content': [{
-          'type': 'text/html',
-          'value': render_document(md_source)
-        }] }
+    def call(context)
+      itself
+        .send(:add_personalisations, context)
+        .send(:add_from, context)
+        .send(:add_content, context)
     end
 
     private
+
+    def add_personalisations(context)
+      merge!(
+        personalisations: [
+          to: recipients.map { |mail| { email: render_template(mail, context) } },
+          subject: render_template(subject, context)
+        ]
+      )
+    end
+
+    def add_from(context)
+      merge!(from: { email: render_template(sender, context) })
+    end
+
+    def add_content(context)
+      merge!(
+        content: [
+          type: 'text/html',
+          value: render_document(render_template(body_t, context))
+        ]
+      )
+    end
 
     def render_template(template, context)
       template_builder
