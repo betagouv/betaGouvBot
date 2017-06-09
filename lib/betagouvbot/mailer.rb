@@ -13,6 +13,8 @@ module BetaGouvBot
         end
       end
 
+      private
+
       def email(urgency, context, rules)
         mail = rules[urgency][:mail].format(context)
         MailAction.new(client, mail)
