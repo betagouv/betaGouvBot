@@ -2,15 +2,6 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::FormatMail do
-  describe '.to_rules' do
-    let(:rules) { described_class.to_rules }
-
-    it { expect(rules[21][:mail]).to be_a_kind_of(described_class) }
-    it { expect(rules[14][:mail]).to be_a_kind_of(described_class) }
-    it { expect(rules[1][:mail]).to be_a_kind_of(described_class) }
-    it { expect(rules[-1][:mail]).to be_a_kind_of(described_class) }
-  end
-
   describe 'formatting emails' do
     let(:template_builder) { class_double('Liquid::Template', parse: template) }
     let(:template)         { instance_spy('template') }
