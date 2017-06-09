@@ -46,22 +46,22 @@ module BetaGouvBot
 
     def add_personalizations(context)
       merge!(
-        personalizations: [
-          to: recipients.map { |mail| { email: render_template(mail, context) } },
-          subject: render_template(subject, context)
+        'personalizations' => [
+          'to' => recipients.map { |mail| { 'email' => render_template(mail, context) } },
+          'subject' => render_template(subject, context)
         ]
       )
     end
 
     def add_from(context)
-      merge!(from: { email: render_template(sender, context) })
+      merge!('from' => { 'email' => render_template(sender, context) })
     end
 
     def add_content(context)
       merge!(
-        content: [
-          type: 'text/html',
-          value: render_document(render_template(body_t, context))
+        'content' => [
+          'type' => 'text/html',
+          'value' => render_document(render_template(body_t, context))
         ]
       )
     end
