@@ -37,16 +37,16 @@ module BetaGouvBot
 
     def call(context)
       itself
-        .send(:add_personalisations, context)
+        .send(:add_personalizations, context)
         .send(:add_from, context)
         .send(:add_content, context)
     end
 
     private
 
-    def add_personalisations(context)
+    def add_personalizations(context)
       merge!(
-        personalisations: [
+        personalizations: [
           to: recipients.map { |mail| { email: render_template(mail, context) } },
           subject: render_template(subject, context)
         ]
