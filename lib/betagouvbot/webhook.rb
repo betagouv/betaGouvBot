@@ -5,7 +5,6 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'sinatra/base'
 require 'sendgrid-ruby'
 require 'httparty'
-require 'liquid'
 
 module BetaGouvBot
   class Webhook < Sinatra::Base

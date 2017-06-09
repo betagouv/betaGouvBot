@@ -1,18 +1,11 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
+require 'liquid'
 require 'kramdown'
 
 module BetaGouvBot
-  class FormatMail < Hash
-    class << self
-      # @note Email data files consist of 1 subject line plus body
-      def from_file(body_path, recipients = [], sender = 'secretariat@beta.gouv.fr')
-        subject, *rest = File.readlines(body_path)
-        new(subject.strip, rest.join, recipients, sender)
-      end
-    end
-
+  class FormatMail
     attr_reader :subject, :body_t, :recipients, :sender
 
     def initialize(subject, body_t, recipients, sender)
@@ -20,36 +13,42 @@ module BetaGouvBot
       @body_t     = body_t
       @recipients = recipients
       @sender     = sender
-      super()
+    end
+
+    # @note Email data files consist of 1 subject line plus body
+    def self.from_file(body_path, recipients = [], sender = 'secretariat@beta.gouv.fr')
+      subject, *rest = File.readlines(body_path)
+      new(subject.strip, rest.join, recipients, sender)
     end
 
     def call(context)
-      itself
-        .send(:add_personalizations, context)
-        .send(:add_from, context)
-        .send(:add_content, context)
+      {}.tap do |format|
+        add_from(context, format)
+        add_content(context, format)
+        add_personalizations(context, format)
+      end
     end
 
     private
 
-    def add_personalizations(context)
-      merge!(
-        'personalizations' => [
-          'to' => recipients.map { |mail| { 'email' => render_template(mail, context) } },
-          'subject' => render_template(subject, context)
+    def add_from(context, format)
+      format.merge!('from' => { 'email' => render_template(sender, context) })
+    end
+
+    def add_content(context, format)
+      format.merge!(
+        'content' => [
+          'type' => 'text/html',
+          'value' => render_document(render_template(body_t, context))
         ]
       )
     end
 
-    def add_from(context)
-      merge!('from' => { 'email' => render_template(sender, context) })
-    end
-
-    def add_content(context)
-      merge!(
-        'content' => [
-          'type' => 'text/html',
-          'value' => render_document(render_template(body_t, context))
+    def add_personalizations(context, format)
+      format.merge!(
+        'personalizations' => [
+          'to' => recipients.map { |mail| { 'email' => render_template(mail, context) } },
+          'subject' => render_template(subject, context)
         ]
       )
     end
