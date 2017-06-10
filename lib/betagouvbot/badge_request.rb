@@ -31,10 +31,6 @@ module BetaGouvBot
           sgmap@beta.gouv.fr
         ]
       end
-
-      def client
-        nil
-      end
     end
   end
 end
