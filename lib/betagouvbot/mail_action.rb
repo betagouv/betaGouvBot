@@ -3,8 +3,7 @@
 
 module BetaGouvBot
   class MailAction
-    def initialize(client, mail)
-      @client = client
+    def initialize(mail)
       @mail = mail
     end
 
