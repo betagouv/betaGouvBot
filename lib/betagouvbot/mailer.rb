@@ -17,7 +17,21 @@ module BetaGouvBot
         client.post(mail)
       end
 
+      def schedule(members, terms, date)
+        end_dates = terms.map { |term| date + term }
+        members
+          .map { |member| member.merge(end: date_with_default(member[:end])) }
+          .select { |member| end_dates.include? member[:end] }
+          .map { |member| { term: (member[:end] - date).to_i, who: member } }
+      end
+
       private
+
+      def date_with_default(date_string)
+        Date.iso8601(date_string)
+      rescue
+        Date.iso8601('3017-01-01')
+      end
 
       def email(urgency, context, rules)
         mail = rules[urgency][:mail].format(context)

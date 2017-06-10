@@ -24,7 +24,7 @@ module BetaGouvBot
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
 
       # Parse into a schedule of notifications
-      warnings = Anticipator.(members, NotificationRule.horizons, date)
+      warnings = Mailer.schedule(members, NotificationRule.horizons, date)
 
       # Send reminders (if any)
       mailer = Mailer.(warnings, NotificationRule.all)
