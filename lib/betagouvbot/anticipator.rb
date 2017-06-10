@@ -22,15 +22,18 @@ module BetaGouvBot
     module_function
 
     class << self
+      def date_with_default(date_string)
+        Date.iso8601(date_string)
+      rescue
+        Date.iso8601('3017-01-01')
+      end
+
       def call(members, terms, date)
-        members_by_end_date = members.group_by { |item| item[:end] }
-        terms.flat_map do |term|
-          day = date.+(term).iso8601
-          members_group = members_by_end_date[day] || []
-          members_group.map do |member|
-            { term: term, who: member }
-          end
-        end
+        end_dates = terms.map { |term| date + term }
+        members
+          .map { |member| member.merge(end: date_with_default(member[:end])) }
+          .select { |member| end_dates.include? member[:end] }
+          .map { |member| { term: (member[:end] - date).to_i, who: member } }
       end
     end
   end
