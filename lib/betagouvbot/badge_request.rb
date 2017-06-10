@@ -17,7 +17,7 @@ module BetaGouvBot
       private
 
       def request_badge(author)
-        MailAction.new(client, format_mail.('author' => author))
+        MailAction.new(nil, format_mail.('author' => author))
       end
 
       def format_mail
@@ -33,7 +33,7 @@ module BetaGouvBot
       end
 
       def client
-        Mailer.client
+        nil
       end
     end
   end

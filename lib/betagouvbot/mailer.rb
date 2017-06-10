@@ -13,6 +13,10 @@ module BetaGouvBot
         end
       end
 
+      def post(mail)
+        client.post(mail)
+      end
+
       private
 
       def email(urgency, context, rules)

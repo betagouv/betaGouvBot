@@ -65,7 +65,7 @@ module BetaGouvBot
       end
 
       def client
-        Mailer.client
+        nil
       end
     end
   end

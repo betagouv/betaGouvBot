@@ -65,7 +65,7 @@ module BetaGouvBot
 
       def notify(subscribed, listname, author)
         BetaGouvBot::MailAction.new(
-          Mailer.client,
+          nil,
           format_mail.(
             'author'      => author,
             'operation'   => operation(subscribed),
