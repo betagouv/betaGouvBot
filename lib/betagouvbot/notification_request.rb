@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module BetaGouvBot
-  module Mailer
+  module NotificationRequest
     module_function
 
     class << self

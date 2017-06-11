@@ -24,10 +24,10 @@ module BetaGouvBot
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
 
       # Parse into a schedule of notifications
-      warnings = Mailer.schedule(members, NotificationRule.horizons, date)
+      warnings = NotificationRequest.schedule(members, NotificationRule.horizons, date)
 
       # Send reminders (if any)
-      mailer = Mailer.(warnings, NotificationRule.all)
+      mailer = NotificationRequest.(warnings, NotificationRule.all)
 
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)

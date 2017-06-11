@@ -23,12 +23,12 @@ module BetaGouvBot
       @mail.to_s
     end
 
-    def sendgrid
+    def api
       SendGrid::API
     end
 
     def client
-      sendgrid
+      api
         .new(api_key: ENV['SENDGRID_API_KEY'] || '')
         .client
         .mail

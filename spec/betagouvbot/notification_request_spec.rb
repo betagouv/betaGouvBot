@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-RSpec.describe BetaGouvBot::Mailer do
+RSpec.describe BetaGouvBot::NotificationRequest do
   subject { described_class.(schedule, rules) }
 
   let(:horizons) { BetaGouvBot::NotificationRule.horizons }
