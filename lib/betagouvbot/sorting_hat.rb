@@ -63,7 +63,7 @@ module BetaGouvBot
 
       def notify(subscribed, listname, author)
         BetaGouvBot::MailAction.new(
-          format_mail.(
+          format_mail(
             'author'      => author,
             'operation'   => operation(subscribed),
             'description' => description(subscribed),
@@ -103,8 +103,11 @@ module BetaGouvBot
         community.detect { |author| email == email(author) }
       end
 
-      def format_mail
-        FormatMail.from_file('data/mail_subscribed.md', ['{{author.id}}@beta.gouv.fr'])
+      def format_mail(context)
+        @format_mail ||=
+          FormatMail.from_file('data/mail_subscribed.md', ['{{author.id}}@beta.gouv.fr'])
+
+        @format_mail.(context)
       end
 
       def description(subscribed)
