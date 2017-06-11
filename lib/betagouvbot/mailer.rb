@@ -13,10 +13,6 @@ module BetaGouvBot
         end
       end
 
-      def post(mail)
-        client.post(mail)
-      end
-
       def schedule(members, terms, date)
         end_dates = terms.map { |term| date + term }
         members
@@ -38,14 +34,6 @@ module BetaGouvBot
         format = FormatMail.from_file(rule.mail_file, rule.recipients)
         mail = format.(context)
         MailAction.new(mail)
-      end
-
-      def client
-        SendGrid::API
-          .new(api_key: ENV['SENDGRID_API_KEY'] || '')
-          .client
-          .mail
-          ._('send')
       end
     end
   end

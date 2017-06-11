@@ -16,11 +16,23 @@ module BetaGouvBot
     end
 
     def execute
-      Mailer.post(request_body: @mail)
+      client.post(request_body: @mail)
     end
 
     def to_s
       @mail.to_s
+    end
+
+    def sendgrid
+      SendGrid::API
+    end
+
+    def client
+      sendgrid
+        .new(api_key: ENV['SENDGRID_API_KEY'] || '')
+        .client
+        .mail
+        ._('send')
     end
   end
 end
