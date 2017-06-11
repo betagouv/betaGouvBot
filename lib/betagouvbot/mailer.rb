@@ -40,10 +40,6 @@ module BetaGouvBot
         MailAction.new(mail)
       end
 
-      def recipient
-        SendGrid::Email
-      end
-
       def client
         SendGrid::API
           .new(api_key: ENV['SENDGRID_API_KEY'] || '')
