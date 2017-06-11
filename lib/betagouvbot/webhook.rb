@@ -5,7 +5,6 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'sinatra/base'
 require 'sendgrid-ruby'
 require 'httparty'
-require 'liquid'
 
 module BetaGouvBot
   class Webhook < Sinatra::Base
@@ -25,10 +24,10 @@ module BetaGouvBot
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
 
       # Parse into a schedule of notifications
-      warnings = Anticipator.(members, RULES.keys, date)
+      warnings = Anticipator.(members, NotificationRule.horizons, date)
 
       # Send reminders (if any)
-      mailer = Mailer.(warnings, RULES)
+      mailer = Mailer.(warnings, NotificationRule.all)
 
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)

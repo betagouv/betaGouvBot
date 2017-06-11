@@ -28,10 +28,9 @@ RSpec.describe BetaGouvBot::Mailer do
     }
   end
 
-  let(:schedule)  { BetaGouvBot::Anticipator.(authors, rules.keys, Date.today) }
-  let(:client)    { instance_spy('client') }
+  let(:schedule) { BetaGouvBot::Anticipator.(authors, rules.keys, Date.today) }
 
-  before { allow(described_class).to receive(:client) { client } }
+  before { allow(described_class).to receive(:post) }
 
   describe 'selecting recipients of emails' do
     context 'when a member has an end date in three weeks' do
@@ -39,7 +38,7 @@ RSpec.describe BetaGouvBot::Mailer do
 
       it 'sends an email directly to the author' do
         described_class.(schedule, rules).map(&:execute)
-        expect(client).to have_received(:post)
+        expect(described_class).to have_received(:post)
           .with(request_body: in_3w.format)
       end
     end
@@ -49,7 +48,7 @@ RSpec.describe BetaGouvBot::Mailer do
 
       it 'sends an email to the author and contact' do
         described_class.(schedule, rules).map(&:execute)
-        expect(client).to have_received(:post)
+        expect(described_class).to have_received(:post)
           .with(request_body: in_2w.format)
       end
     end
@@ -61,7 +60,7 @@ RSpec.describe BetaGouvBot::Mailer do
 
       it 'sends out one email' do
         described_class.(schedule, rules).map(&:execute)
-        expect(client).to have_received(:post).once
+        expect(described_class).to have_received(:post).once
       end
     end
 
@@ -75,7 +74,7 @@ RSpec.describe BetaGouvBot::Mailer do
 
       it 'sends out two emails' do
         described_class.(schedule, rules).map(&:execute)
-        expect(client).to have_received(:post).twice
+        expect(described_class).to have_received(:post).twice
       end
     end
   end

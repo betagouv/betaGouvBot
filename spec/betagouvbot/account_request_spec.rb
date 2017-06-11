@@ -13,13 +13,11 @@ RSpec.describe BetaGouvBot::AccountRequest do
       let(:email)    { "#{fullname}@email.coop" }
       let(:password) { 'password' }
 
-      before { allow(described_class).to receive(:client) }
-
       shared_examples 'sending notifications' do
         it 'notifies the backing address' do
           is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
-            .and(have_attributes(subject: 'Ton adresse @beta.gouv.fr'))
-            .and(have_attributes(recipients: [{ 'email' => 'bob@email.coop' }]))
+            .and(have_attributes('subject' => 'Ton adresse @beta.gouv.fr'))
+            .and(have_attributes('recipients' => [{ 'email' => 'bob@email.coop' }]))
         end
       end
 

@@ -19,9 +19,7 @@ RSpec.describe BetaGouvBot::Webhook do
   end
 
   describe 'GET /actions' do
-    before do
-      stub_request(:get, /api.ovh.com/).to_return(body: [].to_json)
-    end
+    before { stub_request(:get, /api.ovh.com/).to_return(body: [].to_json) }
 
     it { expect(get('/actions')).to be_ok }
   end

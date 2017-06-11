@@ -3,21 +3,20 @@
 
 module BetaGouvBot
   class MailAction
-    def initialize(client, mail)
-      @client = client
+    def initialize(mail)
       @mail = mail
     end
 
     def subject
-      @mail[:personalizations][0][:subject]
+      @mail['personalizations'][0]['subject']
     end
 
     def recipients
-      @mail[:personalizations][0][:to]
+      @mail['personalizations'][0]['to']
     end
 
     def execute
-      @client.post(request_body: @mail)
+      Mailer.post(request_body: @mail)
     end
 
     def to_s

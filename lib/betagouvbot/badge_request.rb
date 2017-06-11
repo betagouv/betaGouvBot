@@ -17,11 +17,11 @@ module BetaGouvBot
       private
 
       def request_badge(author)
-        MailAction.new(client, mail.format('author' => author))
+        MailAction.new(format_mail.('author' => author))
       end
 
-      def mail
-        @mail ||= Mail.from_file('data/mail_badge.md', recipients)
+      def format_mail
+        @mail ||= FormatMail.from_file('data/mail_badge.md', recipients)
       end
 
       def recipients
@@ -30,10 +30,6 @@ module BetaGouvBot
           {{author.id}}@beta.gouv.fr
           sgmap@beta.gouv.fr
         ]
-      end
-
-      def client
-        Mailer.client
       end
     end
   end
