@@ -12,9 +12,6 @@ RSpec/FilePath:
 Style/Documentation:
   Enabled: false
 
-Style/DotPosition:
-  Enabled: true
-
 Style/Encoding:
   EnforcedStyle: always
   Enabled: true
@@ -32,11 +29,14 @@ Style/SymbolArray:
 Style/WordArray:
   Enabled: true
 
-Style/MultilineBlockLayout:
+Style/BlockDelimiters:
   Exclude:
     - 'spec/**/*'
 
-Style/BlockDelimiters:
+Layout/DotPosition:
+  Enabled: true
+
+Layout/MultilineBlockLayout:
   Exclude:
     - 'spec/**/*'
 
