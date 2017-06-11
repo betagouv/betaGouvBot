@@ -2,44 +2,21 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::Mailer do
-  let(:in_3w) do
-    instance_double(
-      'mail',
-      format: { personalizations: [to: ['email' => 'ann@email.coop']] }
-    )
-  end
+  subject { described_class.(schedule, rules) }
 
-  let(:in_2w) do
-    instance_double(
-      'mail',
-      format: {
-        personalizations: [
-          to: [{ 'email' => 'ann@email.coop' }, { 'email' => 'hi@email.coop' }]
-        ]
-      }
-    )
-  end
-
-  let(:rules) do
-    {
-      1  => { mail: instance_double('mail') },
-      14 => { mail: in_2w },
-      21 => { mail: in_3w }
-    }
-  end
-
-  let(:schedule) { described_class.schedule(authors, rules.keys, Date.today) }
-
-  before { allow(described_class).to receive(:post) }
+  let(:horizons) { BetaGouvBot::NotificationRule.horizons }
+  let(:rules)    { BetaGouvBot::NotificationRule.all }
+  let(:members)  { authors.map(&:with_indifferent_access) }
+  let(:schedule) { described_class.schedule(members, horizons, Date.today) }
 
   describe 'selecting recipients of emails' do
     context 'when a member has an end date in three weeks' do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 21).iso8601] }
 
       it 'sends an email directly to the author' do
-        described_class.(schedule, rules).map(&:execute)
-        expect(described_class).to have_received(:post)
-          .with(request_body: in_3w.format)
+        is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
+          .and(have_attributes(subject: '🗓 Fin de contrat prévue pour dans 3 semaines'))
+          .and(have_attributes(recipients: ['email' => 'ann@beta.gouv.fr']))
       end
     end
 
@@ -47,9 +24,13 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 14).iso8601] }
 
       it 'sends an email to the author and contact' do
-        described_class.(schedule, rules).map(&:execute)
-        expect(described_class).to have_received(:post)
-          .with(request_body: in_2w.format)
+        recipients = [
+          { 'email' => 'ann@beta.gouv.fr' },
+          { 'email' => 'contact@beta.gouv.fr' }
+        ]
+        is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
+          .and(have_attributes(subject: '⏲ Fin de contrat prévue pour dans 2 semaines'))
+          .and(have_attributes(recipients: recipients))
       end
     end
   end
@@ -59,8 +40,7 @@ RSpec.describe BetaGouvBot::Mailer do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 21).iso8601] }
 
       it 'sends out one email' do
-        described_class.(schedule, rules).map(&:execute)
-        expect(described_class).to have_received(:post).once
+        is_expected.to have(1).items
       end
     end
 
@@ -73,8 +53,7 @@ RSpec.describe BetaGouvBot::Mailer do
       end
 
       it 'sends out two emails' do
-        described_class.(schedule, rules).map(&:execute)
-        expect(described_class).to have_received(:post).twice
+        is_expected.to have(2).items
       end
     end
   end

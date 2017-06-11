@@ -34,7 +34,9 @@ module BetaGouvBot
       end
 
       def email(urgency, context, rules)
-        mail = rules[urgency][:mail].format(context)
+        rule = rules.find { |r| r.horizon == urgency }
+        format = FormatMail.from_file(rule.mail_file, rule.recipients)
+        mail = format.(context)
         MailAction.new(mail)
       end
 
