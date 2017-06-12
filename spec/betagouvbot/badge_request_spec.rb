@@ -8,6 +8,10 @@ RSpec.describe BetaGouvBot::BadgeRequest do
       let(:bob)     { { id: 'bob', start: '2017-01-01', end: '2017-12-31' } }
       let(:authors) { [bob, ann] }
 
+      let(:client) { instance_double('client') }
+
+      before { allow(described_class).to receive(:client) { client } }
+
       describe 'selecting members' do
         before { allow(described_class).to receive(:request_badge) }
 
