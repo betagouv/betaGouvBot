@@ -27,7 +27,7 @@ module BetaGouvBot
       warnings = Anticipator.(members, NotificationRule.horizons, date)
 
       # Send reminders (if any)
-      mailer = Mailer.(warnings, NotificationRule.all)
+      mailer = Mailer.(warnings)
 
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)

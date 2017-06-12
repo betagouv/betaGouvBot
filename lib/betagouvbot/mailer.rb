@@ -7,10 +7,9 @@ module BetaGouvBot
 
     class << self
       # @param expirations [#:[]] expiration dates mapped to members
-      def call(warnings, rules)
-        warnings.map do |warning|
-          email(warning[:term], { 'author' => warning[:who] }, rules)
-        end
+      def call(warnings)
+        warnings
+          .map { |warning| email({ 'author' => warning[:who] }, rule(warning[:term])) }
       end
 
       def post(mail)
@@ -19,9 +18,18 @@ module BetaGouvBot
 
       private
 
-      def email(urgency, context, rules)
-        mail = rules[urgency][:mail].format(context)
-        MailAction.new(mail)
+      def email(context, rule)
+        MailAction.new(format_mail(rule.mail_file, rule.recipients, context))
+      end
+
+      def rule(urgency)
+        NotificationRule.find(horizon: urgency)
+      end
+
+      def format_mail(mail_file, recipients, context)
+        FormatMail
+          .from_file(mail_file, recipients)
+          .(context)
       end
 
       def recipient

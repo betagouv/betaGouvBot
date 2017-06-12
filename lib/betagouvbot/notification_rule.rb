@@ -6,12 +6,16 @@ module BetaGouvBot
     attr_reader :horizon, :mail_file, :recipients
 
     class << self
+      def all
+        [in_three_weeks, in_two_weeks, in_one_day, one_day_after]
+      end
+
       def horizons
         all.map(&:horizon)
       end
 
-      def all
-        [in_three_weeks, in_two_weeks, in_one_day, one_day_after]
+      def find(horizon:)
+        all.find { |each| each.horizon == horizon }
       end
 
       private
