@@ -2,16 +2,22 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::NotificationRule do
+  describe '.all' do
+    subject(:all) { described_class.all }
+
+    it { is_expected.to match(duck_type(:each)) }
+  end
+
   describe '.horizons' do
     subject { described_class.horizons }
 
     it { is_expected.to match_array([21, 14, 1, -1]) }
   end
 
-  describe '.all' do
-    subject(:all) { described_class.all }
+  describe '.find' do
+    subject { described_class.find(horizon: -1).horizon }
 
-    it { is_expected.to match(duck_type(:each)) }
+    it { is_expected.to eq(-1) }
   end
 
   context 'three weeks before example' do
