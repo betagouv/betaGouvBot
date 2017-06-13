@@ -6,7 +6,6 @@ module BetaGouvBot
     module_function
 
     class << self
-      # @param expirations [#:[]] expiration dates mapped to members
       def call(members, date)
         warnings(members, date)
           .map { |warning| email({ 'author' => warning[:who] }, rule(warning[:term])) }
