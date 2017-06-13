@@ -7,22 +7,15 @@ module BetaGouvBot
 
     class << self
       def call(members, date)
-        warnings(members, date)
-          .map { |warning| email({ 'author' => warning[:who] }, rule(warning[:term])) }
-      end
-
-      def schedule(members, terms, date)
-        end_dates = terms.map { |term| date + term }
-        members
-          .map { |member| member.merge(end: date_with_default(member[:end])) }
-          .select { |member| end_dates.include? member[:end] }
-          .map { |member| { term: (member[:end] - date).to_i, who: member } }
+        warnings(members, date).map do |warning|
+          email({ 'author' => warning[:who] }, rule(warning[:term]))
+        end
       end
 
       private
 
       def warnings(members, date)
-        schedule(members, horizons, date)
+        NotificationSchedule.(members, horizons, date)
       end
 
       def horizons
@@ -31,12 +24,6 @@ module BetaGouvBot
 
       def rule(urgency)
         NotificationRule.find(horizon: urgency)
-      end
-
-      def date_with_default(date_string)
-        Date.iso8601(date_string)
-      rescue
-        Date.iso8601('3017-01-01')
       end
 
       def email(context, rule)
