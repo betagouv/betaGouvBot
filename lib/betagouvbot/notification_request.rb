@@ -24,11 +24,11 @@ module BetaGouvBot
           .map { |member| { term: (member[:end] - date).to_i, who: member } }
       end
 
+      private
+
       def rule(urgency)
         NotificationRule.find(horizon: urgency)
       end
-
-      private
 
       def date_with_default(date_string)
         Date.iso8601(date_string)
