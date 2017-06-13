@@ -2,10 +2,9 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::NotificationRequest do
-  subject { described_class.(schedule, rules) }
+  subject { described_class.(members, Date.today) }
 
   let(:horizons) { BetaGouvBot::NotificationRule.horizons }
-  let(:rules)    { BetaGouvBot::NotificationRule.all }
   let(:members)  { authors.map(&:with_indifferent_access) }
   let(:schedule) { described_class.schedule(members, horizons, Date.today) }
 

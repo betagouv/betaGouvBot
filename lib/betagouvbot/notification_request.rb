@@ -7,10 +7,13 @@ module BetaGouvBot
 
     class << self
       # @param expirations [#:[]] expiration dates mapped to members
-      def call(warnings, rules)
-        warnings.map do |warning|
-          email(warning[:term], { 'author' => warning[:who] }, rules)
-        end
+      def call(members, date)
+        warnings(members, date)
+          .map { |warning| email({ 'author' => warning[:who] }, rule(warning[:term])) }
+      end
+
+      def warnings(members, date)
+        schedule(members, NotificationRule.horizons, date)
       end
 
       def schedule(members, terms, date)
@@ -21,6 +24,10 @@ module BetaGouvBot
           .map { |member| { term: (member[:end] - date).to_i, who: member } }
       end
 
+      def rule(urgency)
+        NotificationRule.find(horizon: urgency)
+      end
+
       private
 
       def date_with_default(date_string)
@@ -29,11 +36,14 @@ module BetaGouvBot
         Date.iso8601('3017-01-01')
       end
 
-      def email(urgency, context, rules)
-        rule = rules.find { |r| r.horizon == urgency }
-        format = FormatMail.from_file(rule.mail_file, rule.recipients)
-        mail = format.(context)
-        MailAction.new(mail)
+      def email(context, rule)
+        MailAction.new(format_mail(rule.mail_file, rule.recipients, context))
+      end
+
+      def format_mail(mail_file, recipients, context)
+        FormatMail
+          .from_file(mail_file, recipients)
+          .(context)
       end
     end
   end
