@@ -2,12 +2,11 @@
 # frozen_string_literal: true
 
 RSpec.describe BetaGouvBot::NotificationSchedule do
-  subject { described_class.(members, [days], today) }
+  subject { described_class.(members, [today, whenever]) }
 
   let(:yesterday)     { today - 1 }
   let(:today)         { Date.today }
-  let(:days)          { 10 }
-  let(:whenever)      { today + days }
+  let(:whenever)      { today + 10 }
 
   context 'when member list is empty' do
     let(:members) { [] }
@@ -21,7 +20,7 @@ RSpec.describe BetaGouvBot::NotificationSchedule do
     let(:members) { [{ fullname: 'lbo', end: whenever.to_s }] }
 
     it 'generates a notification' do
-      expected = [{ term: days, who: a_hash_including(fullname: 'lbo') }]
+      expected = [{ term: 10, who: a_hash_including(fullname: 'lbo') }]
       is_expected.to match(expected)
     end
   end
@@ -35,8 +34,8 @@ RSpec.describe BetaGouvBot::NotificationSchedule do
     end
 
     it 'generates a single notification' do
-      expected = [{ term: days, who: a_hash_including(fullname: 'lbo') },
-                  { term: days, who: a_hash_including(fullname: 'you') }]
+      expected = [{ term: 10, who: a_hash_including(fullname: 'lbo') },
+                  { term: 10, who: a_hash_including(fullname: 'you') }]
       is_expected.to match(expected)
     end
   end
