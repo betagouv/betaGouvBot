@@ -1,18 +1,18 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-RSpec.describe BetaGouvBot::Anticipator do
+RSpec.describe BetaGouvBot::NotificationSchedule do
+  subject { described_class.(members, [today, whenever]) }
+
   let(:yesterday)     { today - 1 }
   let(:today)         { Date.today }
-  let(:days)          { 10 }
-  let(:whenever)      { today + days }
-  let(:notifications) { described_class.(members, [days], today) }
+  let(:whenever)      { today + 10 }
 
   context 'when member list is empty' do
     let(:members) { [] }
 
     it 'generates no notification' do
-      expect(notifications).to eq([])
+      is_expected.to eq([])
     end
   end
 
@@ -20,8 +20,8 @@ RSpec.describe BetaGouvBot::Anticipator do
     let(:members) { [{ fullname: 'lbo', end: whenever.to_s }] }
 
     it 'generates a notification' do
-      expected = [{ term: days, who: a_hash_including(fullname: 'lbo') }]
-      expect(notifications).to match(expected)
+      expected = [{ term: 10, who: a_hash_including(fullname: 'lbo') }]
+      is_expected.to match(expected)
     end
   end
 
@@ -34,9 +34,9 @@ RSpec.describe BetaGouvBot::Anticipator do
     end
 
     it 'generates a single notification' do
-      expected = [{ term: days, who: a_hash_including(fullname: 'lbo') },
-                  { term: days, who: a_hash_including(fullname: 'you') }]
-      expect(notifications).to match(expected)
+      expected = [{ term: 10, who: a_hash_including(fullname: 'lbo') },
+                  { term: 10, who: a_hash_including(fullname: 'you') }]
+      is_expected.to match(expected)
     end
   end
 
@@ -44,7 +44,7 @@ RSpec.describe BetaGouvBot::Anticipator do
     let(:members) { [{ fullname: 'lbo' }, { fullname: 'you', end: '' }] }
 
     it 'generates no notifications' do
-      expect(notifications).to be_empty
+      is_expected.to be_empty
     end
   end
 
@@ -57,7 +57,7 @@ RSpec.describe BetaGouvBot::Anticipator do
     end
 
     it 'generates no notifications' do
-      expect(notifications).to be_empty
+      is_expected.to be_empty
     end
   end
 end

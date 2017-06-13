@@ -1,11 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'active_support/core_ext/hash/indifferent_access'
-require 'sinatra/base'
-require 'sendgrid-ruby'
-require 'httparty'
-
 module BetaGouvBot
   class Webhook < Sinatra::Base
     before { content_type 'application/json; charset=utf8' }
@@ -23,11 +18,8 @@ module BetaGouvBot
       date = params.key?('date') ? Date.iso8601(params['date']) : Date.today
       execute = params.key?('secret') && (params['secret'] == ENV['SECRET'])
 
-      # Parse into a schedule of notifications
-      warnings = Anticipator.(members, NotificationRule.horizons, date)
-
-      # Send reminders (if any)
-      mailer = Mailer.(warnings, NotificationRule.all)
+      # Send contract expiration reminders (if any)
+      notifications = NotificationRequest.(members, date)
 
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)
@@ -41,8 +33,7 @@ module BetaGouvBot
       # Debug
       {
         "execute": execute,
-        "warnings": warnings,
-        "mailer": mailer,
+        "notifications": notifications,
         "sorting_hat": sorting_hat,
         "github": github
       }.to_json

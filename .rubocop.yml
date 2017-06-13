@@ -3,6 +3,9 @@ require: rubocop-rspec
 AllCops:
   TargetRubyVersion: 2.3
 
+Layout/DotPosition:
+  Enabled: true
+
 Metrics/LineLength:
   Max: 90
 
@@ -11,9 +14,6 @@ RSpec/FilePath:
 
 Style/Documentation:
   Enabled: false
-
-Style/DotPosition:
-  Enabled: true
 
 Style/Encoding:
   EnforcedStyle: always
@@ -31,14 +31,6 @@ Style/SymbolArray:
 
 Style/WordArray:
   Enabled: true
-
-Style/MultilineBlockLayout:
-  Exclude:
-    - 'spec/**/*'
-
-Style/BlockDelimiters:
-  Exclude:
-    - 'spec/**/*'
 
 Metrics/BlockLength:
   Exclude:
