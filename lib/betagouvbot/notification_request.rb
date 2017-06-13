@@ -23,7 +23,11 @@ module BetaGouvBot
       private
 
       def warnings(members, date)
-        schedule(members, NotificationRule.horizons, date)
+        schedule(members, horizons, date)
+      end
+
+      def horizons
+        NotificationRule.horizons
       end
 
       def rule(urgency)
