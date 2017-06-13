@@ -1,9 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'liquid'
-require 'kramdown'
-
 module BetaGouvBot
   class FormatMail
     attr_reader :subject, :body_t, :recipients, :sender

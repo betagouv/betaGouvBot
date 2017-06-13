@@ -1,8 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'ovh/rest'
-
 module BetaGouvBot
   module SortingHat
     module_function

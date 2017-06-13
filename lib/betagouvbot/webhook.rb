@@ -1,11 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'active_support/core_ext/hash/indifferent_access'
-require 'sinatra/base'
-require 'sendgrid-ruby'
-require 'httparty'
-
 module BetaGouvBot
   class Webhook < Sinatra::Base
     before { content_type 'application/json; charset=utf8' }
