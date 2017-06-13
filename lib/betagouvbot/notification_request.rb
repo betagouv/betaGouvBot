@@ -12,10 +12,6 @@ module BetaGouvBot
           .map { |warning| email({ 'author' => warning[:who] }, rule(warning[:term])) }
       end
 
-      def warnings(members, date)
-        schedule(members, NotificationRule.horizons, date)
-      end
-
       def schedule(members, terms, date)
         end_dates = terms.map { |term| date + term }
         members
@@ -25,6 +21,10 @@ module BetaGouvBot
       end
 
       private
+
+      def warnings(members, date)
+        schedule(members, NotificationRule.horizons, date)
+      end
 
       def rule(urgency)
         NotificationRule.find(horizon: urgency)
