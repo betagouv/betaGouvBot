@@ -18,9 +18,7 @@ module BetaGouvBot
       private
 
       def date_with_default(date_string)
-        Date.iso8601(date_string)
-      rescue
-        Date.iso8601('3017-01-01')
+        date_string.to_s.empty? || Date.iso8601(date_string)
       end
     end
   end
