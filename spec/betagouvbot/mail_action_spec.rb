@@ -6,10 +6,13 @@ RSpec.describe BetaGouvBot::MailAction do
     subject         { instance_spy('api') }
 
     let(:mail_hash) { { 'content' => 'whatever' } }
-    let(:action)    { described_class.new(mail_hash) }
+    let(:action)    { described_class.new('/dev/null', ['foo@bar.com'], {}) }
     let(:api)       { instance_double('api', new: subject) }
 
-    before { allow(action).to receive(:api) { api } }
+    before do
+      allow(action).to receive(:api)             { api }
+      allow(action).to receive(:formatted_mail)  { mail_hash }
+    end
 
     it 'posts its body to the API' do
       action.execute

@@ -17,11 +17,7 @@ module BetaGouvBot
       private
 
       def request_badge(author)
-        MailAction.new(format_mail.('author' => author))
-      end
-
-      def format_mail
-        @mail ||= FormatMail.from_file('data/mail_badge.md', recipients)
+        MailAction.new('data/mail_badge.md', recipients, 'author' => author)
       end
 
       def recipients

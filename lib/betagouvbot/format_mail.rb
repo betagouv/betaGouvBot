@@ -15,7 +15,7 @@ module BetaGouvBot
     # @note Email data files consist of 1 subject line plus body
     def self.from_file(body_path, recipients = [], sender = 'secretariat@beta.gouv.fr')
       subject, *rest = File.readlines(body_path)
-      new(subject.strip, rest.join, recipients, sender)
+      new(subject.to_s.strip, rest.join, recipients, sender)
     end
 
     def call(context)
@@ -24,6 +24,10 @@ module BetaGouvBot
         add_content(context, format)
         add_personalizations(context, format)
       end
+    end
+
+    def format_recipients(context)
+      recipients.map { |mail| { 'email' => render_template(mail, context) } }
     end
 
     private
@@ -44,7 +48,7 @@ module BetaGouvBot
     def add_personalizations(context, format)
       format.merge!(
         'personalizations' => [
-          'to' => recipients.map { |mail| { 'email' => render_template(mail, context) } },
+          'to' => format_recipients(context),
           'subject' => render_template(subject, context)
         ]
       )
