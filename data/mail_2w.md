@@ -1,7 +1,7 @@
 ⏲ Fin de contrat prévue pour dans 2 semaines
 Bonjour {{author.fullname}} !
 
-D'après les données accessibles sur https://beta.gouv.fr/equipe, ton contrat actuel arrive à expiration le {{author.end | format DD/MM/YYYY}}.
+D'après [nos informations](https://beta.gouv.fr/communaute/), ton contrat actuel arrive à expiration le {{author.end | format DD/MM/YYYY}}.
 
 Si c'est bien normal, assure-toi de prendre connaissance dès maintenant de [ce qu'il te faudra faire](https://github.com/sgmap/beta.gouv.fr/wiki/Au-revoir) en partant.
 

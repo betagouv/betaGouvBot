@@ -1,7 +1,7 @@
 ⏰ Fin de contrat prévue pour demain
 Bonjour {{author.fullname}} !
 
-D'après les données accessibles sur https://beta.gouv.fr/equipe, ton contrat actuel arrive à expiration demain.
+D'après [nos informations](https://beta.gouv.fr/communaute/), ton contrat actuel arrive à expiration demain.
 
 Peut-être que tu as oublié, ou remis à la dernière minute, ou que tu n'avais pas encore tous les éléments concernant ton renouvellement contractuel : si c'est le cas, on en serait plutôt ravis et tu peux dès maintenant [mettre à jour ta nouvelle date de fin](https://github.com/sgmap/beta.gouv.fr/edit/master/_authors/{{author.id}}.md).
 
