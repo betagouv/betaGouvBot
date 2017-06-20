@@ -29,13 +29,7 @@ module BetaGouvBot
       end
 
       def email(context, rule)
-        MailAction.new(format_mail(rule.mail_file, rule.recipients, context))
-      end
-
-      def format_mail(mail_file, recipients, context)
-        FormatMail
-          .from_file(mail_file, recipients)
-          .(context)
+        MailAction.new(rule.mail_file, rule.recipients, context)
       end
     end
   end

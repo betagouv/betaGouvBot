@@ -53,15 +53,11 @@ module BetaGouvBot
         end
 
         personal_address = personal_address[1..-1] unless redirect?(personal_address)
-        [MailAction.new(format_mail(personal_address).(context))]
+        [MailAction.new('data/mail_compte.md', [personal_address], context)]
       end
 
       def redirect?(personal_address)
         !personal_address.start_with?('*')
-      end
-
-      def format_mail(personal_address)
-        FormatMail.from_file('data/mail_compte.md', [personal_address])
       end
     end
   end

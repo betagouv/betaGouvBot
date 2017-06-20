@@ -3,24 +3,29 @@
 
 module BetaGouvBot
   class MailAction
-    def initialize(mail)
-      @mail = mail
+    def initialize(mail_template, recipients, context)
+      @mail = FormatMail.from_file(mail_template, recipients)
+      @context = context
     end
 
     def subject
-      @mail['personalizations'][0]['subject']
+      @mail.subject
     end
 
     def recipients
-      @mail['personalizations'][0]['to']
+      @mail.format_recipients(@context)
+    end
+
+    def formatted_mail
+      @mail.format_message(@context)
     end
 
     def execute
-      client.post(request_body: @mail)
+      client.post(request_body: formatted_mail)
     end
 
     def to_s
-      @mail.to_s
+      formatted_mail.to_s
     end
 
     def api
