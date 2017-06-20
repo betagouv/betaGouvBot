@@ -18,7 +18,7 @@ module BetaGouvBot
       new(subject.to_s.strip, rest.join, recipients, sender)
     end
 
-    def call(context)
+    def format_message(context)
       {}.tap do |format|
         add_from(context, format)
         add_content(context, format)

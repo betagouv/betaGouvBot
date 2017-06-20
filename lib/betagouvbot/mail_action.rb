@@ -17,7 +17,7 @@ module BetaGouvBot
     end
 
     def formatted_mail
-      @mail.(@context)
+      @mail.format_message(@context)
     end
 
     def execute
