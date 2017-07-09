@@ -72,35 +72,35 @@ RSpec.describe BetaGouvBot::AccountRequest do
           let(:fullname) { nil }
 
           it { is_expected.not_to be_valid }
-          it { expect(errors).to include('le format du nom doit être prenom.nom') }
+          it { expect(errors).to include('Le format du nom doit être prenom.nom') }
         end
 
         context 'with an invalid fullname' do
           let(:fullname) { 'bob69' }
 
           it { is_expected.not_to be_valid }
-          it { expect(errors).to include('le format du nom doit être prenom.nom') }
+          it { expect(errors).to include('Le format du nom doit être prenom.nom') }
         end
 
         context 'with a missing email' do
           let(:email) { nil }
 
           it { is_expected.not_to be_valid }
-          it { expect(errors).to include("l'email doit être présent et être valide") }
+          it { expect(errors).to include("L'email doit être présent et être valide") }
         end
 
         context 'with an invalid email' do
           let(:email) { '#bob@email.coop' }
 
           it { is_expected.not_to be_valid }
-          it { expect(errors).to include("l'email doit être présent et être valide") }
+          it { expect(errors).to include("L'email doit être présent et être valide") }
         end
 
         context 'with a missing password' do
           let(:password) { nil }
 
           it { is_expected.not_to be_valid }
-          it { expect(errors).to include('le mot de passe doit être présent') }
+          it { expect(errors).to include('Le mot de passe doit être présent') }
         end
       end
 
@@ -122,7 +122,7 @@ RSpec.describe BetaGouvBot::AccountRequest do
           it { is_expected.not_to broadcast(:not_found) }
         end
 
-        context 'when a request is made by a non member' do
+        context 'when a request is made for a non member' do
           let(:fullname) { 'joe' }
 
           it { is_expected.to broadcast(:not_found) }

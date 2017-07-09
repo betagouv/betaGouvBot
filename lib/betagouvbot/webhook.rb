@@ -76,6 +76,8 @@ module BetaGouvBot
       end
 
       account_request.on(:error) do |errors|
+        body = { text: errors.first }.to_json
+        HTTParty.post(params['response_url'], body: body, headers: headers)
         raise(StandardError, errors.first)
       end
 

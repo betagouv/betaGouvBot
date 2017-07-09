@@ -26,8 +26,8 @@ module BetaGouvBot
       return broadcast(:error, errors.full_messages) if invalid?
 
       accounts.tap do |accounts|
-        broadcast(:success, accounts) if accounts.present?
         broadcast(:not_found) if accounts.empty?
+        broadcast(:success, accounts) if accounts.present?
       end
     end
 
@@ -71,18 +71,18 @@ module BetaGouvBot
     def validate_fullname
       fullname &&
         fullname == fullname[/\A[a-z\.\-.]+\z/] ||
-        errors.add(:base, 'le format du nom doit être prenom.nom')
+        errors.add(:base, 'Le format du nom doit être prenom.nom')
     end
 
     def validate_email
       email &&
         email =~ /\A\*?([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i ||
-        errors.add(:base, "l'email doit être présent et être valide")
+        errors.add(:base, "L'email doit être présent et être valide")
     end
 
     def validate_password
       password ||
-        errors.add(:base, 'le mot de passe doit être présent')
+        errors.add(:base, 'Le mot de passe doit être présent')
     end
   end
 end
