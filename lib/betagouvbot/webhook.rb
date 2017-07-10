@@ -53,19 +53,21 @@ module BetaGouvBot
 
     post '/compte' do
       member, email, password = params['text'].to_s.split
-
-      origin   = params['user_name']
-      response = "A la demande de @#{origin} je créée un compte pour #{member}"
-      body     = { response_type: 'in_channel', text: response }.to_json
-      HTTParty.post(params['response_url'], body: body, headers: headers)
-
-      account_request = AccountRequest.new(members, member, email, password)
+      account_request         = AccountRequest.new(members, member, email, password)
 
       account_request.on(:success) do |accounts|
+        # Notify request is valid and being treated...
+        origin   = params['user_name']
+        response = "A la demande de @#{origin} je créée un compte pour #{member}"
+        body     = { response_type: 'in_channel', text: response }.to_json
+        HTTParty.post(params['response_url'], body: body, headers: headers)
+
+        execute = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
+        accounts.map(&:execute) if execute
+
+        # Notify request has been treated...
         response = 'OK, création de compte en cours !'
         body     = { text: response }.to_json
-        execute  = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
-        accounts.map(&:execute) if execute
         HTTParty.post(params['response_url'], body: body, headers: headers)
       end
 
