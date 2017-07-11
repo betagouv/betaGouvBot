@@ -52,20 +52,38 @@ module BetaGouvBot
     end
 
     post '/compte' do
-      member   = params['text'].to_s.split.first
-      origin   = params['user_name']
-      response = "A la demande de @#{origin} je créée un compte pour #{member}"
-      body     = { response_type: 'in_channel', text: response }.to_json
-      HTTParty.post(params['response_url'], body: body, headers: headers)
+      member, email, password = params['text'].to_s.split
+      account_request         = AccountRequest.new(members, member, email, password)
 
-      response = 'OK, création de compte en cours !'
-      accounts = AccountRequest.(members, *params['text'].to_s.split)
-      execute  = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
-      accounts.map(&:execute) if execute
+      account_request.on(:success) do |accounts|
+        # Notify request is valid and being treated...
+        origin   = params['user_name']
+        response = "A la demande de @#{origin} je créée un compte pour #{member}"
+        body     = { response_type: 'in_channel', text: response }.to_json
+        HTTParty.post(params['response_url'], body: body, headers: headers)
 
-      response = 'Je ne vois pas de qui tu veux parler' if accounts.empty?
-      body     = { text: response }.to_json
-      HTTParty.post(params['response_url'], body: body, headers: headers)
+        execute = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
+        accounts.map(&:execute) if execute
+
+        # Notify request has been treated...
+        response = 'OK, création de compte en cours !'
+        body     = { text: response }.to_json
+        HTTParty.post(params['response_url'], body: body, headers: headers)
+      end
+
+      account_request.on(:not_found) do
+        response = 'Je ne vois pas de qui tu veux parler'
+        body     = { text: response }.to_json
+        HTTParty.post(params['response_url'], body: body, headers: headers)
+      end
+
+      account_request.on(:error) do |errors|
+        body = { text: errors.first }.to_json
+        HTTParty.post(params['response_url'], body: body, headers: headers)
+        raise(StandardError, errors.first)
+      end
+
+      account_request.()
 
       # Explicitly return empty response to suppress echoing of the command
       ''

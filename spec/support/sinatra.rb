@@ -14,5 +14,5 @@ module RSpecSinatra
 end
 
 RSpec.configure do |config|
-  config.include RSpecSinatra
+  config.include(RSpecSinatra)
 end
