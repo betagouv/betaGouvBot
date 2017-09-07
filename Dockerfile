@@ -1,4 +1,4 @@
-FROM ruby:2.3
+FROM ruby:2.3.1
 ENV RACK_ENV production
 RUN mkdir /app
 ADD * /app/
