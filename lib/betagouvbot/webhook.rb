@@ -28,7 +28,8 @@ module BetaGouvBot
       github = GithubRequest.(members, date)
 
       # Execute actions
-      (mailer + sorting_hat + github).map(&:execute) if execute
+      all_actions = (notifications + sorting_hat + github)
+      all_actions.map(&:execute) if execute
 
       # Debug
       {
