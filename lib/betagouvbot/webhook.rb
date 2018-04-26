@@ -64,10 +64,15 @@ module BetaGouvBot
         HTTParty.post(params['response_url'], body: body, headers: headers)
 
         execute = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
-        accounts.map(&:execute) if execute
+        begin
+          accounts.map(&:execute) if execute
 
-        # Notify request has been treated...
-        response = 'OK, création de compte en cours !'
+          # Notify request has been treated...
+          response = 'OK, création de compte en cours !'
+        rescue StandardError => e
+          response = "Zut, il y a une erreur: #{e.message}"
+        end
+
         body     = { text: response }.to_json
         HTTParty.post(params['response_url'], body: body, headers: headers)
       end
