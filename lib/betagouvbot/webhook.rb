@@ -12,6 +12,16 @@ module BetaGouvBot
           .parsed_response
           .map(&:with_indifferent_access)
       end
+
+      def respond_in_channel(response, url)
+        body = { response_type: 'in_channel', text: response }.to_json
+        HTTParty.post(url, body: body)
+      end
+
+      def respond(response, url)
+        body = { text: response }.to_json
+        HTTParty.post(url, body: body)
+      end
     end
 
     get '/actions' do
@@ -57,35 +67,25 @@ module BetaGouvBot
       account_request         = AccountRequest.new(members, member, email, password)
 
       account_request.on(:success) do |accounts|
-        # Notify request is valid and being treated...
         origin   = params['user_name']
         response = "A la demande de @#{origin} je créée un compte pour #{member}"
-        body     = { response_type: 'in_channel', text: response }.to_json
-        HTTParty.post(params['response_url'], body: body, headers: headers)
+        respond_in_channel(response, params['response_url'])
 
         execute = params.key?('token') && (params['token'] == ENV['COMPTE_TOKEN'])
         begin
           accounts.map(&:execute) if execute
-
-          # Notify request has been treated...
-          response = 'OK, création de compte en cours !'
+          respond('OK, création de compte en cours !', params['response_url'])
         rescue StandardError => e
-          response = "Zut, il y a une erreur: #{e.message}"
+          respond("Zut, il y a une erreur: #{e.message}", params['response_url'])
         end
-
-        body     = { text: response }.to_json
-        HTTParty.post(params['response_url'], body: body, headers: headers)
       end
 
       account_request.on(:not_found) do
-        response = 'Je ne vois pas de qui tu veux parler'
-        body     = { text: response }.to_json
-        HTTParty.post(params['response_url'], body: body, headers: headers)
+        respond('Je ne vois pas de qui tu veux parler', params['response_url'])
       end
 
       account_request.on(:error) do |errors|
-        body = { text: errors.first }.to_json
-        HTTParty.post(params['response_url'], body: body, headers: headers)
+        respond(errors.first, params['response_url'])
         raise(StandardError, errors.first)
       end
 
