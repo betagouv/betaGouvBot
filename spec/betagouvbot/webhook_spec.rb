@@ -24,18 +24,6 @@ RSpec.describe BetaGouvBot::Webhook do
     it { expect(get('/actions')).to be_ok }
   end
 
-  describe 'POST /badge' do
-    before do
-      allow(ENV).to receive(:[]).with('BADGE_TOKEN') { token }
-      stub_request(:post, /api.sendgrid.com/)
-    end
-
-    let(:text)         { user_name }
-    let(:base_params)  { { token: token } }
-
-    it { expect(post('/badge', valid_params)).to be_ok }
-  end
-
   describe 'POST /compte' do
     let(:callback)     { 'https://bob.coop' }
     let(:text)         { "#{user_name} #{user_name}@email.coop password" }

@@ -50,18 +50,6 @@ module BetaGouvBot
       }.to_json
     end
 
-    post '/badge' do
-      badges  = BadgeRequest.(members, params['text'])
-      execute = params.key?('token') && (params['token'] == ENV['BADGE_TOKEN'])
-      badges.map(&:execute) if execute
-      { response_type: 'in_channel', text: 'OK, demande faite !' }.to_json
-    end
-
-    # Debug
-    get '/badge' do
-      { "badges": BadgeRequest.(members, params['text']) }.to_json
-    end
-
     post '/compte' do
       member, email, password = params['text'].to_s.split
       account_request         = AccountRequest.new(members, member, email, password)
