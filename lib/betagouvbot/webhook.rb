@@ -74,7 +74,6 @@ module BetaGouvBot
 
       account_request.on(:error) do |errors|
         respond(errors.first, params['response_url'])
-        raise(StandardError, errors.first)
       end
 
       account_request.()
@@ -88,9 +87,5 @@ module BetaGouvBot
       { "comptes": AccountRequest.(members, *params['text'].to_s.split) }.to_json
     end
 
-    ## Noop
-    error StandardError do
-      "Zut, il y a une erreur: #{env['sinatra.error'].message}"
-    end
   end
 end
