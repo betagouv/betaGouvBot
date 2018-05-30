@@ -70,7 +70,7 @@ module BetaGouvBot
 
     def validate_fullname
       fullname &&
-        fullname == fullname[/\A[a-z\.\-.]+\z/] ||
+        fullname == fullname[/\A[a-z\.\-\_.]+\z/] ||
         errors.add(:base, 'Le format du nom doit être prenom.nom')
     end
 
