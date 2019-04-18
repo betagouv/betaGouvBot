@@ -6,13 +6,13 @@ RSpec.describe BetaGouvBot::GithubOrgAction do
     subject       { instance_spy('api') }
 
     let(:octokit) { instance_double('octokit', new: subject) }
-    let(:action)  { described_class.new('sgmap', 'ann-gh', 12) }
+    let(:action)  { described_class.new('betagouv', 'ann-gh', 12) }
 
     before { allow(action).to receive(:octokit) { octokit } }
 
     it 'checks existing membership' do
       action.execute
-      is_expected.to have_received(:organization_member?).with('sgmap', 'ann-gh')
+      is_expected.to have_received(:organization_member?).with('betagouv', 'ann-gh')
     end
 
     context 'when already a member of the org' do

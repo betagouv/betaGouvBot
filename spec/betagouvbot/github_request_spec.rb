@@ -15,7 +15,7 @@ RSpec.describe BetaGouvBot::GithubRequest do
   it 'ensures all active members are invited to Github org SGMAP' do
     is_expected.to have(1).items.and include(
       be_a_kind_of(BetaGouvBot::GithubOrgAction)
-        .and(have_attributes(user: 'bob-gh', org: 'sgmap', team: '2348627'))
+        .and(have_attributes(user: 'bob-gh', org: 'betagouv', team: '2348627'))
     )
   end
 end

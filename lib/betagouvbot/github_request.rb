@@ -12,7 +12,7 @@ module BetaGouvBot
         active = SortingHat.sort(community, date)[:members]
         active
           .reject { |member| member[:github].nil? || member[:github].empty? }
-          .map { |member| GithubOrgAction.new('sgmap', member[:github], BETA_GOUV_FR) }
+          .map { |member| GithubOrgAction.new('betagouv', member[:github], BETA_GOUV_FR) }
       end
     end
   end
