@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['betagouvbot@beta.gouv.fr']
 
   spec.summary       = 'Automated assistant for beta.gouv.fr administrative tasks.'
-  spec.homepage      = 'https://github.com/sgmap/betagouvbot'
+  spec.homepage      = 'https://github.com/betagouv/betagouvbot'
   spec.license       = 'AGPL-3.0'
 
   spec.files         = Dir['{lib,data}/**/*', 'README*', 'Rakefile', 'config.ru']

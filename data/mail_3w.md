@@ -3,9 +3,11 @@ Bonjour {{author.fullname}} !
 
 D'après [nos informations](https://beta.gouv.fr/communaute/), ton contrat actuel arrive à expiration le {{author.end | format DD/MM/YYYY}}.
 
-Si c'est bien normal, assure-toi de prendre connaissance dès maintenant de [ce qu'il te faudra faire](https://github.com/sgmap/beta.gouv.fr/wiki/Au-revoir) en partant.
+Si c'est bien normal, assure-toi de prendre connaissance dès maintenant de [ce qu'il te faudra faire](https://github.com/betagouv/beta.gouv.fr/wiki/Au-revoir) en partant.
 
-Si ton contrat a été prolongé et que tes nouvelles dates sont certaines, [mets-les à jour en deux minutes](https://github.com/sgmap/beta.gouv.fr/edit/master/content/_authors/{{author.id}}.md) tout de suite !
+Si ton contrat a été prolongé et que tes nouvelles dates sont certaines, [mets-les à jour en deux minutes](https://github.com/betagouv/beta.gouv.fr/edit/master/content/_authors/{{author.id}}.md) tout de suite !
+
+Tu n'es pas à l'aise avec Github ? Tu peux le faire [directement à travers notre interface en ligne](https://beta.gouv.fr/admin/).
 
 Si quelque chose n'est pas clair, réponds à cet email ou ouvre une conversation dans [#administration](https://startups-detat.slack.com/archives/incubateur-secretaria) sur Slack.
 
