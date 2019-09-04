@@ -12,7 +12,7 @@ RSpec.describe BetaGouvBot::GithubRequest do
   let(:ted)         { { id: 'ted', fullname: 'Ted', end: tomorrow.iso8601 } }
   let(:members)     { [bob, ann, ted] }
 
-  it 'ensures all active members are invited to Github org BETAGOUV' do
+  it 'ensures all active members are invited to Github org BetaGouv' do
     is_expected.to have(1).items.and include(
       be_a_kind_of(BetaGouvBot::GithubOrgAction)
         .and(have_attributes(user: 'bob-gh', org: 'betagouv', team: '2348627'))
