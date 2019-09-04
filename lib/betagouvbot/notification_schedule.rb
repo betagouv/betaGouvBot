@@ -8,7 +8,7 @@ module BetaGouvBot
     class << self
       def call(members, end_dates)
         members
-          .reject { |member| member[:end].blank? || bad_date(member[:end]) }
+          .reject { |member| bad_date(member[:end]) }
           .map    { |member| member.merge(end: to_date(member[:end])) }
           .select { |member| end_dates.include?(member[:end]) }
           .map    { |member| { term: (member[:end] - Date.today).to_i, who: member } }
@@ -17,10 +17,11 @@ module BetaGouvBot
       private
 
       def bad_date(date_string)
+        return true unless date_string
         begin
           to_date(date_string)
         rescue
-         return true
+          return true
         end
         false
       end
