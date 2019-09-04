@@ -53,5 +53,18 @@ RSpec.describe BetaGouvBot::NotificationRequest do
         is_expected.to have(2).items
       end
     end
+
+    context 'when two members have an end date and one of these is a non-date' do
+      let(:authors) do
+        [
+          { id: 'ann', fullname: 'Ann', end: '2022-04-31' },
+          { id: 'bob', fullname: 'Bob', end: (Date.today + 21).iso8601 }
+        ]
+      end
+
+      it 'sends out one emails, ignoring invalid end dates' do
+        is_expected.to have(1).items
+      end
+    end
   end
 end
