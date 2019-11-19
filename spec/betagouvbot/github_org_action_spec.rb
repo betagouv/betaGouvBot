@@ -32,5 +32,16 @@ RSpec.describe BetaGouvBot::GithubOrgAction do
         is_expected.to have_received(:add_team_membership).with(12, 'ann-gh')
       end
     end
+
+    context 'when not an existing Github user name' do
+      before do
+        allow(action).to receive(:organization_member?).and_raise(Octokit::NotFound.new)
+      end
+
+      it 'quietly ignores the error' do
+        action.execute
+        is_expected.not_to have_received(:add_team_membership)
+      end
+    end
   end
 end

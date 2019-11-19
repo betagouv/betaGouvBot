@@ -14,6 +14,8 @@ module BetaGouvBot
     def execute
       return if organization_member?
       api.add_team_membership(@team, @user)
+    rescue
+      return
     end
 
     def to_s
