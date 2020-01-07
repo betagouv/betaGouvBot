@@ -7,6 +7,8 @@ Si c'est bien normal, assure-toi de prendre connaissance dès maintenant de [ce 
 
 Si ton contrat a été prolongé et que tes nouvelles dates sont certaines, [mets-les à jour](https://github.com/betagouv/beta.gouv.fr/edit/master/content/_authors/{{author.id}}.md) en deux minutes tout de suite !
 
+En mettant à jour ta fiche, cela permet aussi à la vérification périodique des badges que le tien ne soit pas désactivé. Mettre à jour ses dates rapidement permet d'éviter la désactivation du badge.
+
 Tu n'es pas à l'aise avec Github ? Tu peux le faire [directement à travers notre interface en ligne](https://beta.gouv.fr/admin/).
 
 Si quelque chose n'est pas clair, réponds à cet email ou ouvre une conversation dans [#administration](https://startups-detat.slack.com/archives/incubateur-secretaria) sur Slack.
