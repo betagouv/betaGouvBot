@@ -39,7 +39,7 @@ module BetaGouvBot
 
       # Execute actions
       all_actions = (notifications + sorting_hat + github)
-      all_actions.map(&:execute) if execute
+      puts all_actions.map(&:execute) if execute
 
       # Debug
       {
