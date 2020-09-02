@@ -7,7 +7,7 @@ Si tu nous quittes bien à cette date (snif), assure-toi de prendre connaissance
 
 Si ton contrat a été prolongé et que tes nouvelles dates sont connues, [mets-les à jour en deux minutes](https://github.com/betagouv/beta.gouv.fr/edit/master/content/_authors/{{author.id}}.md) tout de suite !
 
-Tu n'es pas à l'aise avec Github ? Tu peux le faire [directement à travers notre interface en ligne](https://beta.gouv.fr/admin/).
+Tu n'es pas à l'aise avec Github ? Tu peux le faire [directement à travers notre interface en ligne](https://beta.gouv.fr/admin/) en suivant [ce petit guide](https://pad.incubateur.net/xAj0p9RKTPW00RUGJHtbyA).
 
 Si quelque chose n'est pas clair, réponds à cet email ou ouvre une conversation dans [#administration](https://startups-detat.slack.com/archives/incubateur-secretaria) sur Slack.
 
