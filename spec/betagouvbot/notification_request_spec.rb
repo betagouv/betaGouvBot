@@ -12,7 +12,7 @@ RSpec.describe BetaGouvBot::NotificationRequest do
 
       it 'sends an email directly to the author' do
         is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
-          .and(have_attributes(subject: '🗓 Fin de contrat prévue pour dans 3 semaines'))
+          .and(have_attributes(subject: '🗓 Encore 3 semaines pour faire le point sur ton contrat'))
           .and(have_attributes(recipients: ['email' => 'ann@beta.gouv.fr']))
       end
     end
@@ -26,7 +26,7 @@ RSpec.describe BetaGouvBot::NotificationRequest do
           { 'email' => 'contact@beta.gouv.fr' }
         ]
         is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
-          .and(have_attributes(subject: '⏲ Fin de contrat prévue pour dans 2 semaines'))
+          .and(have_attributes(subject: '⏲ Plus que 2 semaines pour faire le point sur ton contrat'))
           .and(have_attributes(recipients: recipients))
       end
     end
