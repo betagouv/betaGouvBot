@@ -9,9 +9,9 @@ RSpec.describe BetaGouvBot::NotificationRequest do
   describe 'selecting recipients of emails' do
     context 'when a member has an end date in three weeks' do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 21).iso8601] }
+      let(:three_weeks) { '🗓 Encore 3 semaines pour faire le point sur ton contrat' }
 
       it 'sends an email directly to the author' do
-        three_weeks = '🗓 Encore 3 semaines pour faire le point sur ton contrat'
         is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
           .and(have_attributes(subject: three_weeks))
           .and(have_attributes(recipients: ['email' => 'ann@beta.gouv.fr']))
@@ -20,13 +20,13 @@ RSpec.describe BetaGouvBot::NotificationRequest do
 
     context 'when a member has an end date in two weeks' do
       let(:authors) { [id: 'ann', fullname: 'Ann', end: (Date.today + 14).iso8601] }
+      let(:two_weeks) { '⏲ Plus que 2 semaines pour faire le point sur ton contrat' }
 
       it 'sends an email to the author and contact' do
         recipients = [
           { 'email' => 'ann@beta.gouv.fr' },
           { 'email' => 'contact@beta.gouv.fr' }
-        ]
-        two_weeks = '⏲ Plus que 2 semaines pour faire le point sur ton contrat'
+        ]        
         is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
           .and(have_attributes(subject: two_weeks))
           .and(have_attributes(recipients: recipients))
