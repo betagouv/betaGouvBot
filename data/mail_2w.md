@@ -1,4 +1,4 @@
-🗓 Plus que 2 semaines pour faire le point sur ton contrat
+⏲ Plus que 2 semaines pour faire le point sur ton contrat
 Bonjour {{author.fullname}} !
 
 D'après [nos informations](https://beta.gouv.fr/communaute/), c'est le {{author.end | format DD/MM/YYYY}} que ton contrat doit être renouvelé ou bien arriver à échéance.
