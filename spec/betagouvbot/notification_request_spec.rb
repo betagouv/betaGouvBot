@@ -26,7 +26,7 @@ RSpec.describe BetaGouvBot::NotificationRequest do
         recipients = [
           { 'email' => 'ann@beta.gouv.fr' },
           { 'email' => 'contact@beta.gouv.fr' }
-        ]        
+        ]
         is_expected.to include be_a_kind_of(BetaGouvBot::MailAction)
           .and(have_attributes(subject: two_weeks))
           .and(have_attributes(recipients: recipients))
