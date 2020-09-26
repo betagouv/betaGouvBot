@@ -7,7 +7,7 @@ Peut-être que tu as oublié, ou remis à la dernière minute, ou que tu n'avais
 
 Tu n'es pas à l'aise avec Github ? Tu peux le faire [directement à travers notre interface en ligne](https://beta.gouv.fr/admin/#/collections/authors/entries/{{author.id}}) en suivant [ce petit guide](https://pad.incubateur.net/xAj0p9RKTPW00RUGJHtbyA).
 
-Si c'est bien un "au revoir", c'est le moment de t'assurer que tu as bien coché tous les éléments de la [checklist de départ](https://github.com/betagouv/beta.gouv.fr/wiki/Au-revoir).
+Si c'est bien un "au revoir", c'est le moment de t'assurer que tu as bien coché tous les éléments de la [checklist de départ](https://doc.incubateur.net/communaute/au-revoir).
 
 On espère que tu as passé un moment positif avec nous !
 
