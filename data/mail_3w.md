@@ -3,7 +3,7 @@ Bonjour {{author.fullname}} !
 
 D'après [nos informations](https://beta.gouv.fr/communaute/), c'est le {{author.end | format DD/MM/YYYY}} qu'on avait prévu de faire le point sur ta mission à beta, en particulier si tu restes parmi nous ou pas.
 
-Si tu nous quittes bien à cette date (snif), assure-toi de prendre connaissance dès maintenant de [ce qu'il te faudra faire](https://github.com/betagouv/beta.gouv.fr/wiki/Au-revoir) en partant.
+Si tu nous quittes bien à cette date (snif), assure-toi de prendre connaissance dès maintenant de [ce qu'il te faudra faire](https://doc.incubateur.net/communaute/au-revoir) en partant.
 
 Si ta mission se prolonge et que tes nouvelles dates sont connues, [mets-les à jour en deux minutes](https://github.com/betagouv/beta.gouv.fr/edit/master/content/_authors/{{author.id}}.md) tout de suite !
 
