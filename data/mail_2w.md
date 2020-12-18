@@ -9,7 +9,7 @@ Si ta mission se prolonge et que tes nouvelles dates sont connues, [mets-les à 
 
 Tu n'es pas à l'aise avec Github ? Tu peux le faire [directement à travers notre interface en ligne](https://beta.gouv.fr/admin/#/collections/authors/entries/{{author.id}}) en suivant [ce petit guide](https://pad.incubateur.net/xAj0p9RKTPW00RUGJHtbyA).
 
-Si quelque chose n'est pas clair, réponds à cet email ou ouvre une conversation dans [#administration](https://startups-detat.slack.com/archives/incubateur-secretaria) sur Slack.
+Si quelque chose n'est pas clair, réponds à cet email ou ouvre une conversation [dans #incubateur-secretaria](https://startups-detat.slack.com/archives/incubateur-secretaria) sur Slack.
 
 Sans changement de date, un dernier rappel sera automatiquement envoyé la veille de ton départ.
 
