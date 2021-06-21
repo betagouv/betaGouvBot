@@ -5,8 +5,7 @@ Bonjour les loulous,
 
 Si c'est un départ effectif, il faut s'assurer qu'elle ou il est bien :
 
-- Dans la team [alumni](https://github.com/orgs/betagouv/teams/alumni) sur GitHub.
-- Sans droit d'écriture sur des [dépôts](https://github.com/orgs/betagouv/people) sur GitHub.
+- En dehors de l'organisation GitHub.
 - Sans droit d'écriture sur l'agenda public.
 - Sans droit de délégation sur le [manager OVH](https://www.ovh.com/manager/web/#/configuration/email_domain/beta.gouv.fr?tab=EMAILS).
 - Organisé son pot de départ ☺
