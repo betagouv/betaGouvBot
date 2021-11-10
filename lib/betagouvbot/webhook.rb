@@ -31,9 +31,8 @@ module BetaGouvBot
       # Reconcile mailing lists
       sorting_hat = SortingHat.(members, date)
 
-      # Execute actions
-      all_actions = (sorting_hat)
-      puts all_actions.map(&:execute) if execute
+      # Execute action
+      puts sorting_hat.map(&:execute) if execute
 
       # Debug
       {
