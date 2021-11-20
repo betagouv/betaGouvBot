@@ -23,33 +23,4 @@ RSpec.describe BetaGouvBot::Webhook do
 
     it { expect(get('/actions')).to be_ok }
   end
-
-  describe 'POST /badge' do
-    before do
-      allow(ENV).to receive(:[]).with('BADGE_TOKEN') { token }
-      stub_request(:post, /api.sendgrid.com/)
-    end
-
-    let(:text)         { user_name }
-    let(:base_params)  { { token: token } }
-
-    it { expect(post('/badge', valid_params)).to be_ok }
-  end
-
-  describe 'POST /compte' do
-    let(:callback)     { 'https://bob.coop' }
-    let(:text)         { "#{user_name} #{user_name}@email.coop password" }
-    let(:base_params)  { { response_url: callback, user_name: user_name, token: token } }
-
-    before do
-      allow(ENV).to receive(:[]).with('COMPTE_TOKEN') { token }
-      stub_request(:any, /api.ovh.com/).to_return(body: [].to_json)
-      stub_request(:post, /api.sendgrid.com/)
-      stub_request(:post, callback)
-    end
-
-    it { expect(post('/compte')).not_to be_ok }
-    it { expect(post('/compte', base_params)).not_to be_ok }
-    it { expect(post('/compte', valid_params)).to be_ok }
-  end
 end
