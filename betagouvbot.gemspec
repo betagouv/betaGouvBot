@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'liquid'
   spec.add_runtime_dependency 'octokit'
   spec.add_runtime_dependency 'ovh-rest'
-  spec.add_runtime_dependency 'rack', '< 3'
+  spec.add_runtime_dependency 'rack', '< 4'
   spec.add_runtime_dependency 'redis'
   spec.add_runtime_dependency 'sendgrid-ruby'
   spec.add_runtime_dependency 'sinatra'
